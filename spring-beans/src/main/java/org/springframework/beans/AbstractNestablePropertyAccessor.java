@@ -657,14 +657,12 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	protected Object getPropertyValue(PropertyTokenHolder tokens) throws BeansException {
 		String propertyName = tokens.canonicalName;
 		String actualName = tokens.actualName;
-		// 子类得到属性处理器
 		PropertyHandler ph = getLocalPropertyHandler(actualName);
 		if (ph == null || !ph.isReadable()) {
 			throw new NotReadablePropertyException(getRootClass(), this.nestedPath + propertyName);
 		}
 		try {
-			// 属性执行器中获取值
-			Object value = ph.getValue();
+			Object value = ph.getValue();		// 取得bean中对注入对象的引用
 			if (tokens.keys != null) {
 				if (value == null) {
 					// 判断是否需要设置属性

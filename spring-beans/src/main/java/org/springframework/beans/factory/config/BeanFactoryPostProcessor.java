@@ -53,6 +53,10 @@ import org.springframework.beans.BeansException;
  * {@link org.springframework.core.annotation.Order @Order} annotation is not
  * taken into account for {@code BeanFactoryPostProcessor} beans.
  *
+ * 当所有 bean 定义都已加载但尚未实例化任何 bean 时，将调用bean 实现。
+ * 允许覆盖或添加属性，甚至是early初始化的 bean。
+ * 使可以访问你在 XML 中定义或注释的所有 bean（通过组件扫描扫描）。
+ *
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @since 06.07.2003

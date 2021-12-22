@@ -47,6 +47,16 @@ import org.springframework.lang.Nullable;
  * {@link org.springframework.core.annotation.Order @Order} annotation is not
  * taken into account for {@code BeanPostProcessor} beans.
  *
+ * 本质：
+ * 		是一个监听器，监听容器的触发事件，并执行相应的回调处理。
+ *
+ * 调用时机：
+ * 		都在initializeBean方法中。
+ *
+ * 作用：
+ * 		- 当 Spring IoC 容器实例化 bean 实例时，BeanPostProcessor 接口会完成它们的工作。
+ * 		- 完成Bean的初始化工作，得到可以由IoC容器托管的bean实例。
+ *
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @since 10.10.2003
@@ -63,7 +73,9 @@ public interface BeanPostProcessor {
 	 * or a custom init-method). The bean will already be populated with property values.
 	 * The returned bean instance may be a wrapper around the original.
 	 * <p>The default implementation returns the given {@code bean} as-is.
-	 * 前置方法
+	 *
+	 * 前置方法，在populateBean、aware接口呗调用之后被调用
+	 *
 	 * @param bean the new bean instance
 	 * @param beanName the name of the bean
 	 * @return the bean instance to use, either the original or a wrapped one;
@@ -90,7 +102,8 @@ public interface BeanPostProcessor {
 	 * in contrast to all other {@code BeanPostProcessor} callbacks.
 	 * <p>The default implementation returns the given {@code bean} as-is.
 	 *
-	 * 后置方法
+	 * 后置方法，在initMethod被调用之后调用
+	 *
 	 * @param bean the new bean instance
 	 * @param beanName the name of the bean
 	 * @return the bean instance to use, either the original or a wrapped one;

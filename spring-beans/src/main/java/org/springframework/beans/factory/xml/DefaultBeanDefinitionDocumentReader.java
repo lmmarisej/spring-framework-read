@@ -133,9 +133,6 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 
 	/**
 	 * Register each bean definition within the given root {@code <beans/>} element.
-	 *
-	 *
-	 * 注册每个 bean定义对象
 	 */
 	@SuppressWarnings("deprecation")  // for Environment.acceptsProfiles(String...)
 	protected void doRegisterBeanDefinitions(Element root) {
@@ -228,8 +225,6 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 
 	/**
 	 * 解析 element 元素
-	 * @param ele
-	 * @param delegate
 	 */
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
 		// 解析 import 标签
@@ -386,14 +381,14 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 	 * 解析 bean 标签
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
-		// 创建 bean definition
-		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
+		// 解析的Bean由BeanDefinitionHolder持有
+		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);		// 对Bean元素进行详细解析
 		if (bdHolder != null) {
 			// bean definition 装饰
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.
-				// 注册beanDefinition
+				// 向IoC注册解析得到的BeanDefinition
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			}
 			catch (BeanDefinitionStoreException ex) {
@@ -401,7 +396,7 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 						bdHolder.getBeanName() + "'", ele, ex);
 			}
 			// Send registration event.
-			// component注册事件触发
+			// 注册成功后，发送消息
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
 	}

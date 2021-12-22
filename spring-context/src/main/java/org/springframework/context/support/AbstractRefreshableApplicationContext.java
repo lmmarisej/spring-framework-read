@@ -135,12 +135,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
-		// 是否存在 beanFactory
+		// 如果已经建立了BeanFactory，则销毁并关闭该BeanFactory，保证在refresh后使用的是新建立起来的IoC容器
 		if (hasBeanFactory()) {
-			// 如果存在 beanFactory 则清空 bean 相关信息
-			// 摧毁bean
 			destroyBeans();
-			// 清空 beanFactory
 			closeBeanFactory();
 		}
 		try {
@@ -153,7 +150,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			// 	1. allowBeanDefinitionOverriding
 			//  2. allowCircularReferences
 			customizeBeanFactory(beanFactory);
-			// 加载 bean定义
+			// 开始对BeanDefinitions的载入
 			loadBeanDefinitions(beanFactory);
 			// 上锁设置 beanFactory
 			synchronized (this.beanFactoryMonitor) {
@@ -222,6 +219,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * with the {@linkplain #getInternalParentBeanFactory() internal bean factory} of this
 	 * context's parent as parent bean factory. Can be overridden in subclasses,
 	 * for example to customize DefaultListableBeanFactory's settings.
+	 *
+	 * 在上下文中创建DefaultListableBeanFactory，会根据已有的IoC容器生成DefaultListableBeanFactory的双亲IoC容器。
+	 *
 	 * @return the bean factory for this context
 	 * @see org.springframework.beans.factory.support.DefaultListableBeanFactory#setAllowBeanDefinitionOverriding
 	 * @see org.springframework.beans.factory.support.DefaultListableBeanFactory#setAllowEagerClassLoading
@@ -260,6 +260,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	/**
 	 * Load bean definitions into the given bean factory, typically through
 	 * delegating to one or more bean definition readers.
+	 *
+	 * 模板方法模式，使用BeanDefinitionReader载入Bean
+	 *
 	 * @param beanFactory the bean factory to load bean definitions into
 	 * @throws BeansException if parsing of the bean definitions failed
 	 * @throws IOException if loading of bean definition files failed

@@ -37,7 +37,8 @@ import org.springframework.lang.Nullable;
  * WebApplicationContext implementations need to detect {@link ServletContextAware}
  * beans and invoke the {@code setServletContext} method accordingly.
  *
- * web 应用上下文
+ * 提供从Web容器中载入Resource的功能。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since January 19, 2001

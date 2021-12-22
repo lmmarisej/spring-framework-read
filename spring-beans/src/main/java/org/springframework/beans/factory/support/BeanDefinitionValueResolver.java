@@ -108,7 +108,7 @@ class BeanDefinitionValueResolver {
 	public Object resolveValueIfNecessary(Object argName, @Nullable Object value) {
 		// We must check each value to see whether it requires a runtime reference
 		// to another bean to be resolved.
-		if (value instanceof RuntimeBeanReference) {
+		if (value instanceof RuntimeBeanReference) {		// RuntimeBeanReference在对BeanDefinition进行解析时生成的数据对象
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
 			return resolveReference(argName, ref);
 		}
@@ -299,11 +299,11 @@ class BeanDefinitionValueResolver {
 	 * Resolve a reference to another bean in the factory.
 	 */
 	@Nullable
-	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
+	private Object resolveReference(Object argName, RuntimeBeanReference ref) {		// RuntimeBeanReference在载入BeanDefinition配置时生成
 		try {
 			Object bean;
 			Class<?> beanType = ref.getBeanType();
-			if (ref.isToParent()) {
+			if (ref.isToParent()) {		// ref在双亲IoC容器中
 				BeanFactory parent = this.beanFactory.getParentBeanFactory();
 				if (parent == null) {
 					throw new BeanCreationException(

@@ -132,19 +132,23 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @throws BeansException if context creation failed
 	 * @see #refresh()
 	 */
-	public FileSystemXmlApplicationContext(
-			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
+	public FileSystemXmlApplicationContext(String[] configLocations,	// 包含BeanDefinition所在的文件路径
+										   boolean refresh,
+										   @Nullable ApplicationContext parent	// 指定自己的双亲IoC容器
+	)
 			throws BeansException {
 
 		super(parent);
 		setConfigLocations(configLocations);
 		if (refresh) {
-			refresh();
+			refresh();		// refresh启动IoC容器的初始化，也启动BeanDefinition的载入过程
 		}
 	}
 
 
 	/**
+	 * 不同的应用上下文对应不同的读取BeanDefinition的方式；调用本方法，可以得到FileSystemResource的资源定位。
+	 *
 	 * Resolve resource paths as file system paths.
 	 * <p>Note: Even if a given path starts with a slash, it will get
 	 * interpreted as relative to the current VM working directory.
@@ -154,7 +158,8 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext#getResourceByPath
 	 */
 	@Override
-	protected Resource getResourceByPath(String path) {
+	protected Resource getResourceByPath(String path	// 定位BeanDefinition的路径
+	) {
 		if (path.startsWith("/")) {
 			path = path.substring(1);
 		}

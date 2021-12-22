@@ -196,11 +196,9 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 	@Override
 	public int loadBeanDefinitions(Resource... resources) throws BeanDefinitionStoreException {
-		Assert.notNull(resources, "Resource array must not be null");
+		Assert.notNull(resources, "Resource array must not be null");		// 如果resources为空，抛出异常，会停止容器的启动
 		int count = 0;
-		// 循环处理 resource
-		for (Resource resource : resources) {
-			// 累加 beanDefinition 数量
+		for (Resource resource : resources) {			// 变量所有Resource包含的BeanDefinition
 			count += loadBeanDefinitions(resource);
 		}
 		return count;
@@ -240,7 +238,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 				// 将 local 解析成 resource 列表
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
 
-				// bean 定义的数量
+				// 新找到的bean定义的数量
 				int count = loadBeanDefinitions(resources);
 				if (actualResources != null) {
 					Collections.addAll(actualResources, resources);

@@ -366,16 +366,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 		try {
 			// 流
-			InputStream inputStream = encodedResource.getResource().getInputStream();
-			try {
+			try (InputStream inputStream = encodedResource.getResource().getInputStream()) {
 				InputSource inputSource = new InputSource(inputStream);
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
-			}
-			finally {
-				inputStream.close();
 			}
 		}
 		catch (IOException ex) {
@@ -427,10 +423,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
-			// 将 输入流转换成 Document
-			Document doc = doLoadDocument(inputSource, resource);
-			// 注册bean定义,并获取数量
-			int count = registerBeanDefinitions(doc, resource);
+			Document doc = doLoadDocument(inputSource, resource);		// 将流转为文档树
+			int count = registerBeanDefinitions(doc, resource);			// 注册bean定义，并获取数量
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
 			}

@@ -39,6 +39,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.support.ResourceEditorRegistrar;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -125,7 +126,8 @@ import org.springframework.util.ReflectionUtils;
  * @see org.springframework.context.ApplicationListener
  * @see org.springframework.context.MessageSource
  */
-public abstract class AbstractApplicationContext extends DefaultResourceLoader
+public abstract class AbstractApplicationContext
+		extends DefaultResourceLoader		// 默认具有ResourceLoader，这个容器的子类无需指定Resource
         implements ConfigurableApplicationContext {
 
     /**
@@ -584,6 +586,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
         return this.applicationListeners;
     }
 
+	/**
+	 * 牵涉IoC容器启动的一系列复杂操作：方法的正确执行标志着IoC容器正式启动。
+	 *
+	 * 启动：BeanDefinition的Resource的定位、载入、注册。
+	 */
     @Override
     public void refresh() throws BeansException, IllegalStateException {
         synchronized (this.startupShutdownMonitor) {
@@ -591,63 +598,62 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
             // 准备刷新此上下文。
             prepareRefresh();
 
-			// 创建出 beanFactory
             // Tell the subclass to refresh the internal bean factory.
-            ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+			// 在子类中启动refreshBeanFactory
+            ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();		// 会执行BeanDefinition的载入
 
             // Prepare the bean factory for use in this context.
-			// 准备 beanFactory , 对 beanFactory 进行设置数据等
-            prepareBeanFactory(beanFactory);
+            prepareBeanFactory(beanFactory);	// 为容器的启动做好必要的准备工作，配置Classloader、PropertyEditor、BeanPostProcessor
 
             try {
-				// beanFactory 在子类中进行后置处理
+				// 设置beanFactory的后置处理，调用时机：扫描BeanDefinition、根据BeanDefinition实例化（Instantiation）时
                 // Allows post-processing of the bean factory in context subclasses.
                 postProcessBeanFactory(beanFactory);
 
-                // BeanFactoryPostProcessor 方法调用
+                // 调用容器中的后置处理器处理BeanFactory，这些后处理器在Bean定义中向容器注册
                 // Invoke factory processors registered as beans in the context.
                 invokeBeanFactoryPostProcessors(beanFactory);
 
-                // 注册 beanPostProcessor
+                // 注册bean的后置处理器处理Bean，在Bean的创建过程中调用，调用时机：初始化（Initializing）Bean时
                 // Register bean processors that intercept bean creation.
                 registerBeanPostProcessors(beanFactory);
 
-                // 实例化 message source 相关信息
+                // 对上下文中的消息源进行初始化
                 // Initialize message source for this context.
                 initMessageSource();
 
-                // 实例化 应用事件传播器
+                // 初始化上下文中的事件机制
                 // Initialize event multicaster for this context.
                 initApplicationEventMulticaster();
 
+				// 初始化其他的特殊Bean
                 // Initialize other special beans in specific context subclasses.
                 onRefresh();
 
+				// 检查监听Bean，并将这些Bean向容器注册
                 // Check for listener beans and register them.
-				// 注册监听器
                 registerListeners();
 
-                // Instantiate all remaining (non-lazy-init) singletons.
-				// 完成 beanFactory 的实例化
+				// 实例化所有的(non-lazy-init)单例
+				// Instantiate all remaining (non-lazy-init) singletons.
                 finishBeanFactoryInitialization(beanFactory);
 
+				// 发布容器事件，结束refresh过程
                 // Last step: publish corresponding event.
-				// 完成刷新
                 finishRefresh();
             }
 
             catch (BeansException ex) {
                 if (logger.isWarnEnabled()) {
-                    logger.warn("Exception encountered during context initialization - " +
-                            "cancelling refresh attempt: " + ex);
+                    logger.warn("Exception encountered during context initialization - cancelling refresh attempt: " + ex);
                 }
 
-                // Destroy already created singletons to avoid dangling resources.
-				// 摧毁bean
+				// 为防止Bean资源占用，出现异常后销毁前面已经创建的单例。
+				// Destroy already created singletons to avoid dangling resources.
                 destroyBeans();
 
+				// 重置 'active' 的标志
                 // Reset 'active' flag.
-				// 取消刷新
                 cancelRefresh(ex);
 
                 // Propagate exception to caller.
@@ -657,7 +663,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
             finally {
                 // Reset common introspection caches in Spring's core, since we
                 // might not ever need metadata for singleton beans anymore...
-				// 重置通用缓存
+				// 重置通用内省缓存
                 resetCommonCaches();
             }
         }
@@ -716,7 +722,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
     /**
      * <p>Replace any stub property sources with actual instances.
      * @see org.springframework.core.env.PropertySource.StubPropertySource
-     * @see org.springframework.web.context.support.WebApplicationContextUtils#initServletPropertySources
      */
     protected void initPropertySources() {
         // For subclasses: do nothing by default.
@@ -725,12 +730,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
     /**
      * Tell the subclass to refresh the internal bean factory.
      * @return the fresh BeanFactory instance
-     * @see #refreshBeanFactory()
+     * @see #refreshBeanFactory()	{@link  AbstractXmlApplicationContext#loadBeanDefinitions} 实现了加载BeanDefinition
      * @see #getBeanFactory()
      */
     protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
         // 刷新 beanFactory , 子类实现
-        refreshBeanFactory();
+         refreshBeanFactory();
         // 获取 beanFactory , 子类实现
         return getBeanFactory();
     }

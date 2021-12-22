@@ -30,6 +30,11 @@ import org.springframework.lang.Nullable;
  * {@link BeanFactoryPostProcessor} to introspect and modify property values and other bean
  * metadata.
  *
+ * Spring中将POJO表示为Bean，BeanDefinition实际就是对POJO的抽象，使IoC容器能够方便的对POJO（也就是Bean）进行管理。
+ *
+ * 优点
+ * 		达到载入的灵活性。
+ *
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @see ConfigurableListableBeanFactory#getBeanDefinition

@@ -302,6 +302,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
+	 *
+	 * 既是获取Bean的地方，也是触发依赖注入的地方。
+	 *
 	 * @param name the name of the bean to retrieve
 	 * @param requiredType the required type of the bean to retrieve
 	 * @param args arguments to use when creating a bean instance using explicit arguments
@@ -319,7 +322,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
-		// 获取单例对象
+		// 从缓存中获取单例对象
 		Object sharedInstance = getSingleton(beanName);
 		// 单例对象是否存在 参数是否为空
 		if (sharedInstance != null && args == null) {
@@ -332,7 +335,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
-			// 获取bean实例
+			// 完成FactoryBean的处理，以获取其产生的结果；FactoryBean，创建的对象由Spring作为bean进行管理
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
@@ -345,11 +348,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			// Check if bean definition exists in this factory.
-			// 获取父bean工厂
-			// 从 父bean工厂中创建
 			BeanFactory parentBeanFactory = getParentBeanFactory();
-			// 从 父bean 工厂中查询
-			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
+			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {	// 对beanDefinition是否在IoC容器进行检查，先从当前容器找，找不到从父容器找
 				// Not found -> check parent.
 				// 确定beanName
 				String nameToLookup = originalBeanName(name);
@@ -384,7 +384,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
-				// 需要依赖的bean
+				// 需要依赖的bean，会递归的依赖注入所有属性
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
@@ -437,7 +437,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					try {
 						// 创建之前的行为
 						beforePrototypeCreation(beanName);
-						// 创建
+						// 根据BeanDefinition、参数创建Bean实例
 						prototypeInstance = createBean(beanName, mbd, args);
 					}
 					finally {
@@ -1451,10 +1451,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected String originalBeanName(String name) {
 		// 转换 beanName
 		String beanName = transformedBeanName(name);
-		// 是否是 & 开头, & 开头代表工厂bean
-		if (name.startsWith(FACTORY_BEAN_PREFIX)) {
-			// 计算新的名字
-			beanName = FACTORY_BEAN_PREFIX + beanName;
+		if (name.startsWith(FACTORY_BEAN_PREFIX)) {			// 以&开头，获取工厂bean
+			beanName = FACTORY_BEAN_PREFIX + beanName;		// 计算新的名字
 		}
 		return beanName;
 	}
@@ -2109,11 +2107,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
 		// 判断 beanName 是不是 bean 工厂
 		if (BeanFactoryUtils.isFactoryDereference(name)) {
-			// 类型判断
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
 			}
-			if (!(beanInstance instanceof FactoryBean)) {
+			if (!(beanInstance instanceof FactoryBean)) {		// 如果不是对FactoryBean的调用，则结束处理
 				throw new BeanIsNotAFactoryException(beanName, beanInstance.getClass());
 			}
 			if (mbd != null) {

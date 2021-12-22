@@ -34,6 +34,8 @@ import org.springframework.core.AliasRegistry;
  * interface. Known implementors within the Spring core are DefaultListableBeanFactory
  * and GenericApplicationContext.
  *
+ * 用于完成BeanDefinition的注册（不包含依赖注入，DI发生在应用第一次通过getBean向容器索取Bean的时候【受lazyinit属性控制】）。
+ *
  * @author Juergen Hoeller
  * @since 26.11.2003
  * @see org.springframework.beans.factory.config.BeanDefinition

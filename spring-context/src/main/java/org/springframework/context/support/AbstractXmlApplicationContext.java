@@ -80,26 +80,22 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #loadBeanDefinitions
 	 */
 	@Override
-	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
-		// 创建 读取 xml bean定义的类
+	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory	// 注意这个默认的IoC容器类型
+	) throws BeansException, IOException {
+		// 为容器创建读取器，通过回调设置到beanFactory中
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
-		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);	// 使用的是XML
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
-		// 设置环境
-		beanDefinitionReader.setEnvironment(this.getEnvironment());
-		// 设置资源加载器
-		beanDefinitionReader.setResourceLoader(this);
-		// 资源解析器
-		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
+		beanDefinitionReader.setEnvironment(this.getEnvironment());									// 资源加载的环境
+		beanDefinitionReader.setResourceLoader(this);												// 设置资源加载器
+		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));		// 资源解析器
 
 		// Allow a subclass to provide custom initialization of the reader,
 		// then proceed with actually loading the bean definitions.
-		// 初始化 bean定义阅读器
-		initBeanDefinitionReader(beanDefinitionReader);
-		// 加载 bean 定义
-		loadBeanDefinitions(beanDefinitionReader);
+		initBeanDefinitionReader(beanDefinitionReader);		// 初始化读取器
+		loadBeanDefinitions(beanDefinitionReader);			// 启动读取器，完成BeanDefinition在IoC容器中的载入
 	}
 
 	/**
@@ -127,11 +123,11 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #getResourcePatternResolver
 	 */
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
-		Resource[] configResources = getConfigResources();
+		Resource[] configResources = getConfigResources();		// 获取BeanDefinition的定位
 		if (configResources != null) {
 			reader.loadBeanDefinitions(configResources);
 		}
-		String[] configLocations = getConfigLocations();
+		String[] configLocations = getConfigLocations();		// 以String形式获取配置文件的位置
 		if (configLocations != null) {
 			reader.loadBeanDefinitions(configLocations);
 		}
@@ -146,7 +142,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #getConfigLocations()
 	 */
 	@Nullable
-	protected Resource[] getConfigResources() {
+	protected Resource[] getConfigResources() {		// 交给子类实现，以应对不同的BeanDefinition
 		return null;
 	}
 

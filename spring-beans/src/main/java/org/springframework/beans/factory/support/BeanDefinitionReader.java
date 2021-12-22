@@ -33,9 +33,11 @@ import org.springframework.lang.Nullable;
  * this interface. It only serves as suggestion for bean definition
  * readers that want to follow standard naming conventions.
  *
+ * 定义如何读取BeanDefinition
+ *
  * @author Juergen Hoeller
- * @since 1.1
  * @see org.springframework.core.io.Resource
+ * @since 1.1
  */
 public interface BeanDefinitionReader {
 
@@ -43,7 +45,7 @@ public interface BeanDefinitionReader {
 	 * Return the bean factory to register the bean definitions with.
 	 * <p>The factory is exposed through the BeanDefinitionRegistry interface,
 	 * encapsulating the methods that are relevant for bean definition handling.
-	 *
+	 * <p>
 	 * 获取 bean 定义注册器
 	 */
 	BeanDefinitionRegistry getRegistry();
@@ -62,8 +64,9 @@ public interface BeanDefinitionReader {
 	 * <p>There is also a {@code loadBeanDefinitions(String)} method available,
 	 * for loading bean definitions from a resource location (or location pattern).
 	 * This is a convenience to avoid explicit ResourceLoader handling.
-	 *
+	 * <p>
 	 * 获取资源加载器
+	 *
 	 * @see #loadBeanDefinitions(String)
 	 * @see org.springframework.core.io.support.ResourcePatternResolver
 	 */
@@ -75,7 +78,7 @@ public interface BeanDefinitionReader {
 	 * <p>{@code null} suggests to not load bean classes eagerly
 	 * but rather to just register bean definitions with class names,
 	 * with the corresponding Classes to be resolved later (or never).
-	 *
+	 * <p>
 	 * 获取类加载器
 	 */
 	@Nullable
@@ -84,7 +87,7 @@ public interface BeanDefinitionReader {
 	/**
 	 * Return the BeanNameGenerator to use for anonymous beans
 	 * (without explicit bean name specified).
-	 *
+	 * <p>
 	 * 获取 bean 名称乘乘其
 	 */
 	BeanNameGenerator getBeanNameGenerator();
@@ -92,8 +95,9 @@ public interface BeanDefinitionReader {
 
 	/**
 	 * Load bean definitions from the specified resource.
-	 *
+	 * <p>
 	 * 获取资源中定义的的bean数量
+	 *
 	 * @param resource the resource descriptor
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
@@ -102,8 +106,9 @@ public interface BeanDefinitionReader {
 
 	/**
 	 * Load bean definitions from the specified resources.
-	 *
+	 * <p>
 	 * 获取资源中定义的的bean数量
+	 *
 	 * @param resources the resource descriptors
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
@@ -114,10 +119,11 @@ public interface BeanDefinitionReader {
 	 * Load bean definitions from the specified resource location.
 	 * <p>The location can also be a location pattern, provided that the
 	 * ResourceLoader of this bean definition reader is a ResourcePatternResolver.
-	 *
+	 * <p>
 	 * 获取资源中定义的的bean数量
+	 *
 	 * @param location the resource location, to be loaded with the ResourceLoader
-	 * (or ResourcePatternResolver) of this bean definition reader
+	 *                 (or ResourcePatternResolver) of this bean definition reader
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
 	 * @see #getResourceLoader()
@@ -131,7 +137,7 @@ public interface BeanDefinitionReader {
 	 * 获取资源中定义的的bean数量
 	 *
 	 * @param locations the resource locations, to be loaded with the ResourceLoader
-	 * (or ResourcePatternResolver) of this bean definition reader
+	 *                  (or ResourcePatternResolver) of this bean definition reader
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
 	 */

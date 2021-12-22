@@ -104,7 +104,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
         }
         else {
             // Must generate CGLIB subclass.
-            // cglib 构造 . 本质还是 构造函数创建
+            // cglib 构造 . 本质还是 构造函数创建（CGlib是一个常用的字节码生成类库，提供一系列API来生成和转换Java字节码）
             return instantiateWithMethodInjection(bd, beanName, owner);
         }
     }

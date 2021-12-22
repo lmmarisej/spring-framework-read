@@ -34,6 +34,12 @@ import org.springframework.lang.Nullable;
  * physical form, but a URL or File handle can just be returned for
  * certain resources. The actual behavior is implementation-specific.
  *
+ * Resource作用
+ * 		- 用来定位容器使用的BeanDefinition。
+ * 		- 统一bean的定义信息。
+ *
+ * Resource定义了许多与I/O相关的操作，为接下来读取到的BeanDefinition的载入提供I/O操作的条件。
+ *
  * @author Juergen Hoeller
  * @since 28.12.2003
  * @see #getInputStream()

@@ -96,10 +96,10 @@ import org.springframework.util.StringUtils;
  * is therefore an inexpensive operation in a local bean definition table,
  * operating on pre-resolved bean definition metadata objects.
  *
- * <p>Note that readers for specific bean definition formats are typically
- * implemented separately rather than as bean factory subclasses:
- * see for example {@link PropertiesBeanDefinitionReader} and
- * {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}.
+ * <p>Note that readers for specific bean definition formats are typically implemented separately rather than as bean factory subclasses:
+ * see for example {@link PropertiesBeanDefinitionReader} and {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}.
+ *
+ * DefaultListableBeanFactory作为底层容器，不能直接使用Resource，需要通过BeanDefinitionReader来处理。优点是提供定制IoC的灵活性。
  *
  * <p>For an alternative implementation of the
  * {@link org.springframework.beans.factory.ListableBeanFactory} interface,
@@ -149,7 +149,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	/**
 	 * Map of bean definition objects, keyed by bean name.
 	 *
-	 * bean定义容器
+	 * bean定义容器，使用HashMap作为Bean的容器
 	 * key: beanName
 	 * value: BeanDefinition
 	 *
@@ -541,8 +541,6 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	/**
 	 * 根据类型找到beanNames
 	 * @param type the generically typed class or interface to match
-	 *
-	 * @return
 	 */
 	@Override
 	public String[] getBeanNamesForType(ResolvableType type) {
@@ -551,7 +549,6 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	/**
 	 * 根据类型找到beanNames
-	 * @return
 	 */
 	@Override
 	public String[] getBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {

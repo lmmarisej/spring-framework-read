@@ -89,6 +89,8 @@ import org.springframework.lang.Nullable;
  * <li>a custom destroy-method definition
  * </ol>
  *
+ * 如果使用BeanFactory作为IoC容器，客户需要做的额外工作是为BeanFactory指定响应的Resource来完成Bean信息的定位。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Chris Beams

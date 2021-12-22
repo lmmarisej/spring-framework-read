@@ -73,7 +73,8 @@ import org.springframework.util.xml.DomUtils;
  * {@link BeanDefinitionParser BeanDefinitionParsers} or
  * {@link BeanDefinitionDecorator BeanDefinitionDecorators}.
  *
- * xml Bean定义解析的委托类.
+ * Spring的在XML中定义的Bean解析过程由本类实现
+ *
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Rod Johnson
@@ -1019,13 +1020,14 @@ public class BeanDefinitionParserDelegate {
 		}
 		this.parseState.push(new PropertyEntry(propertyName));
 		try {
+			// 同一个Bean的property值只让第一个声明的有效
 			if (bd.getPropertyValues().contains(propertyName)) {
 				error("Multiple 'property' definitions for property '" + propertyName + "'", ele);
 				return;
 			}
 			// 解析 property 标签
 			Object val = parsePropertyValue(ele, bd, propertyName);
-			// 构造 PropertyValue 对象
+			// 将解析到的值封装到PropertyValue
 			PropertyValue pv = new PropertyValue(propertyName, val);
 			// 解析元信息
 			parseMetaElements(ele, pv);
@@ -1125,6 +1127,7 @@ public class BeanDefinitionParserDelegate {
 		boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);
 		// value 属性是否存在
 		boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE);
+		// 不允许property属性同时为ref和value
 		if ((hasRefAttribute && hasValueAttribute) ||
 				((hasRefAttribute || hasValueAttribute) && subElement != null)) {
 			error(elementName +
@@ -1132,25 +1135,22 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		if (hasRefAttribute) {
-			// 获取 ref 属性值
 			String refName = ele.getAttribute(REF_ATTRIBUTE);
 			if (!StringUtils.hasText(refName)) {
 				error(elementName + " contains empty 'ref' attribute", ele);
 			}
-			// 创建 链接对象
-			RuntimeBeanReference ref = new RuntimeBeanReference(refName);
+			RuntimeBeanReference ref = new RuntimeBeanReference(refName);			// RuntimeBeanReference封装ref的信息
 
 			ref.setSource(extractSource(ele));
 			return ref;
 		}
 		else if (hasValueAttribute) {
-			// 获取 value
-			TypedStringValue valueHolder = new TypedStringValue(ele.getAttribute(VALUE_ATTRIBUTE));
+			TypedStringValue valueHolder = new TypedStringValue(ele.getAttribute(VALUE_ATTRIBUTE));		// TypedStringValue封装value的信息
 			valueHolder.setSource(extractSource(ele));
 			return valueHolder;
 		}
 		else if (subElement != null) {
-			return parsePropertySubElement(subElement, bd);
+			return parsePropertySubElement(subElement, bd);			// 触发对子元素的解析
 		}
 		else {
 			// Neither child element nor "ref" or "value" attribute found.
@@ -1363,7 +1363,7 @@ public class BeanDefinitionParserDelegate {
 		target.setSource(extractSource(collectionEle));
 		target.setElementTypeName(defaultElementType);
 		target.setMergeEnabled(parseMergeAttribute(collectionEle));
-		parseCollectionElements(nl, target, bd, defaultElementType);
+		parseCollectionElements(nl, target, bd, defaultElementType);	// 具体解析list
 		return target;
 	}
 
@@ -1384,10 +1384,11 @@ public class BeanDefinitionParserDelegate {
 	protected void parseCollectionElements(
 			NodeList elementNodes, Collection<Object> target, @Nullable BeanDefinition bd, String defaultElementType) {
 
+		// 变量所有元素节点，解析Element
 		for (int i = 0; i < elementNodes.getLength(); i++) {
 			Node node = elementNodes.item(i);
 			if (node instanceof Element && !nodeNameEquals(node, DESCRIPTION_ELEMENT)) {
-				// 处理子节点
+				// 放入ManagedSet递归触发下一层节点的解析
 				target.add(parsePropertySubElement((Element) node, bd, defaultElementType));
 			}
 		}
