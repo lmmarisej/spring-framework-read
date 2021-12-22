@@ -41,6 +41,9 @@ public interface Joinpoint {
 
 	/**
 	 * Proceed to the next interceptor in the chain.
+	 *
+	 * 拦截器链的调用，直到最后target方法的调用结束。
+	 *
 	 * <p>The implementation and the semantics of this method depends
 	 * on the actual joinpoint type (see the children interfaces).
 	 * @return see the children interfaces' proceed definition

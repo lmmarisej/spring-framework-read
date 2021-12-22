@@ -19,6 +19,11 @@ package org.springframework.aop;
 /**
  * Core Spring pointcut abstraction.
  *
+ * 决定Advice通知应该作用于哪个连接点。
+ *
+ * 作用
+ * 		通过Pointcut来定义需要增强的方法和集合。
+ *
  * <p>A pointcut is composed of a {@link ClassFilter} and a {@link MethodMatcher}.
  * Both these basic terms and a Pointcut itself can be combined to build up combinations
  * (e.g. through {@link org.springframework.aop.support.ComposablePointcut}).

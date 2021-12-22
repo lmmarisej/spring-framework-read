@@ -677,6 +677,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 				// Get as late as possible to minimize the time we "own" the target, in case it comes from a pool...
 				target = targetSource.getTarget();
 				Class<?> targetClass = (target != null ? target.getClass() : null);
+				// 从advised中取得配置好的AOP通知
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
 				// Check whether we only have one InvokerInterceptor: that is,
@@ -687,10 +688,12 @@ class CglibAopProxy implements AopProxy, Serializable {
 					// it does nothing but a reflective operation on the target, and no hot
 					// swapping or fancy proxying.
 					Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);
+					// 没有通知配置，直接调用target对象的指定方法
 					retVal = methodProxy.invoke(target, argsToUse);
 				}
 				else {
 					// We need to create a method invocation...
+					// 通过CglibMethodInvocation来启动advice通知
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
 				retVal = processReturnType(proxy, target, method, retVal);
@@ -767,6 +770,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 		/**
 		 * Gives a marginal performance improvement versus using reflection to
 		 * invoke the target when invoking public methods.
+		 *
+		 * 通过 AopUtils#invokeJoinpointUsingReflection 反射调用
 		 */
 		@Override
 		protected Object invokeJoinpoint() throws Throwable {

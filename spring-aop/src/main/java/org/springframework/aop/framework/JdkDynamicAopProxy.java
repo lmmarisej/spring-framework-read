@@ -164,11 +164,11 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 
 		try {
 			if (!this.equalsDefined && AopUtils.isEqualsMethod(method)) {
-				// The target does not implement the equals(Object) method itself.
+				// 目标本身未实现equals(Object)方法。
 				return equals(args[0]);
 			}
 			else if (!this.hashCodeDefined && AopUtils.isHashCodeMethod(method)) {
-				// The target does not implement the hashCode() method itself.
+				// 目标本身未实现hashCode()方法。
 				return hashCode();
 			}
 			else if (method.getDeclaringClass() == DecoratingProxy.class) {
@@ -195,7 +195,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			Class<?> targetClass = (target != null ? target.getClass() : null);
 
 			// Get the interception chain for this method.
-			// 获取拦截器
+			// 获取定义好的拦截器
 			List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 
 			// Check whether we have any advice. If we don't, we can fallback on direct
@@ -205,18 +205,16 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 				// We can skip creating a MethodInvocation: just invoke the target directly
 				// Note that the final invoker must be an InvokerInterceptor so we know it does
 				// nothing but a reflective operation on the target, and no hot swapping or fancy proxying.
-				// 参数列表
-				Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);
-				// 调用切点方法
+				Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);		// 参数列表
+				// 如果没有拦截器，直接调用target方法
 				retVal = AopUtils.invokeJoinpointUsingReflection(target, method, argsToUse);
 			}
 			else {
 				// We need to create a method invocation...
-				                // 拦截器组装
-				MethodInvocation invocation =
-						new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
+				// 拦截器组装
+				MethodInvocation invocation = new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
 				// Proceed to the joinpoint through the interceptor chain.
-				                // 执行拦截器的链路
+				// 沿着拦截器链继续调用
 				retVal = invocation.proceed();
 			}
 

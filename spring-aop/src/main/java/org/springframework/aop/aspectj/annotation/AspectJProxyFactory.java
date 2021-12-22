@@ -36,6 +36,8 @@ import org.springframework.util.ClassUtils;
  * of proxies which include AspectJ aspects (code style as well
  * Java 5 annotation style).
  *
+ * 对于需要使用AspectJ的AOP应用，提供集成Spring和AspectJ的作用。
+ *
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Ramnivas Laddad

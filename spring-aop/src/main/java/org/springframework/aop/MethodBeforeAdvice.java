@@ -32,6 +32,9 @@ public interface MethodBeforeAdvice extends BeforeAdvice {
 
 	/**
 	 * Callback before a given method is invoked.
+	 *
+	 * 在调用目标方法之前的回调。
+	 *
 	 * @param method method being invoked
 	 * @param args arguments to the method
 	 * @param target target of the method invocation. May be {@code null}.

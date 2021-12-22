@@ -20,6 +20,8 @@ package org.aopalliance.aop;
  * Tag interface for Advice. Implementations can be any type
  * of advice, such as Interceptors.
  *
+ * 用来定义在连接点做什么（需要对目标对象进行增强的切面行为），为切面增强提供织入接口。
+ *
  * @author Rod Johnson
  * @version $Id: Advice.java,v 1.1 2004/03/19 17:02:16 johnsonr Exp $
  */

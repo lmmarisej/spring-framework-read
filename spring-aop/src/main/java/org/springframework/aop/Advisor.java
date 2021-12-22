@@ -30,6 +30,8 @@ import org.aopalliance.aop.Advice;
  * such as <b>before</b> and <b>after</b> advice, which need not be
  * implemented using interception.
  *
+ * 将Advice和Pointcut结合起来，提供即开即用的AOP基础设施。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  */

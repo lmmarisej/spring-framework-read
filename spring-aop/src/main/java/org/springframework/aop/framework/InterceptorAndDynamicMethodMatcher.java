@@ -28,9 +28,9 @@ import org.springframework.aop.MethodMatcher;
  */
 class InterceptorAndDynamicMethodMatcher {
 
-	final MethodInterceptor interceptor;
+	final MethodInterceptor interceptor;		// advice
 
-	final MethodMatcher methodMatcher;
+	final MethodMatcher methodMatcher;			// Pointcut
 
 	public InterceptorAndDynamicMethodMatcher(MethodInterceptor interceptor, MethodMatcher methodMatcher) {
 		this.interceptor = interceptor;

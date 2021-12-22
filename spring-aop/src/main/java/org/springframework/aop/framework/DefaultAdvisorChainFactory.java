@@ -53,8 +53,9 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 		// This is somewhat tricky... We have to process introductions first,
 		// but we need to preserve order in the ultimate list.
+		// registry主要目标是织入
 		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
-		Advisor[] advisors = config.getAdvisors();
+		Advisor[] advisors = config.getAdvisors();		// 直接获取advisor链
 		List<Object> interceptorList = new ArrayList<>(advisors.length);
 		Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
 		Boolean hasIntroductions = null;
@@ -64,6 +65,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 				// Add it conditionally.
 				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
 				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)) {
+					// 获取匹配规则
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
 					boolean match;
 					if (mm instanceof IntroductionAwareMethodMatcher) {
@@ -73,7 +75,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 						match = ((IntroductionAwareMethodMatcher) mm).matches(method, actualClass, hasIntroductions);
 					}
 					else {
-						match = mm.matches(method, actualClass);
+						match = mm.matches(method, actualClass);		// 匹配
 					}
 					if (match) {
 						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
@@ -81,11 +83,11 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.
 							for (MethodInterceptor interceptor : interceptors) {
-								interceptorList.add(new InterceptorAndDynamicMethodMatcher(interceptor, mm));
+								interceptorList.add(new InterceptorAndDynamicMethodMatcher(interceptor, mm));	// 有匹配条件的拦截器
 							}
 						}
 						else {
-							interceptorList.addAll(Arrays.asList(interceptors));
+							interceptorList.addAll(Arrays.asList(interceptors));		// 直接调用的拦截器
 						}
 					}
 				}
@@ -108,17 +110,19 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 	/**
 	 * Determine whether the Advisors contain matching introductions.
+	 *
+	 * 判断advisors是否符合要求。
 	 */
 	private static boolean hasMatchingIntroductions(Advisor[] advisors, Class<?> actualClass) {
 		for (Advisor advisor : advisors) {
 			if (advisor instanceof IntroductionAdvisor) {
 				IntroductionAdvisor ia = (IntroductionAdvisor) advisor;
 				if (ia.getClassFilter().matches(actualClass)) {
-					return true;
+					return true;		// 任意一个匹配上，符合要求
 				}
 			}
 		}
-		return false;
+		return false;		// 一个都没匹配上，不符合要求
 	}
 
 }

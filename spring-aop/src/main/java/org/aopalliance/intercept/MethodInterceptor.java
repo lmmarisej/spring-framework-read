@@ -17,8 +17,9 @@
 package org.aopalliance.intercept;
 
 /**
- * Intercepts calls on an interface on its way to the target. These are nested "on top" of the
- * target.
+ * Intercepts calls on an interface on its way to the target. These are nested "on top" of the target.
+ *
+ * 拦截器实现可以在运行时添加到 Spring AOP 代理中或从 Spring AOP 代理中删除。
  *
  * <p>The user should implement the {@link #invoke(MethodInvocation)}
  * method to modify the original behavior. E.g. the following class implements a tracing interceptor
@@ -44,7 +45,7 @@ public interface MethodInterceptor extends Interceptor {
 	/**
 	 * Implement this method to perform extra treatments before and after the invocation. Polite
 	 * implementations would certainly like to invoke {@link Joinpoint#proceed()}.
-	 *切面接口实现函数
+	 *  切面接口实现函数
 	 * @param invocation the method invocation joinpoint
 	 *
 	 * @return the result of the call to {@link Joinpoint#proceed()}; might be intercepted by the

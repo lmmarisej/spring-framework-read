@@ -1375,7 +1375,6 @@ public abstract class AbstractAopProxyTests {
 	@Test
 	public void testBeforeAdviceThrowsException() {
 		final RuntimeException rex = new RuntimeException();
-		@SuppressWarnings("serial")
 		CountingBeforeAdvice ba = new CountingBeforeAdvice() {
 			@Override
 			public void before(Method m, Object[] args, Object target) throws Throwable {

@@ -159,36 +159,37 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	@Nullable
 	public Object proceed() throws Throwable {
 		// We start with an index of -1 and increment early.
-		// 判断当前拦截器的索引位置
+		// 从索引为-1的位置开始调用，按序递增
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
-			return invokeJoinpoint();
+			return invokeJoinpoint();		// 拦截器调用完成，反射调用target方法
 		}
 
-		// 获取下一个拦截器
-		Object interceptorOrInterceptionAdvice =
-				this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
+		// 沿着定义好的interceptorOrInterceptionAdvice链进行处理，通过拦截器机制对目标对象行为增强起作用
+		// 获取下一个interceptorOrInterceptionAdvice
+		Object interceptorOrInterceptionAdvice = this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
 		// 类型判断
 		if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
 			// Evaluate dynamic method matcher here: static part will already have
 			// been evaluated and found to match.
-			InterceptorAndDynamicMethodMatcher dm =
-					(InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
-			// 代理后类
+			InterceptorAndDynamicMethodMatcher dm = (InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
 			Class<?> targetClass = (this.targetClass != null ? this.targetClass : this.method.getDeclaringClass());
-			// 是否匹配
+			// 如果和定义的Pointcut与过滤器链上的节点匹配上了，那么该节点中的advice业务逻辑将会得到执行
 			if (dm.methodMatcher.matches(this.method, targetClass, this.arguments)) {
-				// 匹配执行
-				return dm.interceptor.invoke(this);
+				return dm.interceptor.invoke(this);		// this指过滤器链上的InterceptorAndDynamicMethodMatcher节点
 			}
-			//  不匹配跳过进行下一个
 			else {
 				// Dynamic matching failed.
 				// Skip this interceptor and invoke the next in the chain.
+				// 不匹配，那么proceed会被递归调用，直到所有的拦截器都被运行过为止
 				return proceed();
 			}
-		} else {
-			// It's an interceptor, so we just invoke it: The pointcut will have
-			// been evaluated statically before this object was constructed.
+		}
+		// InterceptorAndDynamicMethodMatcher与MethodInterceptor的区别：
+		// 											可以看到，上面分支是matches匹配上再调用，下面分支就只是直接调用。
+		// 											因此，我们得出，他们两个的区别就是Advisor和Advice的区别。
+		else {
+			// It's an interceptor, so we just invoke it: The pointcut will have been evaluated statically before this object was constructed.
+			// 如果是interceptor，直接调用interceptor对应的方法
 			return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
 		}
 	}
