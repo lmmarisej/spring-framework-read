@@ -30,6 +30,8 @@ import org.springframework.util.Assert;
  * Used internally by the AOP framework; application developers should not need
  * to use this class directly.
  *
+ * 对MethodBeforeAdvice的封装。
+ *
  * @author Rod Johnson
  * @see AfterReturningAdviceInterceptor
  * @see ThrowsAdviceInterceptor
@@ -52,7 +54,9 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, BeforeA
 
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
+		// 先调用MethodBeforeAdvice中实现
 		this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis());
+		// 再调用调用本方法（invoke）的对象身上的proceed方法
 		return mi.proceed();
 	}
 

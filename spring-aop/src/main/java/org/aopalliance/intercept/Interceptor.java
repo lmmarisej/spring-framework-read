@@ -51,6 +51,8 @@ import org.aopalliance.aop.Advice;
  * }
  * </pre>
  *
+ * SpringAOP为了实现advice的织入，设计了特定的拦截器对这些功能进行封装，
+ *
  * @author Rod Johnson
  * @see Joinpoint
  */

@@ -51,7 +51,7 @@ import org.springframework.lang.Nullable;
  * 		是一个监听器，监听容器的触发事件，并执行相应的回调处理。
  *
  * 调用时机：
- * 		都在initializeBean方法中。
+ * 		Bean初始化前后回调。都在initializeBean方法中。
  *
  * 作用：
  * 		- 当 Spring IoC 容器实例化 bean 实例时，BeanPostProcessor 接口会完成它们的工作。

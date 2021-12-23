@@ -33,6 +33,10 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
  * {@link org.springframework.aop.AfterReturningAdvice},
  * {@link org.springframework.aop.ThrowsAdvice}.
  *
+ * 适配器的实现，为SpringAOP的advice提供编织能力。
+ *
+ * 本实现提供将Advice适配为Advisor和MethodInterceptor的能力。
+ *
  * @author Rod Johnson
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -40,11 +44,14 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 @SuppressWarnings("serial")
 public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Serializable {
 
+	// list中的adapter与实现AOP的advice增强功能相对应。
 	private final List<AdvisorAdapter> adapters = new ArrayList<>(3);
 
 
 	/**
 	 * Create a new DefaultAdvisorAdapterRegistry, registering well-known adapters.
+	 *
+	 * 将Spring中已知的AdvisorAdapter实现注册。
 	 */
 	public DefaultAdvisorAdapterRegistry() {
 		registerAdvisorAdapter(new MethodBeforeAdviceAdapter());
@@ -53,11 +60,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 	}
 
 	/**
-	 * 包装
-	 *
-	 * @param adviceObject
-	 * @return
-	 * @throws UnknownAdviceTypeException
+	 * 将Advice适配为Advisor，方便使用Spring的开发者自定义实现注册，增强扩展性。
 	 */
 	@Override
 	public Advisor wrap(Object adviceObject) throws UnknownAdviceTypeException {
@@ -81,16 +84,19 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		throw new UnknownAdviceTypeException(advice);
 	}
 
+	/**
+	 *  DefaultAdvisorChainFactory中调用
+	 */
 	@Override
 	public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
 		List<MethodInterceptor> interceptors = new ArrayList<>(3);
 		Advice advice = advisor.getAdvice();
-		if (advice instanceof MethodInterceptor) {
-			interceptors.add((MethodInterceptor) advice);
+		if (advice instanceof MethodInterceptor) {		// MethodInterceptor相比与上面的Advisor，只包含织入逻辑，少了Pointcut这种匹配规则信息
+			interceptors.add((MethodInterceptor) advice);		// 对于MethodInterceptor类型的advice直接支持
 		}
 		for (AdvisorAdapter adapter : this.adapters) {
 			if (adapter.supportsAdvice(advice)) {
-				interceptors.add(adapter.getInterceptor(advisor));
+				interceptors.add(adapter.getInterceptor(advisor));	// 利用adapter从advisor取出advice
 			}
 		}
 		if (interceptors.isEmpty()) {

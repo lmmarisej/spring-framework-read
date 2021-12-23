@@ -82,6 +82,8 @@ import org.springframework.util.ObjectUtils;
  * do not have the same object identity. However, they do have the same interceptors
  * and target, and changing any reference will change all objects.
  *
+ * 用于实现AOP应用。
+ *
  * 提供声明式的Spring AOP功能的封装。
  *
  * @author Rod Johnson

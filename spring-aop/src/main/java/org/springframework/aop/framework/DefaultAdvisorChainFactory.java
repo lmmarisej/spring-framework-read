@@ -53,8 +53,8 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 		// This is somewhat tricky... We have to process introductions first,
 		// but we need to preserve order in the ultimate list.
-		// registry主要目标是织入
-		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
+		// 获得AdvisorAdapterRegistry实例，由其负责拦截器的适配和注册过程
+		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();		// registry相当于一个适配器
 		Advisor[] advisors = config.getAdvisors();		// 直接获取advisor链
 		List<Object> interceptorList = new ArrayList<>(advisors.length);
 		Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
@@ -78,7 +78,8 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 						match = mm.matches(method, actualClass);		// 匹配
 					}
 					if (match) {
-						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
+						// 从AdvisorAdapterRegistry中取得MethodInterceptor的实现
+						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);	// 获取织入实现
 						if (mm.isRuntime()) {
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.

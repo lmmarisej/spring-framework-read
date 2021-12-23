@@ -46,7 +46,7 @@ import org.springframework.lang.Nullable;
  * synchronization of bean creation. There is usually no need for internal synchronization other
  * than for purposes of lazy initialization within the FactoryBean itself (or the like).
  *
- * 为应用生成需要的Bean
+ * 为应用生成需要的Bean。
  *
  * @param <T> the bean type
  *

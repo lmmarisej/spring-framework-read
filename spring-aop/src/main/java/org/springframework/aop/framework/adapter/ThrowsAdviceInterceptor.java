@@ -64,7 +64,7 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 	private final Object throwsAdvice;
 
 	/** Methods on throws advice, keyed by exception class. */
-	private final Map<Class<?>, Method> exceptionHandlerMap = new HashMap<>();
+	private final Map<Class<?>, Method> exceptionHandlerMap = new HashMap<>();		// 维护着对不同异常出现的处理逻辑
 
 
 	/**
@@ -76,14 +76,15 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 		Assert.notNull(throwsAdvice, "Advice must not be null");
 		this.throwsAdvice = throwsAdvice;
 
+		// 初始化，配置出现异常时的回调方法
 		Method[] methods = throwsAdvice.getClass().getMethods();
 		for (Method method : methods) {
 			if (method.getName().equals(AFTER_THROWING) &&
 					(method.getParameterCount() == 1 || method.getParameterCount() == 4)) {
-				Class<?> throwableParam = method.getParameterTypes()[method.getParameterCount() - 1];
-				if (Throwable.class.isAssignableFrom(throwableParam)) {
-					// An exception handler to register...
-					this.exceptionHandlerMap.put(throwableParam, method);
+				Class<?> throwableParam = method.getParameterTypes()[method.getParameterCount() - 1];	// 方法throws后面定义的异常类型也属于参数，在参数列表的最后
+				if (Throwable.class.isAssignableFrom(throwableParam)) {		// 如果这个方法指定了抛出的异常类型
+					// An exception handler to register...	// 注册
+					this.exceptionHandlerMap.put(throwableParam, method);		// 当method方法执行出现异常时，当前ThrowsAdviceInterceptor实例支持对throwableParam类型异常的处理
 					if (logger.isDebugEnabled()) {
 						logger.debug("Found exception handler method on throws advice: " + method);
 					}
@@ -114,9 +115,9 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 		catch (Throwable ex) {
 			Method handlerMethod = getExceptionHandler(ex);
 			if (handlerMethod != null) {
-				invokeHandlerMethod(mi, ex, handlerMethod);
+				invokeHandlerMethod(mi, ex, handlerMethod);		// 异常处理通知处理过程中出现的异常，向上抛出
 			}
-			throw ex;
+			throw ex;		// 就算AOP调用过程中出现的异常被AOP异常通知处理过了，同样向上抛出
 		}
 	}
 
@@ -132,8 +133,8 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 			logger.trace("Trying to find handler for exception of type [" + exceptionClass.getName() + "]");
 		}
 		Method handler = this.exceptionHandlerMap.get(exceptionClass);
-		while (handler == null && exceptionClass != Throwable.class) {
-			exceptionClass = exceptionClass.getSuperclass();
+		while (handler == null && exceptionClass != Throwable.class) {		// Throwable的实例永远不会作为异常被抛出，因此需要排除
+			exceptionClass = exceptionClass.getSuperclass();		// 没有查找，尝试获取超类再到异常处理映射表中查
 			handler = this.exceptionHandlerMap.get(exceptionClass);
 		}
 		if (handler != null && logger.isTraceEnabled()) {
@@ -148,13 +149,13 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 			handlerArgs = new Object[] {ex};
 		}
 		else {
-			handlerArgs = new Object[] {mi.getMethod(), mi.getArguments(), mi.getThis(), ex};
+			handlerArgs = new Object[] {mi.getMethod(), mi.getArguments(), mi.getThis(), ex};		// 将被切方法和方法调用发生的异常封装为参数
 		}
 		try {
-			method.invoke(this.throwsAdvice, handlerArgs);
+			method.invoke(this.throwsAdvice, handlerArgs);		// 执行AOP处理过程中抛出异常时的处理逻辑
 		}
 		catch (InvocationTargetException targetEx) {
-			throw targetEx.getTargetException();
+			throw targetEx.getTargetException();				// 执行异常通知再出现异常直接向上抛出
 		}
 	}
 

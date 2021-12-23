@@ -31,7 +31,7 @@ public final class GlobalAdvisorAdapterRegistry {
 
 
 	/**
-	 * Keep track of a single instance so we can return it to classes that request it.
+	 * Keep track of a single instance, so we can return it to classes that request it.
 	 */
 	private static AdvisorAdapterRegistry instance = new DefaultAdvisorAdapterRegistry();
 
@@ -48,7 +48,7 @@ public final class GlobalAdvisorAdapterRegistry {
 	 * adapters.
 	 */
 	static void reset() {
-		instance = new DefaultAdvisorAdapterRegistry();
+		instance = new DefaultAdvisorAdapterRegistry();		// 单例重置功能
 	}
 
 }

@@ -27,7 +27,7 @@ import org.springframework.aop.Advisor;
  *
  * 作用1：主要针对advice的注入作用，实现拦截器的注册。
  *
- * 作用2：从ProxyFactoryBean配置中得到的通知进行适配，从而获得响应的拦截器，再组合成list，完成拦截器的注册。
+ * 作用2：从ProxyFactoryBean配置中得到的通知进行适配，从而获得相应的拦截器，再组合成list，完成拦截器的注册。
  *
  * @author Rod Johnson
  * @author Rob Harrop
