@@ -1,3 +1,8 @@
+/*
+* 提供了基于spring的web的MVC模式，webmvc主要是增加了对spring MVC的支持，包括一些view层的核心封装，提供各前端技术及标签支持，restful协议、国际化等模块。
+*
+* 应用场景：需要一些view层的核心封装，提供各前端技术及标签支援。
+*/
 description = "Spring Web MVC"
 
 apply plugin: "kotlin"

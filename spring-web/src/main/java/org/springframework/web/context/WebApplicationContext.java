@@ -37,7 +37,7 @@ import org.springframework.lang.Nullable;
  * WebApplicationContext implementations need to detect {@link ServletContextAware}
  * beans and invoke the {@code setServletContext} method accordingly.
  *
- * 提供从Web容器中载入Resource的功能。
+ * 为Web应用建立的扩展接口，用于满足在启动过程中的需要。例如，提供从Web容器中载入Resource的功能。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -52,9 +52,10 @@ public interface WebApplicationContext extends ApplicationContext {
 	 * an exception or error as value. Use WebApplicationContextUtils for convenient
 	 * lookup of the root WebApplicationContext.
 	 *
-	 * web 程序的应用上下文属性
 	 * @see org.springframework.web.context.support.WebApplicationContextUtils#getWebApplicationContext
 	 * @see org.springframework.web.context.support.WebApplicationContextUtils#getRequiredWebApplicationContext
+	 *
+	 * 用来索引在ServletContext中存储的根上下文的，具备存取功能
 	 */
 	String ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE = WebApplicationContext.class.getName() + ".ROOT";
 
@@ -111,7 +112,8 @@ public interface WebApplicationContext extends ApplicationContext {
 
 	/**
 	 * Return the standard Servlet API ServletContext for this application.
-	 * 获取 servlet 上下文
+	 *
+	 * 得到当前web应用的Servlet上下文环境，相当于提供一个web应用级别的全局环境。
 	 */
 	@Nullable
 	ServletContext getServletContext();

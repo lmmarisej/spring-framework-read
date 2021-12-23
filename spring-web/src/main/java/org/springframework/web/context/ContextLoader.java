@@ -252,6 +252,8 @@ public class ContextLoader {
 
 
 	/**
+	 * 初始化根web应用程序上下文，由servlet容器启动时事件触发。
+	 *
 	 * Initialize Spring's web application context for the given servlet context,
 	 * using the application context provided at construction time, or creating a new one
 	 * according to the "{@link #CONTEXT_CLASS_PARAM contextClass}" and
@@ -274,24 +276,22 @@ public class ContextLoader {
 		if (logger.isInfoEnabled()) {
 			logger.info("Root WebApplicationContext: initialization started");
 		}
-		// 启动时间
-		long startTime = System.currentTimeMillis();
+
+		long startTime = System.currentTimeMillis();	// 启动时间
 
 		try {
-			// Store context in local instance variable, to guarantee that
-			// it is available on ServletContext shutdown.
+			// Store context in local instance variable, to guarantee that it is available on ServletContext shutdown.
+			// 在当前实例持有根上下文引用
 			if (this.context == null) {
-				// 创建应用上下文
-				this.context = createWebApplicationContext(servletContext);
+				this.context = createWebApplicationContext(servletContext);		// 实例化根上下文
 			}
 			if (this.context instanceof ConfigurableWebApplicationContext) {
 				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) this.context;
 				if (!cwac.isActive()) {
-					// The context has not yet been refreshed -> provide services such as
-					// setting the parent context, setting the application context id, etc
+					// The context has not yet been refreshed -> provide services such as setting the parent context, setting the
+					// application context id, etc
 					if (cwac.getParent() == null) {
-						// The context instance was injected without an explicit parent ->
-						// determine parent for root web application context, if any.
+						// The context instance was injected without an explicit parent -> determine parent for root web application context, if any.
 						ApplicationContext parent = loadParentContext(servletContext);
 						cwac.setParent(parent);
 					}
@@ -299,7 +299,7 @@ public class ContextLoader {
 					configureAndRefreshWebApplicationContext(cwac, servletContext);
 				}
 			}
-			// servletContext设置属性
+			// 将当前应用上下文的引用放到ServletContext中，作为其实例的一个属性
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, this.context);
 
 			// 获取类加载器
@@ -308,7 +308,7 @@ public class ContextLoader {
 				currentContext = this.context;
 			}
 			else if (ccl != null) {
-				currentContextPerThread.put(ccl, this.context);
+				currentContextPerThread.put(ccl, this.context);		// 记录根上下文与创建它的类加载器关系
 			}
 
 			if (logger.isInfoEnabled()) {
@@ -326,8 +326,10 @@ public class ContextLoader {
 	}
 
 	/**
-	 * Instantiate the root WebApplicationContext for this loader, either the
-	 * default context class or a custom context class if specified.
+	 * 建立IoC容器，从而在servlet容器中建立整个spring应用。
+	 *
+	 * Instantiate the root WebApplicationContext for this loader, either the default context class or a custom context class if specified.
+	 *
 	 * <p>This implementation expects custom contexts to implement the
 	 * {@link ConfigurableWebApplicationContext} interface.
 	 * Can be overridden in subclasses.
@@ -348,8 +350,7 @@ public class ContextLoader {
 	}
 
 	/**
-	 * Return the WebApplicationContext implementation class to use, either the
-	 * default XmlWebApplicationContext or a custom context class if specified.
+	 * Return the WebApplicationContext implementation class to use, either the default XmlWebApplicationContext or a custom context class if specified.
 	 * @param servletContext current servlet context
 	 * @return the WebApplicationContext implementation class to use
 	 * @see #CONTEXT_CLASS_PARAM

@@ -28,13 +28,18 @@ import javax.servlet.ServletContextListener;
  * constructor, allowing for programmatic configuration in Servlet 3.0+ environments.
  * See {@link org.springframework.web.WebApplicationInitializer} for usage examples.
  *
+ * 作为SpringMVC的启动类，负责完成IoC容器在Web环境中的启动工作。
+ *
  * @author Juergen Hoeller
  * @author Chris Beams
  * @since 17.02.2003
  * @see #setContextInitializers
  * @see org.springframework.web.WebApplicationInitializer
  */
-public class ContextLoaderListener extends ContextLoader implements ServletContextListener {
+public class ContextLoaderListener 	// 监听Servlet容器的启动，为IoC容器提供一个宿主环境，由ContextLoaderListener创建的上下文为根上下文
+		extends ContextLoader 		// 为根应用程序上下文执行实际的初始化工作
+		implements ServletContextListener		// Servlet容器事件监听，在Servlet容器中初始化建立IoC容器体系
+{
 
 	/**
 	 * Create a new {@code ContextLoaderListener} that will create a web application
@@ -97,6 +102,8 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 
 	/**
 	 * Initialize the root web application context.
+	 *
+	 * 建立根web应用程序上下文。
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent event) {

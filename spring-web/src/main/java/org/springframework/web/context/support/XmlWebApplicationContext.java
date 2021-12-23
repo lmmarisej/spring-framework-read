@@ -58,16 +58,30 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  * @see org.springframework.web.context.ContextLoader#initWebApplicationContext
  * @see org.springframework.web.servlet.FrameworkServlet#initWebApplicationContext
+ *
+ * @see #getDefaultConfigLocations Spring默认使用作为IoC容器。
  */
 public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationContext {
 
-	/** Default config location for the root context. */
+	/**
+	 * Default config location for the root context.
+	 *
+	 * 使用默认的BeanDefinition配置路径。
+	 *  */
 	public static final String DEFAULT_CONFIG_LOCATION = "/WEB-INF/applicationContext.xml";
 
-	/** Default prefix for building a config location for a namespace. */
+	/**
+	 * Default prefix for building a config location for a namespace.
+	 *
+	 * 默认的配置文件路径。
+	 *  */
 	public static final String DEFAULT_CONFIG_LOCATION_PREFIX = "/WEB-INF/";
 
-	/** Default suffix for building a config location for a namespace. */
+	/**
+	 * Default suffix for building a config location for a namespace.
+	 *
+	 * 默认配置文件后缀为.xml
+	 *  */
 	public static final String DEFAULT_CONFIG_LOCATION_SUFFIX = ".xml";
 
 
@@ -80,27 +94,27 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
-		// 创建 XmlBeanDefinitionReader 对象
+		// 使用XmlBeanDefinitionReader进行BeanDefinition的解析
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
 		// 设置环境信息、资源加载器和资源实体解析器
 		beanDefinitionReader.setEnvironment(getEnvironment());
-		beanDefinitionReader.setResourceLoader(this);
+		beanDefinitionReader.setResourceLoader(this);		// 使用自身定义的ResourceLoader
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader,
 		// then proceed with actually loading the bean definitions.
-		// 初始化 XmlBeanDefinitionReader
+		// 允许子类为reader配置自定义的初始化过程
 		initBeanDefinitionReader(beanDefinitionReader);
-		// 加载 bean definition
+		// 使用XmlBeanDefinitionReader来加载BeanDefinition，最终完成整个上下文初始化过程
 		loadBeanDefinitions(beanDefinitionReader);
 	}
 
 	/**
-	 * Initialize the bean definition reader used for loading the bean
-	 * definitions of this context. Default implementation is empty.
+	 * Initialize the bean definition reader used for loading the bean definitions of this context.
+	 * Default implementation is empty.
 	 * <p>Can be overridden in subclasses, e.g. for turning off XML validation
 	 * or using a different XmlBeanDefinitionParser implementation.
 	 * @param beanDefinitionReader the bean definition reader used by this context

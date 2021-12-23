@@ -1,3 +1,8 @@
+/*
+* spring-web提供核心的HTTP集成，包括一些方便的Servlet过滤器，Spring HTTP Invoker，用于与其他Web框架和HTTP技术集成的基础设施。
+*
+* 应用场景：rest应用。
+* */
 description = "Spring Web"
 
 apply plugin: "kotlin"
