@@ -51,7 +51,9 @@ import org.aopalliance.aop.Advice;
  * }
  * </pre>
  *
- * SpringAOP为了实现advice的织入，设计了特定的拦截器对这些功能进行封装，
+ * SpringAOP为了实现advice的织入，设计了特定的拦截器对这些功能进行封装。
+ *
+ * 在SpringAOP中，对目标对象的增强都是通过拦截器来完成的。
  *
  * @author Rod Johnson
  * @see Joinpoint

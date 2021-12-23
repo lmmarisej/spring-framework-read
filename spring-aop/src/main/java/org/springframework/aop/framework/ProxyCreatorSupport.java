@@ -112,7 +112,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 	 */
 	private void activate() {
 		this.active = true;
-		for (AdvisedSupportListener listener : this.listeners) {
+		for (AdvisedSupportListener listener : this.listeners) {		// 触发Advised的监听器
 			listener.activated(this);
 		}
 	}

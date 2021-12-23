@@ -82,9 +82,9 @@ import org.springframework.util.ObjectUtils;
  * do not have the same object identity. However, they do have the same interceptors
  * and target, and changing any reference will change all objects.
  *
- * 用于实现AOP应用。
+ * 用于实现AOP应用，配置本类的属性，以实现对目标对象及拦截器配置，以便SpringAOP代理对象顺利产生。
  *
- * 提供声明式的Spring AOP功能的封装。
+ * 提供声明式的Spring AOP功能的封装。实现的AOP功能与ProxyFactory实现原理一样，只是在外层的表现形式上有区别。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -96,7 +96,8 @@ import org.springframework.util.ObjectUtils;
  */
 @SuppressWarnings("serial")
 public class ProxyFactoryBean extends ProxyCreatorSupport
-		implements FactoryBean<Object>, BeanClassLoaderAware, BeanFactoryAware {
+		implements FactoryBean<Object>, 	// 使用FactoryBean的IoC封装
+		BeanClassLoaderAware, BeanFactoryAware {
 
 	/**
 	 * This suffix in a value in an interceptor list indicates to expand globals.

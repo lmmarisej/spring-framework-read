@@ -37,7 +37,9 @@ import org.springframework.util.ClassUtils;
  * @since 14.03.2003
  */
 @SuppressWarnings("serial")
-public class ProxyFactory extends ProxyCreatorSupport {
+public class ProxyFactory
+		extends ProxyCreatorSupport			// 直接通过继承来完成AOP的属性配置
+{
 
 	/**
 	 * Create a new ProxyFactory.

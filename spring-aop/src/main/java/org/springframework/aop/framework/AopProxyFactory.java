@@ -38,6 +38,10 @@ package org.springframework.aop.framework;
  * the configuration was frozen) a proxy should throw an
  * {@link AopConfigException} on an attempted advice change.
  *
+ * 负责产生相应的AopProxy代理对象。
+ *
+ * 默认使用DefaultAopProxyFactory。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  */

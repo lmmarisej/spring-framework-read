@@ -71,7 +71,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	/**
 	 * Package-protected to allow direct access for efficiency.
 	 */
-	TargetSource targetSource = EMPTY_TARGET_SOURCE;
+	TargetSource targetSource = EMPTY_TARGET_SOURCE;		// 可以将HotSwappableTargetSource配置进来。
 	/**
 	 * The AdvisorChainFactory to use.
 	 */

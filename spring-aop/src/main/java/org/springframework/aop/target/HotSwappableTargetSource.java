@@ -22,15 +22,13 @@ import org.springframework.aop.TargetSource;
 import org.springframework.util.Assert;
 
 /**
- * {@link org.springframework.aop.TargetSource} implementation that
- * caches a local target object, but allows the target to be swapped
- * while the application is running.
+ * {@link org.springframework.aop.TargetSource} implementation that caches a local target object, but allows the target to be swapped while the application is running.
  *
- * <p>If configuring an object of this class in a Spring IoC container,
- * use constructor injection.
+ * <p>If configuring an object of this class in a Spring IoC container, use constructor injection.
  *
- * <p>This TargetSource is serializable if the target is at the time
- * of serialization.
+ * <p>This TargetSource is serializable if the target is at the time of serialization.
+ *
+ * 允许在应用程序运行时以线程安全的方式切换目标对象。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -81,6 +79,8 @@ public class HotSwappableTargetSource implements TargetSource, Serializable {
 
 
 	/**
+	 * 在需要线程安全地交换对象时使用。
+	 *
 	 * Swap the target, returning the old target object.
 	 * @param newTarget the new target object
 	 * @return the old target object

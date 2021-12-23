@@ -173,7 +173,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			}
 			else if (method.getDeclaringClass() == DecoratingProxy.class) {
 				// There is only getDecoratedClass() declared -> dispatch to proxy config.
-				return AopProxyUtils.ultimateTargetClass(this.advised);
+				return AopProxyUtils.ultimateTargetClass(this.advised);		// 获取代理后的对象
 			}
 			else if (!this.advised.opaque && method.getDeclaringClass().isInterface() &&
 					method.getDeclaringClass().isAssignableFrom(Advised.class)) {
@@ -189,8 +189,8 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 				setProxyContext = true;
 			}
 
-			// Get as late as possible to minimize the time we "own" the target,
-			// in case it comes from a pool.
+			// Get as late as possible to minimize the time we "own" the target, in case it comes from a pool.
+			// 通过getTarget完成HotSwappableTargetSource与SpringAOP的集成
 			target = targetSource.getTarget();
 			Class<?> targetClass = (target != null ? target.getClass() : null);
 
@@ -211,7 +211,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			}
 			else {
 				// We need to create a method invocation...
-				// 拦截器组装
+				// 当没有拦截器时，需要先调用拦截器再调用目标方法，通过构造一个ReflectiveMethodInvocation来实现
 				MethodInvocation invocation = new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
 				// Proceed to the joinpoint through the interceptor chain.
 				// 沿着拦截器链继续调用

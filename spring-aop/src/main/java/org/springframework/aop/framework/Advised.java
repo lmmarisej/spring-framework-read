@@ -23,12 +23,12 @@ import org.springframework.aop.TargetClassAware;
 import org.springframework.aop.TargetSource;
 
 /**
- * Interface to be implemented by classes that hold the configuration
- * of a factory of AOP proxies. This configuration includes the
- * Interceptors and other advice, Advisors, and the proxied interfaces.
+ * Interface to be implemented by classes that hold the configuration of a factory of AOP proxies.
+ * This configuration includes the Interceptors and other advice, Advisors, and the proxied interfaces.
  *
- * <p>Any AOP proxy obtained from Spring can be cast to this interface to
- * allow manipulation of its AOP advice.
+ * <p>Any AOP proxy obtained from Spring can be cast to this interface to allow manipulation of its AOP advice.
+ *
+ * 对所有的SpringAOP中advice都支持的中间层。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
