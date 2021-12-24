@@ -124,37 +124,27 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	@Override
 	@Nullable
 	protected Object getHandlerInternal(HttpServletRequest request) throws Exception {
-		// 提取请求地址
-		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
-		// 设置请求地址
-		request.setAttribute(LOOKUP_PATH, lookupPath);
-		// 查询 handler 对象
-		Object handler = lookupHandler(lookupPath, request);
+		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);		// 提取请求url地址
+		request.setAttribute(LOOKUP_PATH, lookupPath);			// 设置请求地址到ServletRequest属性
+		Object handler = lookupHandler(lookupPath, request);	// 查询 handler 对象
 		if (handler == null) {
 			// We need to care for the default handler directly, since we need to
 			// expose the PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE for it as well.
 			Object rawHandler = null;
-			// 对于访问路径是 / 的处理
-			if ("/".equals(lookupPath)) {
-				// 获取根Handler对象
+			if ("/".equals(lookupPath)) {			// 对根地址处理
 				rawHandler = getRootHandler();
 			}
-			// handler 还是空
-			if (rawHandler == null) {
-				// 获取默认的Handler对象
+			if (rawHandler == null) {				// 对默认地址处理
 				rawHandler = getDefaultHandler();
 			}
-			// rawHandler 不为空
-			if (rawHandler != null) {
+			if (rawHandler != null) {				// 有根地址或默认地址的处理
 				// Bean name or resolved handler?
-				// 类型是String从容器中获取
 				if (rawHandler instanceof String) {
 					String handlerName = (String) rawHandler;
-					rawHandler = obtainApplicationContext().getBean(handlerName);
+					rawHandler = obtainApplicationContext().getBean(handlerName);		// 使用根或默认地址handler bean
 				}
-				// 验证 handler
 				validateHandler(rawHandler, request);
-				// 构建 handler 对象
+				// 构建handler的拦截器链
 				handler = buildPathExposingHandler(rawHandler, lookupPath, lookupPath, null);
 			}
 		}
@@ -365,17 +355,16 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 		Object resolvedHandler = handler;
 
 		// Eagerly resolve handler if referencing singleton via name.
-		// 非懒加载并且handler是字符串
+		// 如果直接用bean名称进行映射，那直接从获取获取handler
 		if (!this.lazyInitHandlers && handler instanceof String) {
 			String handlerName = (String) handler;
 			ApplicationContext applicationContext = obtainApplicationContext();
 			if (applicationContext.isSingleton(handlerName)) {
-				// 从容器中获取 handler 对象
 				resolvedHandler = applicationContext.getBean(handlerName);
 			}
 		}
 
-		// 尝试从handlerMap中获取对象
+		// 检查是否重复定义
 		Object mappedHandler = this.handlerMap.get(urlPath);
 		if (mappedHandler != null) {
 			if (mappedHandler != resolvedHandler) {
@@ -386,18 +375,21 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 		}
 		// 容器中不存在的处理情况
 		else {
+			// 如果是/映射，将/对应的handler作为rootHandler
 			if (urlPath.equals("/")) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Root mapping to " + getHandlerDescription(handler));
 				}
 				setRootHandler(resolvedHandler);
 			}
+			// 如果是/*映射，将/*对应的handler作为DefaultHandle
 			else if (urlPath.equals("/*")) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Default mapping to " + getHandlerDescription(handler));
 				}
 				setDefaultHandler(resolvedHandler);
 			}
+			// 普通的映射，将url映射到controller
 			else {
 				this.handlerMap.put(urlPath, resolvedHandler);
 				if (logger.isTraceEnabled()) {

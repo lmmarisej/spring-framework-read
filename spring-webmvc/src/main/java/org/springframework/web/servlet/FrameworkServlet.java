@@ -215,7 +215,16 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/** Whether to log potentially sensitive info (request params at DEBUG + headers at TRACE). */
 	private boolean enableLoggingRequestDetails = false;
 
-	/** WebApplicationContext for this servlet. */
+	/**
+	 * WebApplicationContext for this servlet.
+	 *
+	 * 注意："for this servlet！！！"，当前类实例创建上下文属于一个web应用上下文，根上下文属于容器上下文，这个上下文处于根上下文下，
+	 * 		是其子上下文，也就是应用上下文。【注意区别！】
+	 *
+	 * 	因此，我们得出结论：一个根上下文是一个servlet容器，他的一个子上下文是一个应用。SpringMVC中，一个servlet就是一个应用，一个应用就是一个servlet。
+	 *
+	 * 	补充：IoC之getBean，会先从父容器中找，找不到再从子容器找。【避免bean被覆盖】
+	 * */
 	@Nullable
 	private WebApplicationContext webApplicationContext;
 
@@ -513,6 +522,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 
 	/**
+	 * 初始化部分，伴随着Servlet的init方法调用而调用
+	 *
 	 * Overridden method of {@link HttpServletBean}, invoked after any bean properties
 	 * have been set. Creates this servlet's WebApplicationContext.
 	 */
@@ -525,10 +536,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		long startTime = System.currentTimeMillis();
 
 		try {
-			// 初始化web应用上下文
-			this.webApplicationContext = initWebApplicationContext();
-			// 初始化 FrameworkServlet 对象,暂时为空方法
-			initFrameworkServlet();
+			this.webApplicationContext = initWebApplicationContext();		// 初始化web应用上下文
+			initFrameworkServlet();		// 初始化 FrameworkServlet 对象,暂时为空方法
 		}
 		catch (ServletException | RuntimeException ex) {
 			logger.error("Context initialization failed", ex);
@@ -549,6 +558,10 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 初始化结束后，初始化应用上下文。
+	 *
+	 * 需要为这个上下文对象设置好基本的配置（双亲、配置文件位置等），通过refresh方法完成最终配置。
+	 *
 	 * Initialize and publish the WebApplicationContext for this servlet.
 	 * <p>Delegates to {@link #createWebApplicationContext} for actual creation
 	 * of the context. Can be overridden in subclasses.
@@ -558,7 +571,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #setContextConfigLocation
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
-		// 获取web应用上下文,本质是从ServletContext中获取org.springframework.web.context.WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE属性并将其转换为WebApplicationContext对象
+		// 从servletContext属性中获取根上下文，使其作为当前MVC上下文的双亲
 		WebApplicationContext rootContext =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
@@ -575,11 +588,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					if (cwac.getParent() == null) {
 						// The context instance was injected without an explicit parent -> set
 						// the root application context (if any; may be null) as the parent
-						// 设置父上下文
-						cwac.setParent(rootContext);
+						cwac.setParent(rootContext);	// 与父容器合并
 					}
-					// 配置并刷新应用上下文
-					configureAndRefreshWebApplicationContext(cwac);
+					configureAndRefreshWebApplicationContext(cwac);		// 配置并刷新应用上下文
 				}
 			}
 		}
@@ -588,13 +599,11 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// has been registered in the servlet context. If one exists, it is assumed
 			// that the parent context (if any) has already been set and that the
 			// user has performed any initialization such as setting the context id
-			// 寻找一个Web应用上下文
-			wac = findWebApplicationContext();
+			wac = findWebApplicationContext();					// 在ServletContext中找Spring Web应用上下文
 		}
 		if (wac == null) {
 			// No context instance is defined for this servlet -> create a local one
-			// 创建web应用上下文
-			wac = createWebApplicationContext(rootContext);
+			wac = createWebApplicationContext(rootContext);		// 创建web应用上下文
 		}
 
 		if (!this.refreshEventReceived) {
@@ -602,22 +611,22 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
 			synchronized (this.onRefreshMonitor) {
-				// 刷新应用上下文
-				onRefresh(wac);
+				onRefresh(wac);		// 籍此调用DispatchServlet的initStrategies，完成mvc组件其他模块的初始化
 			}
 		}
 
-		// 是否需要推送上下文
 		if (this.publishContext) {
 			// Publish the context as a servlet context attribute.
-			String attrName = getServletContextAttributeName();
-			getServletContext().setAttribute(attrName, wac);
+			String attrName = getServletContextAttributeName();		// 读取当前Servlet名
+			getServletContext().setAttribute(attrName, wac);		// 把当前创建的应用上下文存到ServletContext属性中，key为Servlet名
 		}
 
 		return wac;
 	}
 
 	/**
+	 * 在当前ServletContext中找是否已经有Spring应用上下文了
+	 *
 	 * Retrieve a {@code WebApplicationContext} from the {@code ServletContext}
 	 * attribute with the {@link #setContextAttribute configured name}. The
 	 * {@code WebApplicationContext} must have already been loaded and stored in the
@@ -625,18 +634,15 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * <p>Subclasses may override this method to provide a different
 	 * {@code WebApplicationContext} retrieval strategy.
 	 *
-	 * 寻找一个Web应用上下文
 	 * @return the WebApplicationContext for this servlet, or {@code null} if not found
 	 * @see #getContextAttribute()
 	 */
 	@Nullable
 	protected WebApplicationContext findWebApplicationContext() {
-		// 获取属性名称
 		String attrName = getContextAttribute();
 		if (attrName == null) {
 			return null;
 		}
-		// servletContext 中寻找 attrName 的 webApplicationContext
 		WebApplicationContext wac =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext(), attrName);
 		if (wac == null) {
@@ -677,7 +683,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		// 设置环境变量
 		wac.setEnvironment(getEnvironment());
 		// 设置父上下文
-		wac.setParent(parent);
+		wac.setParent(parent);		// 对bean的查找先从父容器找，找不到再从子容器找
 		// 获取配置文件
 		String configLocation = getContextConfigLocation();
 		if (configLocation != null) {
@@ -1022,6 +1028,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 作为Servlet，处理HTTP请求的部分，属于Servlet生命周期service方法
+	 *
 	 * Process this request, publishing an event regardless of the outcome.
 	 * <p>The actual event handling is performed by the abstract
 	 * {@link #doService} template method.
@@ -1048,7 +1056,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		initContextHolders(request, localeContext, requestAttributes);
 
 		try {
-			doService(request, response);
+			doService(request, response);		// 对HTTP请求的处理
 		}
 		catch (ServletException | IOException ex) {
 			failureCause = ex;

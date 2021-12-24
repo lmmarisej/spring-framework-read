@@ -46,6 +46,8 @@ import org.springframework.lang.Nullable;
  * interface to be able to specify a sorting order and thus a priority for getting
  * applied by DispatcherServlet. Non-Ordered instances get treated as lowest priority.
  *
+ * 封装HTTP与Controller的映射关系。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see org.springframework.core.Ordered
@@ -130,6 +132,10 @@ public interface HandlerMapping {
 	String PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE = HandlerMapping.class.getName() + ".producibleMediaTypes";
 
 	/**
+	 * 完成请求映射处理。
+	 *
+	 * 返回一个HandlerExecutionChain，持有handler本身，以及处理这个HTTP请求相关的拦截器链。
+	 *
 	 * Return a handler and any interceptors for this request. The choice may be made
 	 * on request URL, session state, or any factor the implementing class chooses.
 	 * <p>The returned HandlerExecutionChain contains a handler Object, rather than

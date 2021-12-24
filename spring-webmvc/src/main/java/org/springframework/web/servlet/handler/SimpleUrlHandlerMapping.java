@@ -48,6 +48,8 @@ import org.springframework.util.CollectionUtils;
  * is to map within the current servlet mapping if applicable; see the
  * {@link #setAlwaysUseFullPath "alwaysUseFullPath"} property. For details on the
  * pattern options, see the {@link org.springframework.util.AntPathMatcher} javadoc.
+ *
+ * 定义了一个map来持有一系列映射关系，以根据HTTP请求确定一个对应的HandlerExecutionChain。
 
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -130,8 +132,9 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
 
 	/**
-	 * Calls the {@link #registerHandlers} method in addition to the
-	 * superclass's initialization.
+	 * Calls the {@link #registerHandlers} method in addition to the superclass's initialization.
+	 *
+	 * ApplicationContextAware接口回调
 	 */
 	@Override
 	public void initApplicationContext() throws BeansException {
@@ -140,6 +143,8 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 	}
 
 	/**
+	 * handlers的注册过程
+	 *
 	 * Register all handlers specified in the URL map for the corresponding paths.
 	 * @param urlMap a Map with URL paths as keys and handler beans or bean names as values
 	 * @throws BeansException if a handler couldn't be registered
@@ -153,12 +158,12 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 			// 循环处理 urlMap
 			urlMap.forEach((url, handler) -> {
 				// Prepend with slash if not already present.
-				if (!url.startsWith("/")) {
+				if (!url.startsWith("/")) {						// url都是以/开头
 					url = "/" + url;
 				}
 				// Remove whitespace from handler bean name.
 				if (handler instanceof String) {
-					handler = ((String) handler).trim();
+					handler = ((String) handler).trim();		// url不存在空格
 				}
 				registerHandler(url, handler);
 			});

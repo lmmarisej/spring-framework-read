@@ -50,7 +50,7 @@ public class HandlerExecutionChain {
 	 * 拦截器列表
 	 */
 	@Nullable
-	private HandlerInterceptor[] interceptors;
+	private HandlerInterceptor[] interceptors;		// 为handler对象提供增强功能
 
 	/**
 	 * 拦截器列表
@@ -70,9 +70,11 @@ public class HandlerExecutionChain {
 	}
 
 	/**
+	 * 配置HandlerExecutionChain
+	 *
 	 * Create a new HandlerExecutionChain.
-	 * @param handler the handler object to execute
-	 * @param interceptors the array of interceptors to apply
+	 * @param handler 在定义HandlerExecutionChain时，就需要配置好
+	 * @param interceptors 在定义HandlerExecutionChain时，就需要配置好
 	 * (in the given order) before the handler itself executes
 	 */
 	public HandlerExecutionChain(Object handler, @Nullable HandlerInterceptor... interceptors) {
@@ -97,6 +99,9 @@ public class HandlerExecutionChain {
 		return this.handler;
 	}
 
+	/*
+	 * 与连接器链维护相关的方法
+	 */
 	public void addInterceptor(HandlerInterceptor interceptor) {
 		initInterceptorList().add(interceptor);
 	}

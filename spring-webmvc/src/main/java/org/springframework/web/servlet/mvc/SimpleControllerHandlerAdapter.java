@@ -40,7 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class SimpleControllerHandlerAdapter implements HandlerAdapter {
 
 	@Override
-	public boolean supports(Object handler) {
+	public boolean supports(Object handler) {		// 判断将要调用的handler是不是controller
 		return (handler instanceof Controller);
 	}
 
@@ -49,7 +49,7 @@ public class SimpleControllerHandlerAdapter implements HandlerAdapter {
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
-		return ((Controller) handler).handleRequest(request, response);
+		return ((Controller) handler).handleRequest(request, response);		// command模式，执行业务逻辑处理请求
 	}
 
 	@Override
