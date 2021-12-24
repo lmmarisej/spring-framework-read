@@ -38,7 +38,8 @@ import org.springframework.lang.Nullable;
  * {@code org.springframework.test} package, shipped in
  * {@code spring-test.jar}.
  *
- * jdbc 操作接口
+ * 定义了通过JDBC操作数据库的基本操作方法。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see JdbcTemplate

@@ -73,7 +73,7 @@ public class SqlFunction<T> extends MappingSqlQuery<T> {
 	 * @param ds the DataSource to obtain connections from
 	 * @param sql the SQL to execute
 	 */
-	public SqlFunction(DataSource ds, String sql) {
+	public SqlFunction(DataSource ds, String sql) {		// 需要指定数据源和要执行的sql
 		setRowsExpected(1);
 		setDataSource(ds);
 		setSql(sql);

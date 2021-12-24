@@ -39,6 +39,8 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.transaction.support.DefaultTransactionDefinition
  * @see org.springframework.transaction.interceptor.TransactionAttribute
  * @since 08.05.2003
+ *
+ * 定义事物处理属性，不推荐使用，会造成事物处理代码和业务代码紧密耦合。
  */
 public interface TransactionDefinition {
 

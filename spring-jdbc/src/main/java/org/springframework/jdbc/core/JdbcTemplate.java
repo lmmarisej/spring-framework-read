@@ -84,6 +84,12 @@ import org.springframework.util.StringUtils;
  *
  * <p><b>NOTE: An instance of this class is thread-safe once configured.</b>
  *
+ * 是一个操作数据库主要的模板类，提供一些便利的方法。
+ *
+ * 模板方法：既能重用模板处理框架，又能发挥具体子类的灵活性。
+ *
+ * 使用：在new时实现抽象方法，以设置回调函数。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Thomas Risberg
@@ -98,7 +104,10 @@ import org.springframework.util.StringUtils;
  * @see RowMapper
  * @see org.springframework.jdbc.support.SQLExceptionTranslator
  */
-public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
+public class JdbcTemplate
+		extends JdbcAccessor
+		implements JdbcOperations		// 实现JDBC操作方法
+{
 
 	/**
 	 * 返回值前缀
@@ -339,16 +348,12 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 		catch (SQLException ex) {
 			// Release Connection early, to avoid potential connection pool deadlock
 			// in the case when the exception translator hasn't been initialized yet.
-			// 获取sql
 			String sql = getSql(action);
-			// 释放数据库链接对象
 			DataSourceUtils.releaseConnection(con, getDataSource());
 			con = null;
-			// 抛出异常
 			throw translateException("ConnectionCallback", sql, ex);
 		}
 		finally {
-			// 释放数据库链接对象
 			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
 	}
@@ -1113,6 +1118,9 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 	// Methods dealing with callable statements
 	//-------------------------------------------------------------------------
 
+	/**
+	 * 对Connection连接创建、数据库的Statement创建、操作回调、异常处理进行了一个封装。
+	 */
 	@Override
 	@Nullable
 	public <T> T execute(CallableStatementCreator csc, CallableStatementCallback<T> action)
@@ -1146,7 +1154,7 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 			cs = null;
 			DataSourceUtils.releaseConnection(con, getDataSource());
 			con = null;
-			throw translateException("CallableStatementCallback", sql, ex);
+			throw translateException("CallableStatementCallback", sql, ex);		// 将数据库异常转化为属于Spring的异常体系的异常
 		}
 		finally {
 			if (csc instanceof ParameterDisposer) {

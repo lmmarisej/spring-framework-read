@@ -57,7 +57,7 @@ public interface Joinpoint {
 	 * Return the object that holds the current joinpoint's static part.
 	 * <p>For instance, the target object for an invocation.
 	 *
-	 * 方法所在的实例。
+	 * 方法所在的target实例。
 	 *
 	 * @return the object (can be null if the accessible object is static)
 	 */

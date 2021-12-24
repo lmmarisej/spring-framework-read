@@ -339,24 +339,19 @@ public abstract class RdbmsOperation implements InitializingBean {
 	 * been correctly initialized, for example if no DataSource has been provided
 	 */
 	public final void compile() throws InvalidDataAccessApiUsageException {
-		// 判断是否编译完成
 		if (!isCompiled()) {
-			// sql为空抛出异常
 			if (getSql() == null) {
 				throw new InvalidDataAccessApiUsageException("Property 'sql' is required");
 			}
 
 			try {
-				// 进行 jdbcTemplate 的初始化操作
-				this.jdbcTemplate.afterPropertiesSet();
+				this.jdbcTemplate.afterPropertiesSet();		// 执行初始化函数
 			}
 			catch (IllegalArgumentException ex) {
 				throw new InvalidDataAccessApiUsageException(ex.getMessage());
 			}
 
-			// 抽象方法子类处理
-			compileInternal();
-			// 将编译状态设置为true
+			compileInternal();		// 执行子类实现的编译H
 			this.compiled = true;
 
 			if (logger.isDebugEnabled()) {

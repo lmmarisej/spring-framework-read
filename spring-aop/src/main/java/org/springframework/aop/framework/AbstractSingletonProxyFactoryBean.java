@@ -139,21 +139,21 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 
 	@Override
 	public void afterPropertiesSet() {
-		if (this.target == null) {
+		if (this.target == null) {		// 必须配置target
 			throw new IllegalArgumentException("Property 'target' is required");
 		}
-		if (this.target instanceof String) {
+		if (this.target instanceof String) {		// 必须是bean ref，而不是bean name
 			throw new IllegalArgumentException("'target' needs to be a bean reference, not a bean name as value");
 		}
 		if (this.proxyClassLoader == null) {
 			this.proxyClassLoader = ClassUtils.getDefaultClassLoader();
 		}
 
-		ProxyFactory proxyFactory = new ProxyFactory();
+		ProxyFactory proxyFactory = new ProxyFactory();		// 用于完成AOP的基本功能
 
 		if (this.preInterceptors != null) {
 			for (Object interceptor : this.preInterceptors) {
-				proxyFactory.addAdvisor(this.advisorAdapterRegistry.wrap(interceptor));
+				proxyFactory.addAdvisor(this.advisorAdapterRegistry.wrap(interceptor));		// 加入通知器
 			}
 		}
 
@@ -168,7 +168,7 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 
 		proxyFactory.copyFrom(this);
 
-		TargetSource targetSource = createTargetSource(this.target);
+		TargetSource targetSource = createTargetSource(this.target);		// AOP目标源
 		proxyFactory.setTargetSource(targetSource);
 
 		if (this.proxyInterfaces != null) {
@@ -176,7 +176,7 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 		}
 		else if (!isProxyTargetClass()) {
 			// Rely on AOP infrastructure to tell us what interfaces to proxy.
-			Class<?> targetClass = targetSource.getTargetClass();
+			Class<?> targetClass = targetSource.getTargetClass();		// 确定为哪个接口代理
 			if (targetClass != null) {
 				proxyFactory.setInterfaces(ClassUtils.getAllInterfacesForClass(targetClass, this.proxyClassLoader));
 			}
@@ -184,7 +184,7 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 
 		postProcessProxyFactory(proxyFactory);
 
-		this.proxy = proxyFactory.getProxy(this.proxyClassLoader);
+		this.proxy = proxyFactory.getProxy(this.proxyClassLoader);		// 设置代理对象
 	}
 
 	/**
@@ -217,7 +217,7 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 		if (this.proxy == null) {
 			throw new FactoryBeanNotInitializedException();
 		}
-		return this.proxy;
+		return this.proxy;		// 代理对象，封装了事物处理的拦截器配置
 	}
 
 	@Override

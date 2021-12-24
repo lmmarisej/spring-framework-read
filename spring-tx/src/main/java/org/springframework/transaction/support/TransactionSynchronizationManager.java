@@ -199,7 +199,10 @@ public abstract class TransactionSynchronizationManager {
 	/**
 	 * Bind the given resource for the given key to the current thread.
 	 * <p>
-	 * 资源绑定
+	 *
+	 * value与当前线程绑定，因为需要设计并发环境中并发事物的处理，因此需要与线程进行绑定。
+	 *
+	 * 并发处理，提高对CPU资源的利用。
 	 *
 	 * @param key   the key to bind the value to (usually the resource factory)
 	 * @param value the value to bind (usually the active resource object)

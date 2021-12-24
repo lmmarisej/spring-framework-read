@@ -24,6 +24,8 @@ import org.springframework.transaction.TransactionDefinition;
  * As custom {@code rollbackOn} is only possible with AOP, it resides in the AOP-related
  * transaction subpackage.
  *
+ * 对事物处理属性的数据抽象。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 16.03.2003

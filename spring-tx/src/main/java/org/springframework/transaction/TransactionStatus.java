@@ -29,8 +29,10 @@ import java.io.Flushable;
  * to savepoint management facilities. Note that savepoint management is only available if supported
  * by the underlying transaction manager.
  * <p>
- * <p>
- * 事务状态
+ *
+ * 存放事物处理信息的主要数据对象，通过与线程绑定来实现事物的隔离性。
+ *
+ * 掌管事物执行的详细信息，包括具体的事物对象、事物执行状态、事物设置状态等。
  *
  * @author Juergen Hoeller
  * @see #setRollbackOnly()

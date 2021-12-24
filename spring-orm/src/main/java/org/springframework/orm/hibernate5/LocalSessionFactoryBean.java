@@ -67,6 +67,8 @@ import org.springframework.util.ClassUtils;
  * In combination with {@link HibernateTransactionManager}, this naturally allows for
  * mixing JPA access code with native Hibernate access code within the same transaction.
  *
+ * 用来对Hibernate的session进行管理，读取Hibernate配置、生成sessionFactory。
+ *
  * @author Juergen Hoeller
  * @since 4.2
  * @see #setDataSource
@@ -233,10 +235,10 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator
 	private Configuration configuration;
 
 	/**
-	 * session 工厂
+	 * 用来生成session，session是作为Hibernate完成对象持久化的上下文出现。
 	 */
 	@Nullable
-	private SessionFactory sessionFactory;
+	private SessionFactory sessionFactory;		// 创建在afterPropertiesSet中，由IoC容器回调时创建。
 
 
 	/**
@@ -694,6 +696,8 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator
 	 * @param sfb a LocalSessionFactoryBuilder prepared by this LocalSessionFactoryBean
 	 * @return the SessionFactory instance
 	 * @see LocalSessionFactoryBuilder#buildSessionFactory
+	 *
+	 * 通过配置得到SessionFactory。
 	 */
 	protected SessionFactory buildSessionFactory(LocalSessionFactoryBuilder sfb) {
 		return (this.bootstrapExecutor != null ? sfb.buildSessionFactory(this.bootstrapExecutor) :
@@ -715,7 +719,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator
 
 	@Override
 	@Nullable
-	public SessionFactory getObject() {
+	public SessionFactory getObject() {		// 产生具体对象
 		return this.sessionFactory;
 	}
 

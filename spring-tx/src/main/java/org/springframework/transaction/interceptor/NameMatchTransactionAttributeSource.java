@@ -35,7 +35,8 @@ import org.springframework.util.PatternMatchUtils;
  * Simple {@link TransactionAttributeSource} implementation that
  * allows attributes to be matched by registered name.
  *
- * 名称匹配的事务属性源对象
+ * 名称匹配的事务属性源对象，实现事物处理属性的读入和匹配。
+ *
  * @author Juergen Hoeller
  * @since 21.08.2003
  * @see #isMatch
@@ -56,7 +57,7 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	 * key: 方法名称
 	 * value: 事务属性
 	 * */
-	private Map<String, TransactionAttribute> nameMap = new HashMap<>();
+	private Map<String, TransactionAttribute> nameMap = new HashMap<>();	// 调用方法的方法名直接找，找不到则使用PatternMatchUtils#simpleMatch命名模式进行匹配(比如用通配符匹配)
 
 
 	/**
@@ -76,6 +77,8 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	 * parsable into TransactionAttribute instances via TransactionAttributeEditor.
 	 * @see #setNameMap
 	 * @see TransactionAttributeEditor
+	 *
+	 * 设置配置的事物方法
 	 */
 	public void setProperties(Properties transactionAttributes) {
 		// 事务属性编辑对象
@@ -103,6 +106,7 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	 * "*xxx" or "*xxx*" for matching multiple methods.
 	 *
 	 * 进行方法名和事务属性对象进行关系绑定
+	 *
 	 * @param methodName the name of the method
 	 * @param attr attribute associated with the method
 	 */
@@ -114,6 +118,11 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	}
 
 
+	/**
+	 * 判断调用的方法，是否为事物，是事物则取出相应的事物配置属性
+	 *
+	 * 返回null，则不是事物方法
+	 */
 	@Override
 	@Nullable
 	public TransactionAttribute getTransactionAttribute(Method method, @Nullable Class<?> targetClass) {
@@ -133,9 +142,9 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 			// 检索最佳匹配值
 			String bestNameMatch = null;
 			// 循环缓存容器中的key
-			for (String mappedName : this.nameMap.keySet()) {
+			for (String mappedName : this.nameMap.keySet()) {	// 对所有的注册的方法使用表达式进行匹配
 				// 如果匹配则从缓存中获取事务属性对象
-				if (isMatch(methodName, mappedName) &&
+				if (isMatch(methodName, mappedName) &&		// PatternMatchUtils.simpleMatch
 						(bestNameMatch == null || bestNameMatch.length() <= mappedName.length())) {
 
 					attr = this.nameMap.get(mappedName);

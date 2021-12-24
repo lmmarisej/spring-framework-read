@@ -33,6 +33,8 @@ import org.springframework.util.Assert;
  * <p>Not intended to be used directly.
  * See {@link org.springframework.jdbc.core.JdbcTemplate}.
  *
+ * 对DataSource数据源进行管理和配置。
+ *
  * @author Juergen Hoeller
  * @since 28.11.2003
  * @see org.springframework.jdbc.core.JdbcTemplate
@@ -161,11 +163,9 @@ public abstract class JdbcAccessor implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() {
-		// 判断 数据源是否为空
 		if (getDataSource() == null) {
 			throw new IllegalArgumentException("Property 'dataSource' is required");
 		}
-		// 判断是佛懒加载
 		if (!isLazyInit()) {
 			getExceptionTranslator();
 		}

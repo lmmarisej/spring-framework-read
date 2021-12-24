@@ -29,7 +29,8 @@ import org.springframework.transaction.TransactionDefinition;
  * <p>Base class for both {@link TransactionTemplate} and
  * {@link org.springframework.transaction.interceptor.DefaultTransactionAttribute}.
  * <p>
- * 默认的事务定义
+ *
+ * 持有事物处理属性。
  *
  * @author Juergen Hoeller
  * @since 08.05.2003

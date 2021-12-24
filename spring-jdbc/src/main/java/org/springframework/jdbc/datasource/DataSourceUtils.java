@@ -38,6 +38,8 @@ import org.springframework.util.Assert;
  * Spring's JDBC operation objects and the JDBC {@link DataSourceTransactionManager}. Can also be
  * used directly in application code.
  *
+ * 辅助类，用于对数据Connection进行管理。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see #getConnection

@@ -33,7 +33,10 @@ import org.springframework.lang.Nullable;
  * {@link org.springframework.transaction.jta.JtaTransactionManager} and {@link
  * org.springframework.jdbc.datasource.DataSourceTransactionManager}, which can serve as an
  * implementation guide for other transaction strategies.
- *平台事务管理
+ *
+ * 事物处理器，在IoC容器中配置。
+ *
+ * 为具体的数据源配置了不同的事物处理器，以处理不同的数据源的事物处理，形成一个从抽象到具体事物处理的中间平台设计。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -55,8 +58,6 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * ignored if no explicit read-only mode is supported. Essentially, the read-only flag is just a
 	 * hint for potential optimization.
 	 *
-	 * 获取事务
-	 *
 	 * @param definition the TransactionDefinition instance (can be {@code null} for defaults),
 	 *                   describing propagation behavior, isolation level, timeout etc.
 	 * @return transaction status object representing the new or current transaction
@@ -69,6 +70,8 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * @see TransactionDefinition#getIsolationLevel
 	 * @see TransactionDefinition#getTimeout
 	 * @see TransactionDefinition#isReadOnly
+	 *
+	 *
 	 */
 	TransactionStatus getTransaction(@Nullable TransactionDefinition definition)
 			throws TransactionException;

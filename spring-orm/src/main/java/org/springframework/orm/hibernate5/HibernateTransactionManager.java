@@ -112,6 +112,13 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 		implements ResourceTransactionManager, BeanFactoryAware, InitializingBean {
 	/**
 	 * Session 工厂
+	 *
+	 * Session
+	 * 		- Hibernate的核心类，通过它管理数据对象的生命周期。
+	 * 		- 通过它可以得到Hibernate的transaction。
+	 * 		- TransactionManager通过对session的管理来完成事物处理的实现。
+	 *
+	 *
 	 */
 	@Nullable
 	private SessionFactory sessionFactory;
@@ -419,19 +426,22 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 		return obtainSessionFactory();
 	}
 
+	/**
+	 * 通过获得、session，配置session的属性，以及通过session得到Hibernate的transaction对象完成事物的创建、提交和回滚的过程。
+	 */
 	@Override
 	protected Object doGetTransaction() {
 		HibernateTransactionObject txObject = new HibernateTransactionObject();
-		txObject.setSavepointAllowed(isNestedTransactionAllowed());
+		txObject.setSavepointAllowed(isNestedTransactionAllowed());		// 设置是否允许嵌套事物
 
 		SessionFactory sessionFactory = obtainSessionFactory();
-		SessionHolder sessionHolder =
+		SessionHolder sessionHolder =		// 从事物开始时设置的SessionHolder，从线程中取得
 				(SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
 		if (sessionHolder != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Found thread-bound Session [" + sessionHolder.getSession() + "] for Hibernate transaction");
 			}
-			txObject.setSessionHolder(sessionHolder);
+			txObject.setSessionHolder(sessionHolder);		// 设置到HibernateTransactionObject中
 		}
 		else if (this.hibernateManagedSession) {
 			try {
@@ -448,9 +458,8 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 		}
 
 		if (getDataSource() != null) {
-			ConnectionHolder conHolder = (ConnectionHolder)
-					TransactionSynchronizationManager.getResource(getDataSource());
-			txObject.setConnectionHolder(conHolder);
+			ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(getDataSource());
+			txObject.setConnectionHolder(conHolder);		// DataSource也是与线程绑定的，设置到HibernateTransactionObject中
 		}
 
 		return txObject;
@@ -463,6 +472,9 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 				(this.hibernateManagedSession && txObject.hasHibernateManagedTransaction()));
 	}
 
+	/**
+	 * hibernate事物开始的实现
+	 */
 	@Override
 	@SuppressWarnings("deprecation")
 	protected void doBegin(Object transaction, TransactionDefinition definition) {
@@ -481,10 +493,12 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 
 		try {
 			// 为事务对象系进行可能需要的session设置
-			if (!txObject.hasSessionHolder() || txObject.getSessionHolder().isSynchronizedWithTransaction()) {
+			if (!txObject.hasSessionHolder() || 		// 没有session
+					txObject.getSessionHolder().isSynchronizedWithTransaction()	// 为非同步事物创建session
+			) {
 				// 获取实体拦截器
 				Interceptor entityInterceptor = getEntityInterceptor();
-				// 创建session
+				// 没有session创建session
 				Session newSession = (entityInterceptor != null ?
 						obtainSessionFactory().withOptions().interceptor(entityInterceptor).openSession() :
 						obtainSessionFactory().openSession());
@@ -492,10 +506,10 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 				if (logger.isDebugEnabled()) {
 					logger.debug("Opened new Session [" + newSession + "] for Hibernate transaction");
 				}
-				txObject.setSession(newSession);
+				txObject.setSession(newSession);		// 存入sessionHolder，初始化状态
 			}
 
-			session = txObject.getSessionHolder().getSession();
+			session = txObject.getSessionHolder().getSession();		// 取得session，为创建HibernateTransaction做准备
 
 			boolean holdabilityNeeded = this.allowResultAccessAfterCompletion && !txObject.isNewSession();
 			// 是否为默认的事务隔离级别
@@ -555,47 +569,47 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 			Transaction hibTx;
 
 			// Register transaction timeout.
-			// 超时时间相关处理
+			// 为Hibernate的transaction设置超时属性
 			int timeout = determineTimeout(definition);
 			if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {
 				// Use Hibernate's own transaction timeout mechanism on Hibernate 3.1+
 				// Applies to all statements, also to inserts, updates and deletes!
-				hibTx = session.getTransaction();
+				hibTx = session.getTransaction();		// 使用Hibernate的超时配置来配置Transaction
 				hibTx.setTimeout(timeout);
 				hibTx.begin();
 			}
 			else {
 				// Open a plain Hibernate transaction without specified timeout.
-				hibTx = session.beginTransaction();
+				hibTx = session.beginTransaction();		// 在不需要超时属性时，直接创建并开始事物
 			}
 
-			// Add the Hibernate transaction to the session holder.
+			// Add to Hibernate transaction to the session holder.
+			// 将Hibernate的transaction设置到TransactionObject的sessionHolder中，sessionHolder与线程绑定
 			txObject.getSessionHolder().setTransaction(hibTx);
 
-			// Register the Hibernate Session's JDBC Connection for the DataSource, if set.
-			// 链接持有器相关处理
+			// Register to Hibernate Session's JDBC Connection for the DataSource, if set.
+			// 设置DataSource到Hibernate Session的JDBC连接中去
 			if (getDataSource() != null) {
 				SessionImplementor sessionImpl = (SessionImplementor) session;
 				// The following needs to use a lambda expression instead of a method reference
 				// for compatibility with Hibernate ORM <5.2 where connection() is defined on
 				// SessionImplementor itself instead of on SharedSessionContractImplementor...
-				ConnectionHolder conHolder = new ConnectionHolder(() -> sessionImpl.connection());
+				ConnectionHolder conHolder = new ConnectionHolder(sessionImpl::connection);
 				if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {
 					conHolder.setTimeoutInSeconds(timeout);
 				}
 				if (logger.isDebugEnabled()) {
 					logger.debug("Exposing Hibernate transaction as JDBC [" + conHolder.getConnectionHandle() + "]");
 				}
-				TransactionSynchronizationManager.bindResource(getDataSource(), conHolder);
+				TransactionSynchronizationManager.bindResource(getDataSource(), conHolder);		// 将ConnectionHolder绑定到当前线程
 				txObject.setConnectionHolder(conHolder);
 			}
 
 			// Bind the session holder to the thread.
-			// 资源绑定
-			if (txObject.isNewSessionHolder()) {
+			if (txObject.isNewSessionHolder()) {		// 新的SessionHolder，将其与当前线程绑定
 				TransactionSynchronizationManager.bindResource(obtainSessionFactory(), txObject.getSessionHolder());
 			}
-			// 同步事务标记设置
+			// 修改SessionHolder中状态，标识事物已经开始
 			txObject.getSessionHolder().setSynchronizedWithTransaction(true);
 		}
 
@@ -618,18 +632,20 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 		}
 	}
 
+	/**
+	 * 事物挂起处理
+	 */
 	@Override
 	protected Object doSuspend(Object transaction) {
 		HibernateTransactionObject txObject = (HibernateTransactionObject) transaction;
-		txObject.setSessionHolder(null);
-		SessionHolder sessionHolder =
-				(SessionHolder) TransactionSynchronizationManager.unbindResource(obtainSessionFactory());
+		txObject.setSessionHolder(null);		// 释放当前线程中的SessionHolder、ConnectionHolder
+		SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(obtainSessionFactory());
 		txObject.setConnectionHolder(null);
 		ConnectionHolder connectionHolder = null;
 		if (getDataSource() != null) {
 			connectionHolder = (ConnectionHolder) TransactionSynchronizationManager.unbindResource(getDataSource());
 		}
-		return new SuspendedResourcesHolder(sessionHolder, connectionHolder);
+		return new SuspendedResourcesHolder(sessionHolder, connectionHolder);		// 返回被挂起的事物会话信息
 	}
 
 	@Override
@@ -650,16 +666,16 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 
 	@Override
 	protected void doCommit(DefaultTransactionStatus status) {
+		// 获得当前Hibernate Transaction
 		HibernateTransactionObject txObject = (HibernateTransactionObject) status.getTransaction();
 		Transaction hibTx = txObject.getSessionHolder().getTransaction();
 		Assert.state(hibTx != null, "No Hibernate transaction");
 		if (status.isDebug()) {
-			logger.debug("Committing Hibernate transaction on Session [" +
-					txObject.getSessionHolder().getSession() + "]");
+			logger.debug("Committing Hibernate transaction on Session [" + txObject.getSessionHolder().getSession() + "]");
 		}
 
 		try {
-			hibTx.commit();
+			hibTx.commit();		// 通过Hibernate的Transaction完成提交
 		}
 		catch (org.hibernate.TransactionException ex) {
 			// assumably from commit call to the underlying JDBC connection
@@ -683,12 +699,11 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 		Transaction hibTx = txObject.getSessionHolder().getTransaction();
 		Assert.state(hibTx != null, "No Hibernate transaction");
 		if (status.isDebug()) {
-			logger.debug("Rolling back Hibernate transaction on Session [" +
-					txObject.getSessionHolder().getSession() + "]");
+			logger.debug("Rolling back Hibernate transaction on Session [" + txObject.getSessionHolder().getSession() + "]");
 		}
 
 		try {
-			hibTx.rollback();
+			hibTx.rollback();		// 通过Hibernate的Transaction完成回滚
 		}
 		catch (org.hibernate.TransactionException ex) {
 			throw new TransactionSystemException("Could not roll back Hibernate transaction", ex);
@@ -707,7 +722,7 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 			if (!txObject.isNewSession() && !this.hibernateManagedSession) {
 				// Clear all pending inserts/updates/deletes in the Session.
 				// Necessary for pre-bound Sessions, to avoid inconsistent state.
-				txObject.getSessionHolder().getSession().clear();
+				txObject.getSessionHolder().getSession().clear();		// 清除所有在session中的增删改操作
 			}
 		}
 	}
@@ -843,6 +858,8 @@ public class HibernateTransactionManager extends AbstractPlatformTransactionMana
 	/**
 	 * Hibernate transaction object, representing a SessionHolder.
 	 * Used as transaction object by HibernateTransactionManager.
+	 *
+	 * 是设置session及DataSource这些对象之用。
 	 */
 	private class HibernateTransactionObject extends JdbcTransactionObjectSupport {
 

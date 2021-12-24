@@ -81,7 +81,7 @@ public interface FactoryBean<T> {
 	 * objects. The factory will consider this as normal value to be used; it will not throw a
 	 * FactoryBeanNotInitializedException in this case anymore. FactoryBean implementations are
 	 * encouraged to throw FactoryBeanNotInitializedException themselves now, as appropriate.
-	 *获取对象
+	 *
 	 * @return an instance of the bean (can be {@code null})
 	 *
 	 * @throws Exception in case of creation errors

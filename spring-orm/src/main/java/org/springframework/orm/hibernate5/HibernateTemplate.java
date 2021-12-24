@@ -78,6 +78,8 @@ import org.springframework.util.ReflectionUtils;
  * HibernateTemplate are deprecated in the meantime and primarily exist as a migration
  * helper for older Hibernate 3.x/4.x data access code in existing applications.</b>
  *
+ * Spring通过IoC和AOP（事物）对Hibernate进行的封装。
+ *
  * @author Juergen Hoeller
  * @since 4.2
  * @see #setSessionFactory
@@ -182,8 +184,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	}
 
 	/**
-	 * Set the Hibernate SessionFactory that should be used to create
-	 * Hibernate Sessions.
+	 * Set the Hibernate SessionFactory that should be used to create Hibernate Sessions.
 	 */
 	public void setSessionFactory(@Nullable SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -357,6 +358,9 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		}
 	}
 
+	/**
+	 * 通过这个回调来使用。
+	 */
 	@Override
 	@Nullable
 	public <T> T execute(HibernateCallback<T> action) throws DataAccessException {
@@ -416,8 +420,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			//  确定session对象 , 主要是进行代理对象的创建
 			Session sessionToExpose =
 					(enforceNativeSession || isExposeNativeSession() ? session : createSessionProxy(session));
-			// 回调执行
-			return action.doInHibernate(sessionToExpose);
+			return action.doInHibernate(sessionToExpose);		// 回调执行，传入session，以便回调方法使用session对Hibernate进行操作
 		}
 		catch (HibernateException ex) {
 			// 异常转换

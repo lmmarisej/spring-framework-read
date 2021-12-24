@@ -42,7 +42,7 @@ abstract class TransactionAttributeSourcePointcut extends StaticMethodMatcherPoi
 
 
 	@Override
-	public boolean matches(Method method, Class<?> targetClass) {
+	public boolean matches(Method method, Class<?> targetClass) {		// 对是否需要启动事物处理拦截器进行判断
 		TransactionAttributeSource tas = getTransactionAttributeSource();
 		return (tas == null || tas.getTransactionAttribute(method, targetClass) != null);
 	}

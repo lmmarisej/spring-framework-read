@@ -32,6 +32,8 @@ import org.springframework.util.Assert;
  * faster than just letting the TransactionInterceptor run and find out
  * itself that it has no work to do.
  *
+ * 读取和处理在IoC容器中配置的事物处理属性，并转化为Spring事物处理需要的内部数据结构（TransactionAttribute）。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see #setTransactionInterceptor

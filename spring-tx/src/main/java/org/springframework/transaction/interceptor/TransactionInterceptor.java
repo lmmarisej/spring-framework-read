@@ -43,8 +43,8 @@ import org.springframework.transaction.PlatformTransactionManager;
  *
  * <p>TransactionInterceptors are thread-safe.
  *
- * 
- * 事务拦截器
+ * 作为AOP Advice实现事物功能。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see TransactionProxyFactoryBean
