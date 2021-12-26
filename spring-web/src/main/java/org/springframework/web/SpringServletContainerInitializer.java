@@ -139,7 +139,9 @@ public class SpringServletContainerInitializer implements ServletContainerInitia
 	 * @see AnnotationAwareOrderComparator
 	 */
 	@Override
-	public void onStartup(@Nullable Set<Class<?>> webAppInitializerClasses, ServletContext servletContext)
+	public void onStartup(@Nullable Set<Class<?>> webAppInitializerClasses, 		// 本地实现，SPI提供
+						  ServletContext servletContext		// web容器提供
+	)
 			throws ServletException {
 
 		List<WebApplicationInitializer> initializers = new LinkedList<>();
@@ -169,7 +171,7 @@ public class SpringServletContainerInitializer implements ServletContainerInitia
 		servletContext.log(initializers.size() + " Spring WebApplicationInitializers detected on classpath");
 		AnnotationAwareOrderComparator.sort(initializers);
 		for (WebApplicationInitializer initializer : initializers) {
-			initializer.onStartup(servletContext);
+			initializer.onStartup(servletContext);		// 回调
 		}
 	}
 
