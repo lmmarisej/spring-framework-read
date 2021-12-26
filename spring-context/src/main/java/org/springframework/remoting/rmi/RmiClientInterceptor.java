@@ -67,6 +67,8 @@ import org.springframework.remoting.support.RemoteInvocationUtils;
  * @see org.springframework.remoting.RemoteAccessException
  * @see java.rmi.RemoteException
  * @see java.rmi.Remote
+ *
+ * 对RMI基础设施封装。
  */
 public class RmiClientInterceptor extends RemoteInvocationBasedAccessor
 		implements MethodInterceptor {
@@ -79,7 +81,7 @@ public class RmiClientInterceptor extends RemoteInvocationBasedAccessor
 
 	private RMIClientSocketFactory registryClientSocketFactory;
 
-	private Remote cachedStub;
+	private Remote cachedStub;		// 对rmi tub提供缓存，增强性能
 
 	private final Object stubMonitor = new Object();
 
@@ -258,7 +260,7 @@ public class RmiClientInterceptor extends RemoteInvocationBasedAccessor
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		Remote stub = getStub();
 		try {
-			return doInvoke(invocation, stub);
+			return doInvoke(invocation, stub);		// 触发拦截器回调
 		}
 		catch (RemoteConnectFailureException ex) {
 			return handleRemoteConnectFailure(invocation, ex);

@@ -152,7 +152,7 @@ import org.springframework.web.util.WebUtils;
  *
  * 作为J2EE核心模式中前端控制器模式，所有的web请求都需要通过本类的实例处理，进行转发、匹配，数据处理后，转由页面进行展现。
  *
- * 负责建立自己持有的IoC容器、请求分发。
+ * 负责建立自己持有的IoC容器、请求映射与分发。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

@@ -46,8 +46,12 @@ import org.springframework.util.ClassUtils;
  * @see org.springframework.remoting.rmi.RmiServiceExporter
  * @see org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean
  * @see org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter
+ *
+ * 数据对象，封装了对远端的调用信息（方法名、参数、参数类型等），服务端和客户端用于序列化和反序列化的共用的'接口'（视为通信协议）。
  */
-public class RemoteInvocation implements Serializable {
+public class RemoteInvocation
+		implements Serializable		// 远端调用通过序列化机制来完成
+{
 
 	/** use serialVersionUID from Spring 1.1 for interoperability. */
 	private static final long serialVersionUID = 6876024250231820554L;

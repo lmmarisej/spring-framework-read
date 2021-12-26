@@ -42,6 +42,8 @@ public interface RemoteInvocationExecutor {
 	 * @throws IllegalAccessException if the method could not be accessed
 	 * @throws InvocationTargetException if the method invocation resulted in an exception
 	 * @see java.lang.reflect.Method#invoke
+	 *
+	 * 根据RemoteInvocation信息，反射调用targetObject。
 	 */
 	Object invoke(RemoteInvocation invocation, Object targetObject)
 			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException;

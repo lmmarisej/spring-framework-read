@@ -36,6 +36,8 @@ import org.springframework.remoting.support.RemoteInvocationBasedExporter;
  * @since 1.2.5
  * @see RmiServiceExporter
  * @see JndiRmiServiceExporter
+ *
+ * RMI服务的参数设置、服务导出、服务注册。
  */
 public abstract class RmiBasedExporter extends RemoteInvocationBasedExporter {
 

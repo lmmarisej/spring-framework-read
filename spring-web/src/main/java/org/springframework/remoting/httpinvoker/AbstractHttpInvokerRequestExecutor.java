@@ -176,12 +176,13 @@ public abstract class AbstractHttpInvokerRequestExecutor implements HttpInvokerR
 	}
 
 	/**
-	 * Return the OutputStream to use for writing remote invocations,
-	 * potentially decorating the given original OutputStream.
+	 * Return the OutputStream to use for writing remote invocations, potentially decorating the given original OutputStream.
 	 * <p>The default implementation returns the given stream as-is.
 	 * Can be overridden, for example, for custom encryption or compression.
 	 * @param os the original OutputStream
 	 * @return the potentially decorated OutputStream
+	 *
+	 * 封装OutputStream流的来源。【想从什么地方获取数据，例如：打开的目标服务器的链接的Response对象】
 	 */
 	protected OutputStream decorateOutputStream(OutputStream os) throws IOException {
 		return os;
@@ -197,6 +198,8 @@ public abstract class AbstractHttpInvokerRequestExecutor implements HttpInvokerR
 	 * @param oos the ObjectOutputStream to write to
 	 * @throws IOException if thrown by I/O methods
 	 * @see java.io.ObjectOutputStream#writeObject
+	 *
+	 * 利用ObjectOutputStream将RemoteInvocation写入OutputStream
 	 */
 	protected void doWriteRemoteInvocation(RemoteInvocation invocation, ObjectOutputStream oos) throws IOException {
 		oos.writeObject(invocation);
@@ -218,7 +221,9 @@ public abstract class AbstractHttpInvokerRequestExecutor implements HttpInvokerR
 	 * @see #readRemoteInvocationResult(java.io.InputStream, String)
 	 */
 	protected abstract RemoteInvocationResult doExecuteRequest(
-			HttpInvokerClientConfiguration config, ByteArrayOutputStream baos)
+			HttpInvokerClientConfiguration config,
+			ByteArrayOutputStream baos	// RemoteInvocation
+	)
 			throws Exception;
 
 	/**

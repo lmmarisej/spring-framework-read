@@ -30,18 +30,20 @@ import org.springframework.util.ClassUtils;
  * remotability, like the granularity of method calls that it offers.
  * Furthermore, it has to have serializable arguments etc.
  *
+ * 对外暴露的远程服务。
+ *
  * @author Juergen Hoeller
  * @since 26.12.2003
  */
 public abstract class RemoteExporter extends RemotingSupport {
 
-	private Object service;
+	private Object service;					// 要导出的具体服务
 
-	private Class<?> serviceInterface;
+	private Class<?> serviceInterface;		// 导出服务实现的接口（方便实现代理）
 
-	private Boolean registerTraceInterceptor;
+	private Boolean registerTraceInterceptor;	// 跟踪用的拦截器
 
-	private Object[] interceptors;
+	private Object[] interceptors;				// 业务处理拦截器
 
 
 	/**
@@ -154,6 +156,7 @@ public abstract class RemoteExporter extends RemotingSupport {
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.addInterface(getServiceInterface());
 
+		// 根据配置为暴露出去的对象注册拦截器
 		if (this.registerTraceInterceptor != null ? this.registerTraceInterceptor : this.interceptors == null) {
 			proxyFactory.addAdvice(new RemoteInvocationTraceInterceptor(getExporterName()));
 		}
@@ -164,10 +167,10 @@ public abstract class RemoteExporter extends RemotingSupport {
 			}
 		}
 
-		proxyFactory.setTarget(getService());
-		proxyFactory.setOpaque(true);
+		proxyFactory.setTarget(getService());		// target就是暴露对象
+		proxyFactory.setOpaque(true);				// 不可转为Advised
 
-		return proxyFactory.getProxy(getBeanClassLoader());
+		return proxyFactory.getProxy(getBeanClassLoader());		// 执行代理处理，返回代理对象
 	}
 
 	/**

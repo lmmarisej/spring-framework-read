@@ -34,6 +34,8 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 1.1
  * @see RemoteInvocation
+ *
+ * 对远端调用结果的封装。
  */
 public class RemoteInvocationResult implements Serializable {
 

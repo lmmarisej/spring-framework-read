@@ -79,18 +79,23 @@ public class SimpleHttpInvokerRequestExecutor extends AbstractHttpInvokerRequest
 	 * @see #writeRequestBody
 	 * @see #validateResponse
 	 * @see #readResponseBody
+	 *
+	 * 通过HTTP来完成远程通信。
 	 */
 	@Override
 	protected RemoteInvocationResult doExecuteRequest(
-			HttpInvokerClientConfiguration config, ByteArrayOutputStream baos)
+			HttpInvokerClientConfiguration config,
+			ByteArrayOutputStream baos		// 已利用ObjectOutputStream将RemoteInvocation写入OutputStream
+	)
 			throws IOException, ClassNotFoundException {
 
-		HttpURLConnection con = openConnection(config);
-		prepareConnection(con, baos.size());
-		writeRequestBody(config, con, baos);
+		HttpURLConnection con = openConnection(config);	// 打开HTTP链接
+		prepareConnection(con, baos.size());		// 配置HTTP链接
+		writeRequestBody(config, con, baos);		// 发送数据
 		validateResponse(config, con);
 		InputStream responseBody = readResponseBody(config, con);
 
+		// 获取远端返回结果转为RemoteInvocationResult
 		return readRemoteInvocationResult(responseBody, config.getCodebaseUrl());
 	}
 
@@ -103,7 +108,7 @@ public class SimpleHttpInvokerRequestExecutor extends AbstractHttpInvokerRequest
 	 * @see java.net.URL#openConnection()
 	 */
 	protected HttpURLConnection openConnection(HttpInvokerClientConfiguration config) throws IOException {
-		URLConnection con = new URL(config.getServiceUrl()).openConnection();
+		URLConnection con = new URL(config.getServiceUrl()).openConnection();		// 打开HTTP链接
 		if (!(con instanceof HttpURLConnection)) {
 			throw new IOException(
 					"Service URL [" + config.getServiceUrl() + "] does not resolve to an HTTP connection");
@@ -131,7 +136,7 @@ public class SimpleHttpInvokerRequestExecutor extends AbstractHttpInvokerRequest
 		}
 
 		connection.setDoOutput(true);
-		connection.setRequestMethod(HTTP_METHOD_POST);
+		connection.setRequestMethod(HTTP_METHOD_POST);		// 使用的post请求
 		connection.setRequestProperty(HTTP_HEADER_CONTENT_TYPE, getContentType());
 		connection.setRequestProperty(HTTP_HEADER_CONTENT_LENGTH, Integer.toString(contentLength));
 
@@ -203,13 +208,15 @@ public class SimpleHttpInvokerRequestExecutor extends AbstractHttpInvokerRequest
 	 * @see java.net.HttpURLConnection#getInputStream()
 	 * @see java.net.HttpURLConnection#getHeaderField(int)
 	 * @see java.net.HttpURLConnection#getHeaderFieldKey(int)
+	 *
+	 * 从HTTP获取响应的io流
 	 */
 	protected InputStream readResponseBody(HttpInvokerClientConfiguration config, HttpURLConnection con)
 			throws IOException {
 
 		if (isGzipResponse(con)) {
 			// GZIP response found - need to unzip.
-			return new GZIPInputStream(con.getInputStream());
+			return new GZIPInputStream(con.getInputStream());		// 对于gzip需要先解压
 		}
 		else {
 			// Plain response found.

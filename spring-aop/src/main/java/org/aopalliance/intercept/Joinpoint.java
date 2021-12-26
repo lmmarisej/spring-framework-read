@@ -19,8 +19,7 @@ package org.aopalliance.intercept;
 import java.lang.reflect.AccessibleObject;
 
 /**
- * This interface represents a generic runtime joinpoint (in the AOP
- * terminology).
+ * This interface represents a generic runtime joinpoint (in the AOP terminology).
  *
  * <p>A runtime joinpoint is an <i>event</i> that occurs on a static
  * joinpoint (i.e. a location in a the program). For instance, an
@@ -34,7 +33,9 @@ import java.lang.reflect.AccessibleObject;
  * joinpoint. It is passed to the interceptors that are installed on
  * the static joinpoint.
  *
- * 用来封装被AOP切面处理的方法。
+ * 用来封装需要被拦截的点（可能是方法、类等）。
+ *
+ * 一个实现了Joinpoint类，就应该能被拦截器拦截，因此这里封装了应该给拦截器提供的被拦截点的信息。
  *
  * @author Rod Johnson
  * @see Interceptor
@@ -44,7 +45,7 @@ public interface Joinpoint {
 	/**
 	 * Proceed to the next interceptor in the chain.
 	 *
-	 * 拦截器链的调用，直到最后target方法的调用结束。
+	 * 可以是target方法的直接调用，也可以是拦截器链的调用，拦截器链最后一个元素以target方法的调用而结束。
 	 *
 	 * <p>The implementation and the semantics of this method depends
 	 * on the actual joinpoint type (see the children interfaces).
@@ -57,7 +58,7 @@ public interface Joinpoint {
 	 * Return the object that holds the current joinpoint's static part.
 	 * <p>For instance, the target object for an invocation.
 	 *
-	 * 方法所在的target实例。
+	 * 被拦截的对象。
 	 *
 	 * @return the object (can be null if the accessible object is static)
 	 */
@@ -65,8 +66,7 @@ public interface Joinpoint {
 
 	/**
 	 * Return the static part of this joinpoint.
-	 * <p>The static part is an accessible object on which a chain of
-	 * interceptors are installed.
+	 * <p>The static part is an accessible object on which a chain of interceptors are installed.
 	 */
 	AccessibleObject getStaticPart();
 

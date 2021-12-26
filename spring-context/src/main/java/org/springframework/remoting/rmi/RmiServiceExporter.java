@@ -70,7 +70,7 @@ public class RmiServiceExporter extends RmiBasedExporter implements Initializing
 
 	private String serviceName;
 
-	private int servicePort = 0;  // anonymous port
+	private int servicePort = 0;  // anonymous port		// rmi基于tcp/ip，不需要Spring MVC来支持
 
 	private RMIClientSocketFactory clientSocketFactory;
 
@@ -236,7 +236,7 @@ public class RmiServiceExporter extends RmiBasedExporter implements Initializing
 	 * @throws RemoteException if service registration failed
 	 */
 	public void prepare() throws RemoteException {
-		checkService();
+		checkService();		// 属性检查
 
 		if (this.serviceName == null) {
 			throw new IllegalArgumentException("Property 'serviceName' is required");
@@ -271,7 +271,7 @@ public class RmiServiceExporter extends RmiBasedExporter implements Initializing
 		}
 
 		// Initialize and cache exported object.
-		this.exportedObject = getObjectToExport();
+		this.exportedObject = getObjectToExport();		// 取得服务
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("Binding service '" + this.serviceName + "' to RMI registry: " + this.registry);
@@ -286,7 +286,7 @@ public class RmiServiceExporter extends RmiBasedExporter implements Initializing
 			UnicastRemoteObject.exportObject(this.exportedObject, this.servicePort);
 		}
 
-		// Bind RMI object to registry.
+		// Bind RMI object to registry.		// 将服务对象和端口绑定，供客户端查询
 		try {
 			if (this.replaceExistingBinding) {
 				this.registry.rebind(this.serviceName, this.exportedObject);

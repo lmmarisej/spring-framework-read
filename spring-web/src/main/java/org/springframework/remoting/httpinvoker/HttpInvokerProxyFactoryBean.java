@@ -49,29 +49,37 @@ import org.springframework.util.Assert;
  * @see #setServiceInterface
  * @see #setServiceUrl
  * @see #setCodebaseUrl
- * @see HttpInvokerClientInterceptor
+ * @see HttpInvokerClientInterceptor 对应的拦截器。
  * @see HttpInvokerServiceExporter
  * @see org.springframework.remoting.rmi.RmiProxyFactoryBean
  * @see org.springframework.remoting.caucho.HessianProxyFactoryBean
+ *
+ * 支持对HTTP调用器的使用，客户端的基础配置模块，为客户端的HTTP配置提供服务配置。
+ *
+ * 封装了域名、端口号和服务所在的URL。
  */
-public class HttpInvokerProxyFactoryBean extends HttpInvokerClientInterceptor implements FactoryBean<Object> {
+public class HttpInvokerProxyFactoryBean		// 用来生成远端代理对象
+		extends HttpInvokerClientInterceptor	// 拦截器中封装了具体的对远端的调用
+		implements FactoryBean<Object>			// 在AOP处理中封装客户端需要的远端代理对象
+{
 
 	@Nullable
-	private Object serviceProxy;
+	private Object serviceProxy;		// 作为远端服务的本地代理对象，在FactoryBean#getObject中被提供给外界使用
 
 
 	@Override
-	public void afterPropertiesSet() {
+	public void afterPropertiesSet() {	// 在注入完成后，设置远端对象代理
 		super.afterPropertiesSet();
 		Class<?> ifc = getServiceInterface();
 		Assert.notNull(ifc, "Property 'serviceInterface' is required");
+		// 在bean初始化声明周期中对远端对象进行代理，将HttpInvokerProxyFactoryBean中实现的拦截器配置
 		this.serviceProxy = new ProxyFactory(ifc, this).getProxy(getBeanClassLoader());
 	}
 
 
 	@Override
 	@Nullable
-	public Object getObject() {
+	public Object getObject() {		// 返回代理对象
 		return this.serviceProxy;
 	}
 

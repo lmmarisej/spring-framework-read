@@ -24,8 +24,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
- * Generic support base class for remote accessor and exporters,
- * providing common bean ClassLoader handling.
+ * Generic support base class for remote accessor and exporters, providing common bean ClassLoader handling.
  *
  * @author Juergen Hoeller
  * @since 2.5.2

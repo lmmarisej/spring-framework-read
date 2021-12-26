@@ -70,8 +70,11 @@ import org.springframework.remoting.support.RemoteInvocationResult;
  * @see HttpInvokerProxyFactoryBean
  * @see java.rmi.server.RMIClassLoader
  */
-public class HttpInvokerClientInterceptor extends RemoteInvocationBasedAccessor
-		implements MethodInterceptor, HttpInvokerClientConfiguration {
+public class HttpInvokerClientInterceptor
+		extends RemoteInvocationBasedAccessor
+		implements MethodInterceptor,				// 封装当前代理方法调用的具体调用场景
+		HttpInvokerClientConfiguration
+{
 
 	@Nullable
 	private String codebaseUrl;
@@ -142,24 +145,28 @@ public class HttpInvokerClientInterceptor extends RemoteInvocationBasedAccessor
 
 
 	@Override
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-		if (AopUtils.isToStringMethod(methodInvocation.getMethod())) {
+	public Object invoke(MethodInvocation methodInvocation	// 将MethodInvocation作为参数，序列化传输到服务端（主要是封装远程方法的信息）
+	) throws Throwable {
+		if (AopUtils.isToStringMethod(methodInvocation.getMethod())) {		// 对于代理对象的ToString方法的调用，直接在本地完成调用
 			return "HTTP invoker proxy for service URL [" + getServiceUrl() + "]";
 		}
 
+		// 本地方法调用封装为远端调用
 		RemoteInvocation invocation = createRemoteInvocation(methodInvocation);
 		RemoteInvocationResult result;
 
 		try {
+			// 进行远端调用
 			result = executeRequest(invocation, methodInvocation);
 		}
 		catch (Throwable ex) {
+			// 出现异常转换为Spring内置的异常体系
 			RemoteAccessException rae = convertHttpInvokerAccessException(ex);
 			throw (rae != null ? rae : ex);
 		}
 
 		try {
-			return recreateRemoteInvocationResult(result);
+			return recreateRemoteInvocationResult(result);		// 远端调用结果
 		}
 		catch (Throwable ex) {
 			if (result.hasInvocationTargetException()) {

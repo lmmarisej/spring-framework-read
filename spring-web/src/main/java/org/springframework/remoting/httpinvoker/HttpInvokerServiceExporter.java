@@ -58,6 +58,10 @@ import org.springframework.web.util.NestedServletException;
  * @see HttpInvokerProxyFactoryBean
  * @see org.springframework.remoting.rmi.RmiServiceExporter
  * @see org.springframework.remoting.caucho.HessianServiceExporter
+ *
+ * 远端调用响应处理器，与Spring MVC是结合在一起的。
+ *
+ * 会封装MVC中的DispatcherServlet，并设置相应的controller，有控制器来处理HTTP请求（接收反序列化、序列化响应）。
  */
 public class HttpInvokerServiceExporter extends RemoteInvocationSerializingExporter implements HttpRequestHandler {
 
@@ -67,14 +71,19 @@ public class HttpInvokerServiceExporter extends RemoteInvocationSerializingExpor
 	 * @see #readRemoteInvocation(HttpServletRequest)
 	 * @see #invokeAndCreateResult(org.springframework.remoting.support.RemoteInvocation, Object)
 	 * @see #writeRemoteInvocationResult(HttpServletRequest, HttpServletResponse, RemoteInvocationResult)
+	 *
+	 * 请求接收、服务执行，最后返回服务结果的完整过程。
 	 */
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		try {
+			// 读取数据载体
 			RemoteInvocation invocation = readRemoteInvocation(request);
+			// 执行本地调用
 			RemoteInvocationResult result = invokeAndCreateResult(invocation, getProxy());
+			// 写回结果
 			writeRemoteInvocationResult(request, response, result);
 		}
 		catch (ClassNotFoundException ex) {

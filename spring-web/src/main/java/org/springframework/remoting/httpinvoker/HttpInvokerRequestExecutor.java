@@ -53,6 +53,8 @@ public interface HttpInvokerRequestExecutor {
 	 * @throws IOException if thrown by I/O operations
 	 * @throws ClassNotFoundException if thrown during deserialization
 	 * @throws Exception in case of general errors
+	 *
+	 * 触发远端调用。
 	 */
 	RemoteInvocationResult executeRequest(HttpInvokerClientConfiguration config, RemoteInvocation invocation)
 			throws Exception;

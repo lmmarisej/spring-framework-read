@@ -57,6 +57,8 @@ import org.springframework.util.Assert;
  * @see org.springframework.remoting.RemoteAccessException
  * @see org.springframework.remoting.caucho.HessianProxyFactoryBean
  * @see org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean
+ *
+ * 支持Spring应用对RMI的使用。
  */
 public class RmiProxyFactoryBean extends RmiClientInterceptor implements FactoryBean<Object>, BeanClassLoaderAware {
 
