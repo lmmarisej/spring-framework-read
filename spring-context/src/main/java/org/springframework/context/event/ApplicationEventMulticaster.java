@@ -31,7 +31,9 @@ import org.springframework.lang.Nullable;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Stephane Nicoll
- * @see ApplicationListener  向多个事件监听器发送事件
+ * @see ApplicationListener
+ *
+ * 事件传播器，向多个事件监听器发送事件。
  */
 public interface ApplicationEventMulticaster {
 

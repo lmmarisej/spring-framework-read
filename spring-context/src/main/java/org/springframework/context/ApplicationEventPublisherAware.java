@@ -27,6 +27,8 @@ import org.springframework.beans.factory.Aware;
  * @author Chris Beams
  * @since 1.1.1
  * @see ApplicationContextAware
+ *
+ * 暴露给事件发布者一个ApplicationEventPublisher事件发布端口，通过publishEvent进行发布事件。
  */
 public interface ApplicationEventPublisherAware extends Aware {
 

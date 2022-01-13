@@ -37,7 +37,7 @@ import java.util.EventListener;
  * @see org.springframework.context.event.ApplicationEventMulticaster
  * @see org.springframework.context.event.EventListener
  *
- * 自定义事件，只负责监听指定的事件并进行处理。
+ * Spring应用内事件监听器，只负责监听指定的事件并进行处理。
  */
 @FunctionalInterface
 public interface ApplicationListener<E extends ApplicationEvent> extends EventListener {
