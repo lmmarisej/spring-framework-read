@@ -1107,7 +1107,7 @@ public abstract class AbstractApplicationContext
      * @see #doClose()
      */
     @Override
-    public void registerShutdownHook() {
+    public void registerShutdownHook() {		// 需要显示地调用，以完成注册。AbstractGenericContextLoader#loadContext中自动完成了注册。
         if (this.shutdownHook == null) {
             // No shutdown hook registered yet.
             this.shutdownHook = new Thread(SHUTDOWN_HOOK_THREAD_NAME) {

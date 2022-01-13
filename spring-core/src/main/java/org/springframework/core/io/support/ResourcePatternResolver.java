@@ -51,7 +51,9 @@ import org.springframework.core.io.ResourceLoader;
  * @see org.springframework.context.ApplicationContext
  * @see org.springframework.context.ResourceLoaderAware
  */
-public interface ResourcePatternResolver extends ResourceLoader {
+public interface ResourcePatternResolver 	// 可以根据指定的资源路径匹配模式，每次返回多个resource实例
+		extends ResourceLoader				// 每次只能根据路径返回单个resource实例
+{
 
 	/**
 	 * Pseudo URL prefix for all matching resources from the class path: "classpath*:"
@@ -68,7 +70,7 @@ public interface ResourcePatternResolver extends ResourceLoader {
 	 * resource should be avoided, as far as possible. The result should
 	 * have set semantics.
 	 *
-	 * 完成具体的Resource定位
+	 * 完成具体的Resource定位。
 	 *
 	 * @param locationPattern the location pattern to resolve
 	 * @return the corresponding Resource objects

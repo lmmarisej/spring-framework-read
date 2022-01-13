@@ -29,7 +29,6 @@ import java.util.EventListener;
  * {@code ApplicationContext}, events will be filtered accordingly, with the
  * listener getting invoked for matching event objects only.
  *
- * 应用监听器
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @param <E> the specific {@code ApplicationEvent} subclass to listen to
@@ -37,13 +36,14 @@ import java.util.EventListener;
  * @see org.springframework.context.ApplicationEvent
  * @see org.springframework.context.event.ApplicationEventMulticaster
  * @see org.springframework.context.event.EventListener
+ *
+ * 自定义事件，只负责监听指定的事件并进行处理。
  */
 @FunctionalInterface
 public interface ApplicationListener<E extends ApplicationEvent> extends EventListener {
 
 	/**
 	 * Handle an application event.
-	 * 处理事件
 	 * @param event the event to respond to
 	 */
 	void onApplicationEvent(E event);

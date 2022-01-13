@@ -34,6 +34,8 @@ package org.springframework.core.io;
  * @since 1.1.3
  * @see DefaultResourceLoader
  * @see org.springframework.context.support.FileSystemXmlApplicationContext
+ *
+ * 从文件系统加载资源并返回。
  */
 public class FileSystemResourceLoader extends DefaultResourceLoader {
 

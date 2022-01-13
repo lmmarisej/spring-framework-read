@@ -21,16 +21,16 @@ package org.springframework.context;
  *
  * <p>Serves as a super-interface for {@link ApplicationContext}.
  *
- * 事件机制
- *
  * @author Juergen Hoeller
  * @author Stephane Nicoll
  * @since 1.1.1
  * @see ApplicationContext
- * @see ApplicationEventPublisherAware
+ * @see ApplicationEventPublisherAware		通过aware接口在容器启动时注册事件发布者
  * @see org.springframework.context.ApplicationEvent
  * @see org.springframework.context.event.ApplicationEventMulticaster
  * @see org.springframework.context.event.EventPublicationInterceptor
+ *
+ * 事件发布者，本身作为事件源，在合适的时间点，将相应的事件发布给对应的事件监听器。
  */
 @FunctionalInterface
 public interface ApplicationEventPublisher {
@@ -45,7 +45,6 @@ public interface ApplicationEventPublisher {
 	 * to be as efficient as possible, individually using asynchronous
 	 * execution for longer-running and potentially blocking operations.
 	 *
-	 * 推送事件
 	 * @param event the event to publish
 	 * @see #publishEvent(Object)
 	 * @see org.springframework.context.event.ContextRefreshedEvent
@@ -66,7 +65,6 @@ public interface ApplicationEventPublisher {
 	 * to be as efficient as possible, individually using asynchronous
 	 * execution for longer-running and potentially blocking operations.
 	 *
-	 * 推送事件
 	 * @param event the event to publish
 	 * @since 4.2
 	 * @see #publishEvent(ApplicationEvent)

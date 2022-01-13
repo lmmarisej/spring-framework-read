@@ -40,6 +40,8 @@ import org.springframework.util.StringUtils;
  * @since 28.12.2003
  * @see ClassLoader#getResourceAsStream(String)
  * @see Class#getResourceAsStream(String)
+ *
+ * 从Java应用程序的classpath中加载资源并封装。
  */
 public class ClassPathResource extends AbstractFileResolvingResource {
 

@@ -26,7 +26,9 @@ import org.springframework.context.ApplicationEvent;
  * @since 2.5
  */
 @SuppressWarnings("serial")
-public abstract class ApplicationContextEvent extends ApplicationEvent {
+public abstract class ApplicationContextEvent
+		extends ApplicationEvent		// 扩展ApplicationEvent以实现自定义的事件类型
+{
 
 	/**
 	 * Create a new ContextStartedEvent.

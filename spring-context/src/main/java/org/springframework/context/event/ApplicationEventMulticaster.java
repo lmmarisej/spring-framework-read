@@ -22,8 +22,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
- * Interface to be implemented by objects that can manage a number of
- * {@link ApplicationListener} objects and publish events to them.
+ * Interface to be implemented by objects that can manage a number of {@link ApplicationListener} objects and publish events to them.
  *
  * <p>An {@link org.springframework.context.ApplicationEventPublisher}, typically
  * a Spring {@link org.springframework.context.ApplicationContext}, can use an
@@ -32,7 +31,7 @@ import org.springframework.lang.Nullable;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Stephane Nicoll
- * @see ApplicationListener
+ * @see ApplicationListener  向多个事件监听器发送事件
  */
 public interface ApplicationEventMulticaster {
 

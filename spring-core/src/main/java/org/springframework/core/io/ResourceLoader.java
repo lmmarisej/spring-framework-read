@@ -31,8 +31,6 @@ import org.springframework.util.ResourceUtils;
  * <p>Bean properties of type Resource and Resource array can be populated
  * from Strings when running in an ApplicationContext, using the particular
  * context's resource loading strategy.
- * <p>
- * 可以从不同的地方得到Bean定义资源
  *
  * @author Juergen Hoeller
  * @see Resource
@@ -40,6 +38,8 @@ import org.springframework.util.ResourceUtils;
  * @see org.springframework.context.ApplicationContext
  * @see org.springframework.context.ResourceLoaderAware
  * @since 10.03.2004
+ *
+ * 资源查找和定位的统一抽象。
  */
 public interface ResourceLoader {
 

@@ -16,6 +16,8 @@
 
 package org.springframework.core.io;
 
+import org.springframework.lang.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +26,6 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-import org.springframework.lang.Nullable;
-
 /**
  * Interface for a resource descriptor that abstracts from the actual
  * type of underlying resource, such as a file or class path resource.
@@ -33,27 +33,31 @@ import org.springframework.lang.Nullable;
  * <p>An InputStream can be opened for every resource if it exists in
  * physical form, but a URL or File handle can just be returned for
  * certain resources. The actual behavior is implementation-specific.
- *
+ * <p>
  * Resource作用
- * 		- 用来定位容器使用的BeanDefinition。
- * 		- 统一bean的定义信息。
- *
+ * - 用来定位容器使用的BeanDefinition。
+ * - 统一bean的定义信息。
+ * <p>
  * Resource定义了许多与I/O相关的操作，为接下来读取到的BeanDefinition的载入提供I/O操作的条件。
  *
  * @author Juergen Hoeller
- * @since 28.12.2003
  * @see #getInputStream()
  * @see #getURL()
  * @see #getURI()
  * @see #getFile()
  * @see WritableResource
  * @see ContextResource
- * @see UrlResource
+ * @see UrlResource    内部委派 URL 查找资源和定位。
  * @see FileUrlResource
- * @see FileSystemResource
- * @see ClassPathResource
+ * @see FileSystemResource    对 File 类型的封装，可以以文件或 URL 类型访问资源。
+ * @see ClassPathResource    从Java应用程序的classpath中加载资源并封装。
  * @see ByteArrayResource
- * @see InputStreamResource
+ * @see InputStreamResource  将给定的 InputStream 视为资源。
+ * @since 28.12.2003
+ * <p>
+ * 资源抽象，Spring使用其作为所有资源的抽象和访问接口。弥补 JavaSE 中 URL 的不足。
+ * <p>
+ * 想要注入Resource类型的Bean定义，就需要注册自定义的PropertyEditor到BeanFactory容器；对于ApplicationContext无需如此。
  */
 public interface Resource extends InputStreamSource {
 
@@ -62,8 +66,6 @@ public interface Resource extends InputStreamSource {
 	 * <p>This method performs a definitive existence check, whereas the
 	 * existence of a {@code Resource} handle only guarantees a valid
 	 * descriptor handle.
-	 *
-	 * 是否存在
 	 */
 	boolean exists();
 
@@ -75,7 +77,7 @@ public interface Resource extends InputStreamSource {
 	 * Note that actual content reading may still fail when attempted.
 	 * However, a value of {@code false} is a definitive indication
 	 * that the resource content cannot be read.
-	 * 是否可读
+	 *
 	 * @see #getInputStream()
 	 * @see #exists()
 	 */
@@ -88,8 +90,6 @@ public interface Resource extends InputStreamSource {
 	 * If {@code true}, the InputStream cannot be read multiple times,
 	 * and must be read and closed to avoid resource leaks.
 	 * <p>Will be {@code false} for typical resource descriptors.
-	 *
-	 * 是否打开
 	 */
 	default boolean isOpen() {
 		return false;
@@ -100,9 +100,9 @@ public interface Resource extends InputStreamSource {
 	 * A value of {@code true} strongly suggests (but does not guarantee)
 	 * that a {@link #getFile()} call will succeed.
 	 * <p>This is conservatively {@code false} by default.
-	 * 是否是文件类型
-	 * @since 5.0
+	 *
 	 * @see #getFile()
+	 * @since 5.0
 	 */
 	default boolean isFile() {
 		return false;
@@ -110,19 +110,19 @@ public interface Resource extends InputStreamSource {
 
 	/**
 	 * Return a URL handle for this resource.
-	 *
+	 * <p>
 	 * 获取 URL 对象
+	 *
 	 * @throws IOException if the resource cannot be resolved as URL,
-	 * i.e. if the resource is not available as descriptor
+	 *                     i.e. if the resource is not available as descriptor
 	 */
 	URL getURL() throws IOException;
 
 	/**
 	 * Return a URI handle for this resource.
 	 *
-	 * 获取 URI 对象
 	 * @throws IOException if the resource cannot be resolved as URI,
-	 * i.e. if the resource is not available as descriptor
+	 *                     i.e. if the resource is not available as descriptor
 	 * @since 2.5
 	 */
 	URI getURI() throws IOException;
@@ -130,10 +130,9 @@ public interface Resource extends InputStreamSource {
 	/**
 	 * Return a File handle for this resource.
 	 *
-	 * 获取文件
 	 * @throws java.io.FileNotFoundException if the resource cannot be resolved as
-	 * absolute file path, i.e. if the resource is not available in a file system
-	 * @throws IOException in case of general resolution/reading failures
+	 *                                       absolute file path, i.e. if the resource is not available in a file system
+	 * @throws IOException                   in case of general resolution/reading failures
 	 * @see #getInputStream()
 	 */
 	File getFile() throws IOException;
@@ -143,13 +142,14 @@ public interface Resource extends InputStreamSource {
 	 * <p>It is expected that each call creates a <i>fresh</i> channel.
 	 * <p>The default implementation returns {@link Channels#newChannel(InputStream)}
 	 * with the result of {@link #getInputStream()}.
-	 *
+	 * <p>
 	 * 可读字节通道
+	 *
 	 * @return the byte channel for the underlying resource (must not be {@code null})
 	 * @throws java.io.FileNotFoundException if the underlying resource doesn't exist
-	 * @throws IOException if the content channel could not be opened
-	 * @since 5.0
+	 * @throws IOException                   if the content channel could not be opened
 	 * @see #getInputStream()
+	 * @since 5.0
 	 */
 	default ReadableByteChannel readableChannel() throws IOException {
 		return Channels.newChannel(getInputStream());
@@ -157,26 +157,25 @@ public interface Resource extends InputStreamSource {
 
 	/**
 	 * Determine the content length for this resource.
-	 *
+	 * <p>
 	 * 内容长度
+	 *
 	 * @throws IOException if the resource cannot be resolved
-	 * (in the file system or as some other known physical resource type)
+	 *                     (in the file system or as some other known physical resource type)
 	 */
 	long contentLength() throws IOException;
 
 	/**
 	 * Determine the last-modified timestamp for this resource.
 	 *
-	 * 最后修改实践
 	 * @throws IOException if the resource cannot be resolved
-	 * (in the file system or as some other known physical resource type)
+	 *                     (in the file system or as some other known physical resource type)
 	 */
 	long lastModified() throws IOException;
 
 	/**
 	 * Create a resource relative to this resource.
 	 *
-	 * 创建资源
 	 * @param relativePath the relative path (relative to this resource)
 	 * @return the resource handle for the relative resource
 	 * @throws IOException if the relative resource cannot be determined
@@ -188,8 +187,6 @@ public interface Resource extends InputStreamSource {
 	 * part of the path: for example, "myfile.txt".
 	 * <p>Returns {@code null} if this type of resource does not
 	 * have a filename.
-	 *
-	 * 获取文件名称
 	 */
 	@Nullable
 	String getFilename();
@@ -200,7 +197,6 @@ public interface Resource extends InputStreamSource {
 	 * <p>Implementations are also encouraged to return this value
 	 * from their {@code toString} method.
 	 *
-	 * 获取资源描述
 	 * @see Object#toString()
 	 */
 	String getDescription();

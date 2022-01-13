@@ -22,7 +22,6 @@ import java.util.EventObject;
  * Class to be extended by all application events. Abstract as it
  * doesn't make sense for generic events to be published directly.
  * <p>
- * 应用事件
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

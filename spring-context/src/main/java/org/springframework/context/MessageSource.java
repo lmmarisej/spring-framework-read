@@ -32,7 +32,8 @@ import org.springframework.lang.Nullable;
  * highly configurable, in particular with respect to reloading message definitions.
  * </ul>
  *
- * 消息源 主要用于国际化
+ * 在 JavaSE 的国际化支持的基础上，进一步抽象了国际化消息的访问接口。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see org.springframework.context.support.ResourceBundleMessageSource

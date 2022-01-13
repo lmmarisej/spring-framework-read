@@ -56,9 +56,13 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.BeanFactory
  * @see org.springframework.core.io.ResourceLoader
  */
-public interface ApplicationContext extends EnvironmentCapable,
+public interface ApplicationContext			// 当实例化时，会根据自身特性，从不同的位置加载Bean定义配置文件
+		extends EnvironmentCapable,
 		ListableBeanFactory, HierarchicalBeanFactory,		// BeanFactory接口关联
-		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {
+		MessageSource,		// 提供国际化信息支持
+		ApplicationEventPublisher,		// 担当事件发布者角色
+		ResourcePatternResolver		// 支持Spring内统一资源加载策略，可以通过ApplicationContext来加载任何Spring支持的Resource类型
+{
 
 	/**
 	 * Return the unique id of this application context.

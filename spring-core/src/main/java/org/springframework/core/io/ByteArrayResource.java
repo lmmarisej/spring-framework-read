@@ -39,6 +39,8 @@ import org.springframework.util.Assert;
  * @see java.io.ByteArrayInputStream
  * @see InputStreamResource
  * @see org.springframework.mail.javamail.MimeMessageHelper#addAttachment(String, InputStreamSource)
+ *
+ * 将字节数组提供的数据封装为资源。
  */
 public class ByteArrayResource extends AbstractResource {
 

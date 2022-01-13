@@ -80,6 +80,8 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * from the given XML file and automatically refreshing the context.
 	 * @param configLocation file path
 	 * @throws BeansException if context creation failed
+	 *
+	 * 去掉classpath:前缀，FileSystemXmlApplicationContext默认从文件系统加载资源。
 	 */
 	public FileSystemXmlApplicationContext(String configLocation) throws BeansException {
 		this(new String[] {configLocation}, true, null);
