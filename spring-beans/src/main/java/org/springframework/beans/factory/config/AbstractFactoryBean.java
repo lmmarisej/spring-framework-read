@@ -109,7 +109,7 @@ public abstract class AbstractFactoryBean<T>
 	}
 
 	@Override
-	public void setBeanFactory(@Nullable BeanFactory beanFactory) {
+	public void setBeanFactory(@Nullable BeanFactory beanFactory) {		// BeanFactoryAware
 		this.beanFactory = beanFactory;
 	}
 
@@ -167,12 +167,10 @@ public abstract class AbstractFactoryBean<T>
 	private T getEarlySingletonInstance() throws Exception {
 		Class<?>[] ifcs = getEarlySingletonInterfaces();
 		if (ifcs == null) {
-			throw new FactoryBeanNotInitializedException(
-					getClass().getName() + " does not support circular references");
+			throw new FactoryBeanNotInitializedException(getClass().getName() + " does not support circular references");
 		}
 		if (this.earlySingletonInstance == null) {
-			this.earlySingletonInstance = (T) Proxy.newProxyInstance(
-					this.beanClassLoader, ifcs, new EarlySingletonInvocationHandler());
+			this.earlySingletonInstance = (T) Proxy.newProxyInstance(this.beanClassLoader, ifcs, new EarlySingletonInvocationHandler());
 		}
 		return this.earlySingletonInstance;
 	}

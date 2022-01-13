@@ -33,6 +33,8 @@ import org.springframework.util.StringUtils;
  * @author Dave Syer
  * @see org.springframework.util.StringUtils#delimitedListToStringArray
  * @see org.springframework.util.StringUtils#arrayToDelimitedString
+ *
+ * 将符合CSV格式的字符串转换为String[]数组的形式。
  */
 public class StringArrayPropertyEditor extends PropertyEditorSupport {
 

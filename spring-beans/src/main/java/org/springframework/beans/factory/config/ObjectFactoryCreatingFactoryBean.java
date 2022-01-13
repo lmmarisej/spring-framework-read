@@ -125,7 +125,7 @@ public class ObjectFactoryCreatingFactoryBean extends AbstractFactoryBean<Object
 	}
 
 	@Override
-	protected ObjectFactory<Object> createInstance() {
+	protected ObjectFactory<Object> createInstance() {		// 原型bean才会通过本方法实例化
 		BeanFactory beanFactory = getBeanFactory();
 		Assert.state(beanFactory != null, "No BeanFactory available");
 		Assert.state(this.targetBeanName != null, "No target bean name specified");
@@ -150,7 +150,7 @@ public class ObjectFactoryCreatingFactoryBean extends AbstractFactoryBean<Object
 
 		@Override
 		public Object getObject() throws BeansException {
-			return this.beanFactory.getBean(this.targetBeanName);
+			return this.beanFactory.getBean(this.targetBeanName);		// 完成利用beanFactory获取bean的操作，隔离客户端对象直接引用beanFactory
 		}
 	}
 

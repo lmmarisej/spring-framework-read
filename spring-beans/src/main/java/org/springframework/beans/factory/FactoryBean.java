@@ -46,7 +46,9 @@ import org.springframework.lang.Nullable;
  * synchronization of bean creation. There is usually no need for internal synchronization other
  * than for purposes of lazy initialization within the FactoryBean itself (or the like).
  *
- * 为应用生成需要的Bean。
+ * Spring容器提供的一种可以扩展容器对象实例化逻辑的接口，生成泛型类型的Bean。
+ *
+ * 优点：可以很好地封装复杂的构造逻辑或在 Spring 中更轻松地配置高度可配置的对象。
  *
  * @param <T> the bean type
  *
@@ -64,7 +66,6 @@ public interface FactoryBean<T> {
 	 * set} on a {@link org.springframework.beans.factory.config.BeanDefinition} so that factory
 	 * beans can signal their object type when it can't be deduced from the factory bean class.
 	 *
-	 * object 类型
 	 * @since 5.2
 	 */
 	String OBJECT_TYPE_ATTRIBUTE = "factoryBeanObjectType";

@@ -35,6 +35,8 @@ import org.springframework.util.StringUtils;
  * @since 13.05.2003
  * @see Class#forName
  * @see org.springframework.util.ClassUtils#forName(String, ClassLoader)
+ *
+ * 根据String类型的CLass名称，直接将其转换为Class对象。
  */
 public class ClassEditor extends PropertyEditorSupport {
 

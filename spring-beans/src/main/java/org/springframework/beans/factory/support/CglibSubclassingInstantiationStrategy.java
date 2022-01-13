@@ -49,8 +49,12 @@ import org.springframework.util.StringUtils;
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @since 1.1
+ *
+ * 支持CGLib实例化对象功能，支持动态生成某个类的子类。
  */
-public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationStrategy {
+public class CglibSubclassingInstantiationStrategy
+		extends SimpleInstantiationStrategy		// 继承了反射实例化对象的功能
+{
 
 	/**
 	 * Index in the CGLIB callback array for passthrough behavior,

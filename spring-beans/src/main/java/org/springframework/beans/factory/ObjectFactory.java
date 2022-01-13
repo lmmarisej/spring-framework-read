@@ -19,8 +19,7 @@ package org.springframework.beans.factory;
 import org.springframework.beans.BeansException;
 
 /**
- * Defines a factory which can return an Object instance
- * (possibly shared or independent) when invoked.
+ * Defines a factory which can return an Object instance (possibly shared or independent) when invoked.
  *
  * <p>This interface is typically used to encapsulate a generic factory which
  * returns a new instance (prototype) of some target object on each invocation.
@@ -31,19 +30,21 @@ import org.springframework.beans.BeansException;
  * to be fed as an API to other beans (through injection). As such, the
  * {@code getObject()} method has different exception handling behavior.
  *
- * 对象工厂
- * @author Colin Sampaleanu
- * @since 1.0.2
  * @param <T> the object type
+ * @author Colin Sampaleanu
  * @see FactoryBean
+ * @since 1.0.2
+ *
+ * 通常用于封装通用工厂，该工厂可以为我们返回容器管理的相关对象。
  */
 @FunctionalInterface
 public interface ObjectFactory<T> {
 
 	/**
-	 * Return an instance (possibly shared or independent)
-	 * of the object managed by this factory.
-	 * 获取对象
+	 * Return an instance (possibly shared or independent) of the object managed by this factory.
+	 *
+	 * 在每次调用时返回 T 的新实例（原型）。
+	 *
 	 * @return the resulting instance
 	 * @throws BeansException in case of creation errors
 	 */

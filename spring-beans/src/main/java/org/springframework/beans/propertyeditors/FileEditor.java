@@ -27,8 +27,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Editor for {@code java.io.File}, to directly populate a File property
- * from a Spring resource location.
+ * Editor for {@code java.io.File}, to directly populate a File property from a Spring resource location.
  *
  * <p>Supports Spring-style URL notation: any fully qualified standard URL
  * ("file:", "http:", etc) and Spring's special "classpath:" pseudo-URL.
@@ -52,6 +51,8 @@ import org.springframework.util.StringUtils;
  * @see org.springframework.core.io.ResourceLoader
  * @see URLEditor
  * @see InputStreamEditor
+ *
+ * 从Spring资源位置填充File属性。
  */
 public class FileEditor extends PropertyEditorSupport {
 

@@ -89,6 +89,10 @@ import org.springframework.lang.Nullable;
  * <li>a custom destroy-method definition
  * </ol>
  *
+ * 基础类型IoC容器，提供完成的IoC服务支持（对象创建管理、依赖注入服务）。
+ *
+ * 默认采用延迟初始化策略，只有客户端需要某个对象时，才对对象进行初始化和依赖注入操作。
+ *
  * 如果使用BeanFactory作为IoC容器，客户需要做的额外工作是为BeanFactory指定响应的Resource来完成Bean信息的定位。
  *
  * @author Rod Johnson
@@ -117,7 +121,8 @@ public interface BeanFactory {
 	 * <i>created</i> by the FactoryBean. For example, if the bean named {@code myJndiObject} is a
 	 * FactoryBean, getting {@code &myJndiObject} will return the factory, not the instance returned
 	 * by the factory.
-	 * 工厂bean前缀区分作用.
+	 *
+	 * 用于区分BeanFactory实例和BeanFactory生成的实例。
 	 */
 	String FACTORY_BEAN_PREFIX = "&";
 
@@ -130,7 +135,15 @@ public interface BeanFactory {
 	 * <p>Translates aliases back to the corresponding canonical bean name.
 	 * Will ask the parent factory if the bean cannot be found in this factory instance.
 	 * <p>
-	 * 获取一个bean
+	 *
+	 * 获取一个bean，触发Bean实例化阶段的活动。
+	 *
+	 * 触发：
+	 * 	- 显示
+	 * 		直接调用getBean。
+	 * 	- 隐式
+	 * 		1. 当一个对象被请求，且依赖另一个对象时。
+	 * 		2. ApplicationContext启动完成后实例化所有的Bean定义。
 	 *
 	 * @param name the name of the bean to retrieve
 	 *

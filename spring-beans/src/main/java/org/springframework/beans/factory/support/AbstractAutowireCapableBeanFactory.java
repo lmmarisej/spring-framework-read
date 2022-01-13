@@ -492,6 +492,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * 后置方法执行
+	 *
 	 * @param existingBean the existing bean instance
 	 * @param beanName the name of the bean, to be passed to it if necessary
 	 * (only passed to {@link BeanPostProcessor BeanPostProcessors};
@@ -549,8 +550,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	//---------------------------------------------------------------------
 
 	/**
-	 * Central method of this class: creates a bean instance, populates the bean instance, applies
-	 * post-processors, etc.
+	 * Central method of this class: creates a bean instance, populates the bean instance, applies post-processors, etc.
 	 *
 	 * 不仅创建Bean，还对init-method属性定义、bean后置处理器等。
 	 *
@@ -1405,7 +1405,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/**
 	 * Create a new instance for the specified bean, using an appropriate instantiation strategy:
 	 * factory method, constructor autowiring, or simple instantiation.
-	 * bean 初始化
+	 *
+	 * bean 简单实例化
+	 *
 	 * @param beanName the name of the bean
 	 * @param mbd      the bean definition for the bean
 	 * @param args     explicit arguments to use for constructor or factory method invocation
@@ -2183,7 +2185,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 第二部分
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
-			// BeanPostProcessor 前置方法执行
+			// BeanPostProcessor 前置方法执行，在 LifecycleMetadata.invokeInitMethods 中完成JSR250注解的前置处理，如：PostConstruct。
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 

@@ -60,6 +60,8 @@ import org.springframework.util.ReflectionUtils;
  * @see #getPropertyType
  * @see BeanWrapper
  * @see PropertyEditorRegistrySupport
+ *
+ * 对某个Bean进行包裹，然后对这个包裹的Bean进行操作。
  */
 public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements BeanWrapper {
 

@@ -37,7 +37,8 @@ import org.springframework.util.StringUtils;
  * <p>Does not support Method Injection, although it provides hooks for subclasses
  * to override to add Method Injection support, for example by overriding methods.
  *
- * 简单的实例化方式
+ * 简单的实例化方式，可以通过反射来实例化对象。不支持方法注入方式的对象实例化。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 1.1

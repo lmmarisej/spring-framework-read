@@ -47,22 +47,25 @@ import org.springframework.lang.Nullable;
  * {@link org.springframework.core.annotation.Order @Order} annotation is not
  * taken into account for {@code BeanPostProcessor} beans.
  *
+ * 存在于对象实例化阶段。
+ *
  * 本质：
  * 		是一个监听器，监听容器的触发事件，并执行相应的回调处理。
  *
  * 调用时机：
- * 		Bean初始化前后回调。都在initializeBean方法中。
+ * 		Bean初始化前后初始化回调，如：init、aware等。
  *
  * 作用：
- * 		- 当 Spring IoC 容器实例化 bean 实例时，BeanPostProcessor 接口会完成它们的工作。
+ * 		- 当 Spring IoC 容器触发 getBean 调用，从而实例化 bean 实例时，BeanPostProcessor 接口会完成它们的工作。
  * 		- 完成Bean的初始化工作，得到可以由IoC容器托管的bean实例。
+ * 		- 替换但其那实例或字节码增强当前对象实例等，如：Spring AOP用来生成对应的代理对象。
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @since 10.10.2003
  * @see InstantiationAwareBeanPostProcessor
  * @see DestructionAwareBeanPostProcessor
- * @see ConfigurableBeanFactory#addBeanPostProcessor
+ * @see ConfigurableBeanFactory#addBeanPostProcessor 实现BeanPostProcessor后，需要通过本方法注册。
  * @see BeanFactoryPostProcessor
  */
 public interface BeanPostProcessor {

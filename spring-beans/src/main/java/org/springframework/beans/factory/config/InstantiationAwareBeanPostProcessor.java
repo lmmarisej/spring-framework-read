@@ -23,8 +23,6 @@ import org.springframework.beans.PropertyValues;
 import org.springframework.lang.Nullable;
 
 /**
- * Bean实例化前后回调。
- *
  * Subinterface of {@link BeanPostProcessor} that adds a before-instantiation callback,
  * and a callback after instantiation but before explicit properties are set or
  * autowiring occurs.
@@ -45,6 +43,8 @@ import org.springframework.lang.Nullable;
  * @since 1.2
  * @see org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#setCustomTargetSourceCreators
  * @see org.springframework.aop.framework.autoproxy.target.LazyInitTargetSourceCreator
+ *
+ * 在Bean的初始化之前执行，用于构造对象实例，构造后直接返回对象，不再按照bean的"正规流程"执行。
  */
 public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 

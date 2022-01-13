@@ -52,6 +52,10 @@ import org.springframework.util.StringValueResolver;
  * @deprecated as of 5.2; use {@code org.springframework.context.support.PropertySourcesPlaceholderConfigurer}
  * instead which is more flexible through taking advantage of the {@link org.springframework.core.env.Environment}
  * and {@link org.springframework.core.env.PropertySource} mechanisms.
+ *
+ * 允许在XML中使用占位符，将占位符所代表的的资源单独配置到properties文件中加载。
+ *
+ * 原理：依赖于BeanFactoryPostProcessor。
  */
 @Deprecated
 public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport {

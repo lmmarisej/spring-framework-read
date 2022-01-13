@@ -40,6 +40,8 @@ public interface DestructionAwareBeanPostProcessor extends BeanPostProcessor {
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 * @see org.springframework.beans.factory.DisposableBean#destroy()
 	 * @see org.springframework.beans.factory.support.AbstractBeanDefinition#setDestroyMethodName(String)
+	 *
+	 * 完成Bean销毁的前置处理。
 	 */
 	void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException;
 

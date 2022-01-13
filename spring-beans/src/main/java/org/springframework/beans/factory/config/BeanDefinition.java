@@ -30,6 +30,8 @@ import org.springframework.lang.Nullable;
  * {@link BeanFactoryPostProcessor} to introspect and modify property values and other bean
  * metadata.
  *
+ * 保存Bean实例化阶段要用的必要信息。
+ *
  * Spring中将POJO表示为Bean，BeanDefinition实际就是对POJO的抽象，使IoC容器能够方便的对POJO（也就是Bean）进行管理。
  *
  * 优点
@@ -47,8 +49,6 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	/**
 	 * Scope identifier for the standard singleton scope: {@value}.
 	 * <p>Note that extended bean factories might support further scopes.
-	 * <p>
-	 * 作用域,单例
 	 *
 	 * @see #setScope
 	 * @see ConfigurableBeanFactory#SCOPE_SINGLETON
@@ -58,7 +58,6 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	/**
 	 * Scope identifier for the standard prototype scope: {@value}.
 	 * <p>Note that extended bean factories might support further scopes.
-	 * 作用域,prototype
 	 *
 	 * @see #setScope
 	 * @see ConfigurableBeanFactory#SCOPE_PROTOTYPE
@@ -93,7 +92,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**
 	 * Return the name of the parent definition of this bean definition, if any.
-	 * 获取父类的名字(父BeanDefinition)
+	 *
+	 * 获取父 BeanDefinition 的名称。
 	 */
 	@Nullable
 	String getParentName();

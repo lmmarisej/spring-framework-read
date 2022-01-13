@@ -265,21 +265,22 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * that autodetected post-processors (e.g. as beans in an ApplicationContext)
 	 * will always be applied after programmatically registered ones.
 	 *
-	 * 添加 bean 后置处理器
+	 * 添加bean实例化阶段的处理器。
+	 *
 	 * @param beanPostProcessor the post-processor to register
 	 */
 	void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
 	/**
 	 * Return the current number of registered BeanPostProcessors, if any.
-	 * 获取 bean 后置处理器的数量
 	 */
 	int getBeanPostProcessorCount();
 
 	/**
 	 * Register the given scope, backed by the given Scope implementation.
 	 *
-	 * scope 注册
+	 * 注册scope管理器。
+	 *
 	 * @param scopeName the scope identifier
 	 * @param scope the backing Scope implementation
 	 */

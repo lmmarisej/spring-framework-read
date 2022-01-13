@@ -240,7 +240,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	/**
 	 * Actually register the default editors for this registry instance.
 	 *
-	 * 创建默认编辑器
+	 * Spring中的默认实现会自动加载到容器，即使没有告诉容器应该如何执行类型转换，容器同样可以正确完成工作
 	 */
 	private void createDefaultEditors() {
 		this.defaultEditors = new HashMap<>(64);

@@ -36,7 +36,7 @@ import java.beans.PropertyDescriptor;
  * is "false", to avoid side effects caused by getter method invocations.
  * Turn this to "true" to expose present property values to custom editors.
  *
- * bean 的包装接口
+ * 使用BeanWrapper以方便操作Bean实例，可以免去直接使用Java反射API操作对象实例的繁琐。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -48,7 +48,9 @@ import java.beans.PropertyDescriptor;
  * @see org.springframework.validation.BeanPropertyBindingResult
  * @see org.springframework.validation.DataBinder#initBeanPropertyAccess()
  */
-public interface BeanWrapper extends ConfigurablePropertyAccessor {
+public interface BeanWrapper
+		extends ConfigurablePropertyAccessor	// 支持以统一的方式对对象属性进行访问
+{
 
 	/**
 	 * Return the limit for array and collection auto-growing.

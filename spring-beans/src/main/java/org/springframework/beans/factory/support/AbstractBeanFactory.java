@@ -396,7 +396,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						// 注册依赖bean
 						registerDependentBean(dep, beanName);
 						try {
-							// 获取bean
+							// 对当前BeanDefinition所依赖的所有bean，都调用getBean来触发其Bean的实例化
 							getBean(dep);
 						}
 						catch (NoSuchBeanDefinitionException ex) {
@@ -410,22 +410,21 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// 单例创建
 				// 判断是否是单例
 				if (mbd.isSingleton()) {
-					// 获取bean单例bean
+					// 获取 bean 的 FactoryBean，或者是已经实例化的 bean
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
-							// 创建bean
+							// 根据BeanDefinition创建一个单例bean
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
 							// Explicitly remove instance from singleton cache: It might have been put there
 							// eagerly by the creation process, to allow for circular reference resolution.
 							// Also remove any beans that received a temporary reference to the bean.
-							// 摧毁单例的bean
 							destroySingleton(beanName);
 							throw ex;
 						}
 					});
-					// 获取 bean 实例
+					// 根据 FactoryBean 将给定 Bean 实例化
 					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
 
@@ -437,14 +436,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					try {
 						// 创建之前的行为
 						beforePrototypeCreation(beanName);
-						// 根据BeanDefinition、参数创建Bean实例
+						// 根据BeanDefinition、参数创建Bean实例，创建的可能是 FactoryBean 实例，也可能是非 FactoryBean 实例
 						prototypeInstance = createBean(beanName, mbd, args);
 					}
 					finally {
 						// 创建后的行为
 						afterPrototypeCreation(beanName);
 					}
-					// 创建
+					// 对于在 createBean 时创建的 FactoryBean 实例，完成其对应的 Bean 的创建
 					bean = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
 				}
 
@@ -2092,16 +2091,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Get the object for the given bean instance, either the bean
-	 * instance itself or its created object in case of a FactoryBean.
+	 * Get the object for the given bean instance, either the bean instance itself or its created object in case of a FactoryBean.
 	 * @param beanInstance the shared bean instance
 	 * @param name name that may include factory dereference prefix
 	 * @param beanName the canonical bean name
 	 * @param mbd the merged bean definition
 	 * @return the object to expose for the bean
 	 */
-	protected Object getObjectForBeanInstance(
-			Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
+	protected Object getObjectForBeanInstance(Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
 
 		// 第一部分
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
@@ -2145,7 +2142,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
 			boolean synthetic = (mbd != null && mbd.isSynthetic());
-			// 从 FactoryBean 中获取bean实例
+			// 使用 FactoryBean 创建 bean 实例
 			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
 		}
 		return object;

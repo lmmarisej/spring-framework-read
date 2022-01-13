@@ -30,16 +30,21 @@ package org.springframework.beans.factory;
  * @see DisposableBean
  * @see org.springframework.beans.factory.config.BeanDefinition#getPropertyValues()
  * @see org.springframework.beans.factory.support.AbstractBeanDefinition#getInitMethodName()
+ *
+ * 对象生命周期标识接口，在对象实例化调用BeanPostProcessor处理之后，初始化过程中调用。
+ *
+ * 缺点：
+ * 		具有侵入性，可以使用init-method代替。
  */
 public interface InitializingBean {
 
 	/**
-	 * Invoked by the containing {@code BeanFactory} after it has set all bean properties and
-	 * satisfied {@link BeanFactoryAware}, {@code ApplicationContextAware} etc.
+	 * Invoked by the containing {@code BeanFactory} after it has set all bean properties and satisfied {@link BeanFactoryAware}, {@code ApplicationContextAware} etc.
 	 * <p>This method allows the bean instance to perform validation of its overall
 	 * configuration and final initialization when all bean properties have been set.
 	 *
-	 * 设置属性
+	 * Bean初始化期间的回调方法。
+	 *
 	 * @throws Exception in the event of misconfiguration (such as failure to set an essential
 	 *                   property) or if initialization fails for any other reason
 	 */
