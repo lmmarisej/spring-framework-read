@@ -34,6 +34,14 @@ import org.springframework.lang.Nullable;
  *
  * @author Rod Johnson
  * @author Rob Harrop
+ *
+ * 只对advisor有效。
+ *
+ * 将DefaultAdvisorAutoProxyCreator注册到容器后，会自动搜索容器内的advisor，根据advisor所提供的信息，为符合条件的容器内目标对象生成代理对象。
+ *
+ * 为目标对象生成代理对象后，从容器中获取到的对象就是代理后的对象。
+ *
+ * 范围较广，应尽量细化各个advisor的定义。
  */
 @SuppressWarnings("serial")
 public class DefaultAdvisorAutoProxyCreator extends AbstractAdvisorAutoProxyCreator implements BeanNameAware {

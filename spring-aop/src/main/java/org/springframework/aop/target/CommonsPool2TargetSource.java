@@ -62,6 +62,8 @@ import org.springframework.util.Assert;
  * @see #setMaxWait
  * @see #setTimeBetweenEvictionRunsMillis
  * @see #setMinEvictableIdleTimeMillis
+ *
+ * 享元模式。
  */
 @SuppressWarnings({"rawtypes", "unchecked", "serial"})
 public class CommonsPool2TargetSource extends AbstractPoolingTargetSource implements PooledObjectFactory<Object> {

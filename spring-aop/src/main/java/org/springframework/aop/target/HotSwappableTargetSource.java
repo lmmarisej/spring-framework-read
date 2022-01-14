@@ -28,10 +28,10 @@ import org.springframework.util.Assert;
  *
  * <p>This TargetSource is serializable if the target is at the time of serialization.
  *
- * 允许在应用程序运行时以线程安全的方式切换目标对象。
- *
  * @author Rod Johnson
  * @author Juergen Hoeller
+ *
+ * 以HotSwappableTargetSource封装对象，可以在程序运行时，根据某种条件，动态地替换目标对象的具体实现。
  */
 public class HotSwappableTargetSource implements TargetSource, Serializable {
 

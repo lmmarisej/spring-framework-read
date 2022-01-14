@@ -30,6 +30,8 @@ import org.springframework.beans.BeansException;
  * @author Juergen Hoeller
  * @see #setBeanFactory
  * @see #setTargetBeanName
+ *
+ * 每次方法到达调用点，并即将调用目标对象方法时，都会返回一个新的目标对象实例供调用。
  */
 @SuppressWarnings("serial")
 public class PrototypeTargetSource extends AbstractPrototypeBasedTargetSource {

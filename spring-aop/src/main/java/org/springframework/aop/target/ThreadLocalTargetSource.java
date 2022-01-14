@@ -47,6 +47,8 @@ import org.springframework.core.NamedThreadLocal;
  * @author Rob Harrop
  * @see ThreadLocalTargetSourceStats
  * @see org.springframework.beans.factory.DisposableBean#destroy()
+ *
+ * 为不同线程提供不同的目标对象。
  */
 @SuppressWarnings("serial")
 public class ThreadLocalTargetSource extends AbstractPrototypeBasedTargetSource

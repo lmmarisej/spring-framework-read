@@ -141,20 +141,20 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 
 	/**
-	 * Set the names of the interfaces we're proxying. If no interface
-	 * is given, a CGLIB for the actual class will be created.
+	 * Set the names of the interfaces we're proxying. If no interface is given, a CGLIB for the actual class will be created.
 	 * <p>This is essentially equivalent to the "setInterfaces" method,
 	 * but mirrors TransactionProxyFactoryBean's "setProxyInterfaces".
 	 * @see #setInterfaces
 	 * @see AbstractSingletonProxyFactoryBean#setProxyInterfaces
+	 *
+	 * 指定基于接口代理的接口类型，如果没有明确指定接口类型，会自动检测并进行代理
 	 */
 	public void setProxyInterfaces(Class<?>[] proxyInterfaces) throws ClassNotFoundException {
 		setInterfaces(proxyInterfaces);
 	}
 
 	/**
-	 * Set the list of Advice/Advisor bean names. This must always be set
-	 * to use this factory bean in a bean factory.
+	 * Set the list of Advice/Advisor bean names. This must always be set to use this factory bean in a bean factory.
 	 * <p>The referenced beans should be of type Interceptor, Advisor or Advice
 	 * The last entry in the list can be the name of any bean in the factory.
 	 * If it's neither an Advice nor an Advisor, a new SingletonTargetSource
@@ -168,6 +168,8 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	 * @see org.springframework.aop.Advisor
 	 * @see org.aopalliance.aop.Advice
 	 * @see org.springframework.aop.target.SingletonTargetSource
+	 *
+	 * 指定将要织入目标对象的advice、拦截器以及advisor
 	 */
 	public void setInterceptorNames(String... interceptorNames) {
 		this.interceptorNames = interceptorNames;
@@ -465,7 +467,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 					logger.trace("Configuring advisor or advice '" + name + "'");
 				}
 
-				if (name.endsWith(GLOBAL_SUFFIX)) {
+				if (name.endsWith(GLOBAL_SUFFIX)) {		// 如果interceptorNames有以*结尾的，在容器中搜索符合条件的所有advisor并应用到目标对象
 					if (!(this.beanFactory instanceof ListableBeanFactory)) {
 						throw new AopConfigException(
 								"Can only use global advisors or interceptors with a ListableBeanFactory");

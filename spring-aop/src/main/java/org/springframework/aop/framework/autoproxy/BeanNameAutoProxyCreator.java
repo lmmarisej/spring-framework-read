@@ -42,6 +42,12 @@ import org.springframework.util.StringUtils;
  * @see #isMatch
  * @see #setInterceptorNames
  * @see AbstractAutoProxyCreator
+ *
+ * 通过指定一组容器内的目标对象对应的beanNames，将指定的一组拦截器应用到这些目标对象身上。
+ *
+ * 半自动，提供更细粒度的织入范围。
+ *
+ * 可以使用多个BeanNameAutoProxyCreator，以细化织入范围。
  */
 @SuppressWarnings("serial")
 public class BeanNameAutoProxyCreator extends AbstractAutoProxyCreator {

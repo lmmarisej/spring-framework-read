@@ -32,6 +32,8 @@ import org.springframework.lang.Nullable;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
+ *
+ * 为目标对象在外层加壳，方便Spring AOP插足于调用链与实际目标对象之间。
  */
 public interface TargetSource extends TargetClassAware {
 
@@ -51,6 +53,8 @@ public interface TargetSource extends TargetClassAware {
 	 * and the AOP framework can cache the return value of {@link #getTarget()}.
 	 * @return {@code true} if the target is immutable
 	 * @see #getTarget
+	 *
+	 * 是否返回同一个目标对象实例。
 	 */
 	boolean isStatic();
 

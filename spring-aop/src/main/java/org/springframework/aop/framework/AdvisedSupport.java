@@ -91,7 +91,6 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	 * Interfaces to be implemented by the proxy. Held in List to keep the order of registration, to
 	 * create JDK proxy with specified order of interfaces.
 	 * <p>
-	 * 接口列表
 	 */
 	private List<Class<?>> interfaces = new ArrayList<>();
 
@@ -140,6 +139,9 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		return this.targetSource;
 	}
 
+	/**
+	 * 指定具体的目标对象。
+	 */
 	@Override
 	public void setTargetSource(@Nullable TargetSource targetSource) {
 		this.targetSource = (targetSource != null ? targetSource : EMPTY_TARGET_SOURCE);

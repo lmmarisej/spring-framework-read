@@ -88,10 +88,17 @@ import org.springframework.util.StringUtils;
  * @see BeanNameAutoProxyCreator
  * @see DefaultAdvisorAutoProxyCreator
  * @since 13.10.2003
+ *
+ * Spring AOP给出的自动代理机制，帮助我们解决使用ProxyFactoryBean工作量较大的问题。
+ *
+ * 子类只只需要提供规则匹配一类的逻辑。
  */
 @SuppressWarnings("serial")
 public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
-		implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware {
+		implements
+		// AbstractAutoProxyCreator直接构造代理对象返回
+		SmartInstantiationAwareBeanPostProcessor,	// 通过InstantiationAwareBeanPostProcessor构造实例并返回，不会走正常bean实例化流程
+		BeanFactoryAware {
 
 	/**
 	 * Convenience constant for subclasses: Return value for "do not proxy".
@@ -200,6 +207,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * <p>If this property isn't set, there will be zero common interceptors.
 	 * This is perfectly valid, if "specific" interceptors such as matching Advisors are all we
 	 * want.
+	 *
+	 * 指定将要应用到目标对象的advice、拦截器和advisor等。
 	 */
 	public void setInterceptorNames(String... interceptorNames) {
 		this.interceptorNames = interceptorNames;
