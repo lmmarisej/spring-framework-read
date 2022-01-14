@@ -16,6 +16,9 @@
 
 package org.springframework.aop;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+
 /**
  * Tag interface for throws advice.
  *
@@ -47,7 +50,17 @@ package org.springframework.aop;
  * @author Juergen Hoeller
  * @see AfterReturningAdvice
  * @see MethodBeforeAdvice
+ *
+ * 通常用于对系统中特定的异常情况进行监控，以统一的方式对所发生的异常进行处理。
  */
 public interface ThrowsAdvice extends AfterAdvice {
+
+//	实现时需要遵循的原则：
+//	public void afterThrowing(【Method method, Object[] args, Object target】, Exception ex)
+//	其中，【】中的三个参数可以省略。
+//
+//	实现多个afterThrowing，我们可以根据将要拦截的Throwable的不同类型，在同一个ThrowsAdvice实现多个afterThrowing方法。
+//	框架将会使用Java反射机制来调用这些方法。
+//
 
 }

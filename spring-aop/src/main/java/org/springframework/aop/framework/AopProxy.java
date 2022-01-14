@@ -24,7 +24,7 @@ import org.springframework.lang.Nullable;
  * <p>Out-of-the-box implementations are available for JDK dynamic proxies
  * and for CGLIB proxies, as applied by {@link DefaultAopProxyFactory}.
  *
- * 定义生成代理方式，比如JDK代理、CGLib代理。
+ * 对不同的代理实现机制进行了适度的抽象，针对不同的代理机制，提供了不同的子类实现。JDK代理、CGLib代理。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

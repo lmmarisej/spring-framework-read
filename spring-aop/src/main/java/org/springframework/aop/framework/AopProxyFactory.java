@@ -53,6 +53,8 @@ public interface AopProxyFactory {
 	 * AdvisedSupport object
 	 * @return the corresponding AOP proxy
 	 * @throws AopConfigException if the configuration is invalid
+	 *
+	 * 根据传入的AdvisedSupport实例提供的相关信息，来决定生成什么类型的AopProxy
 	 */
 	AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException;
 

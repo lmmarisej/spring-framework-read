@@ -35,6 +35,8 @@ import org.springframework.util.Assert;
  * @since 2.0
  * @see AnnotationClassFilter
  * @see AnnotationMethodMatcher
+ *
+ * 根据目标对象是否存在指定类型的注解来匹配Joinpoint。
  */
 public class AnnotationMatchingPointcut implements Pointcut {
 
@@ -44,8 +46,10 @@ public class AnnotationMatchingPointcut implements Pointcut {
 
 
 	/**
+	 * 给定注解类型。
+	 *
 	 * Create a new AnnotationMatchingPointcut for the given annotation type.
-	 * @param classAnnotationType the annotation type to look for at the class level
+	 * @param classAnnotationType 在类级别查找注解类型
 	 */
 	public AnnotationMatchingPointcut(Class<? extends Annotation> classAnnotationType) {
 		this(classAnnotationType, false);
@@ -77,6 +81,8 @@ public class AnnotationMatchingPointcut implements Pointcut {
 	}
 
 	/**
+	 * 进一步的缩小包围圈。同时指定类级别的注解和方法级别的注解，只有同时指定了类注解和方法注解才匹配。
+	 *
 	 * Create a new AnnotationMatchingPointcut for the given annotation types.
 	 * @param classAnnotationType the annotation type to look for at the class level
 	 * (can be {@code null})
@@ -155,8 +161,9 @@ public class AnnotationMatchingPointcut implements Pointcut {
 	}
 
 	/**
-	 * Factory method for an AnnotationMatchingPointcut that matches
-	 * for the specified annotation at the method level.
+	 * 指定方法级别的注解，未指定类级别的注解，将只匹配方法级别的注解的Joinpoint。
+	 *
+	 * Factory method for an AnnotationMatchingPointcut that matches for the specified annotation at the method level.
 	 * @param annotationType the annotation type to look for at the method level
 	 * @return the corresponding AnnotationMatchingPointcut
 	 */

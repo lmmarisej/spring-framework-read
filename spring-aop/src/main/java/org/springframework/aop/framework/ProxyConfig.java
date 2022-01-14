@@ -27,6 +27,8 @@ import org.springframework.util.Assert;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see AdvisedSupport
+ *
+ * 记载生成代理对象的控制信息。
  */
 public class ProxyConfig implements Serializable {
 
@@ -36,15 +38,15 @@ public class ProxyConfig implements Serializable {
 	/**
 	 * {@code <aop:aspectj-autoproxy proxy-target-class="true"/>} 中的属性
 	 */
-	private boolean proxyTargetClass = false;
+	private boolean proxyTargetClass = false;		// 代理方式，默认jdk
 
-	private boolean optimize = false;
+	private boolean optimize = false;		// 是否对代理采取优化措施，默认jdk代理
 
-	boolean opaque = false;
+	boolean opaque = false;		// 控制生成的代理对象是否可以强转为advised，默认都可以
 
-	boolean exposeProxy = false;
+	boolean exposeProxy = false;		// true，生成代理对象时，将当前代理对象绑定到ThreadLocal，通过AopContext#currentProxy取得
 
-	private boolean frozen = false;
+	private boolean frozen = false;	// true，一旦生成代理对象将不能被修改，可以优化代理对象生成的性能
 
 
 	/**

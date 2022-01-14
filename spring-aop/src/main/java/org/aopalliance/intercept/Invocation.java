@@ -23,7 +23,7 @@ package org.aopalliance.intercept;
  *
  * @author Rod Johnson
  *
- * 在被拦截点基础上，额外封装了调用者的部分信息。
+ * 在被拦截点基础上，额外封装了方法调用的部分信息。
  */
 public interface Invocation extends Joinpoint {
 

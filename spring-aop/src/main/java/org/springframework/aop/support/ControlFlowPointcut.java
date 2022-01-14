@@ -36,6 +36,8 @@ import org.springframework.util.ObjectUtils;
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Sam Brannen
+ *
+ * 用于匹配调用流程，对通过某个class的某个方法的Joinpoint进行拦截。
  */
 @SuppressWarnings("serial")
 public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher, Serializable {
@@ -95,6 +97,7 @@ public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher
 	public boolean matches(Method method, Class<?> targetClass, Object... args) {
 		this.evaluations.incrementAndGet();
 
+		// 当当前方法在指定的class中被指定的方法调用时，才对经过这个Joinpoint的方法进行拦截
 		for (StackTraceElement element : new Throwable().getStackTrace()) {
 			if (element.getClassName().equals(this.clazz.getName()) &&
 					(this.methodName == null || element.getMethodName().equals(this.methodName))) {

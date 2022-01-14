@@ -28,8 +28,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Convenient implementation of the
- * {@link org.springframework.aop.IntroductionInterceptor} interface.
+ * Convenient implementation of the {@link org.springframework.aop.IntroductionInterceptor} interface.
  *
  * <p>This differs from {@link DelegatingIntroductionInterceptor} in that a single
  * instance of this class can be used to advise multiple target objects, and each target
@@ -51,6 +50,10 @@ import org.springframework.util.ReflectionUtils;
  * @since 2.0
  * @see #suppressInterface
  * @see DelegatingIntroductionInterceptor
+ *
+ * 实现原理
+ * 			在内部持有一个目标对象与相应Introduction逻辑实现类之间的映射关系。每当目标对象上新定义的接口方法被调用时，DelegatePerTargetObjectIntroductionInterceptor
+ * 		将拦截这些调用，以目标对象实例作为键，到它持有的映射关系中取得对应当前目标对象实例的Introduction实现类实例。
  */
 @SuppressWarnings("serial")
 public class DelegatePerTargetObjectIntroductionInterceptor extends IntroductionInfoSupport

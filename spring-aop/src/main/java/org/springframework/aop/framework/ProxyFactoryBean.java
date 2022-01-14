@@ -82,6 +82,8 @@ import org.springframework.util.ObjectUtils;
  * do not have the same object identity. However, they do have the same interceptors
  * and target, and changing any reference will change all objects.
  *
+ * 织入器，本质上是一个用来生产Proxy的FactoryBean，通过getObject向容器返回一个代理对象。
+ *
  * 用于实现AOP应用，配置本类的属性，以实现对目标对象及拦截器配置，以便SpringAOP代理对象顺利产生。
  *
  * 提供声明式的Spring AOP功能的封装。实现的AOP功能与ProxyFactory实现原理一样，只是在外层的表现形式上有区别。
@@ -115,7 +117,8 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 	private boolean autodetectInterfaces = true;
 
-	private boolean singleton = true;
+	// 对于单例，直接从缓冲中获取
+	private boolean singleton = true;		// FactoryBean中明确要求标明返回的对象是单例函数原型返回，针对这两种情况返回不同的代理对象
 
 	private AdvisorAdapterRegistry advisorAdapterRegistry = GlobalAdvisorAdapterRegistry.getInstance();
 
@@ -477,7 +480,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 					Object advice;
 					if (this.singleton || this.beanFactory.isSingleton(name)) {		// 对bean是单例还是原型进行判断
 						// Add the real Advisor/Advice to the chain.
-						advice = this.beanFactory.getBean(name);		// IoC中获取
+						advice = this.beanFactory.getBean(name);		// 从缓存中获取
 					}
 					else {
 						// It's a prototype Advice or Advisor: replace with a prototype.

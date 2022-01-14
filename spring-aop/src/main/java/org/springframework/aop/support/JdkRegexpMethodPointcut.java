@@ -36,6 +36,8 @@ import java.util.regex.PatternSyntaxException;
  * @author Dmitriy Kopylenko
  * @author Rob Harrop
  * @since 1.1
+ *
+ * 根据整个方法签名（不能只给出方法名称）进行正则匹配，使用JDK标准正则表达式。
  */
 @SuppressWarnings("serial")
 public class JdkRegexpMethodPointcut extends AbstractRegexpMethodPointcut {

@@ -27,7 +27,7 @@ import org.springframework.util.ClassUtils;
  * setup in a bean factory. This class provides a simple way of obtaining
  * and configuring AOP proxy instances in custom user code.
  *
- * 用于实现AOP应用。
+ * Spring AOP最基本的一个织入器实现，可以独立于SpringIoC容器之外来使用AOP支持。
  *
  * 提供编程式的Spring AOP功能的封装。
  *
@@ -135,7 +135,7 @@ public class ProxyFactory
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getProxy(Class<T> proxyInterface, Interceptor interceptor) {
-		return (T) new ProxyFactory(proxyInterface, interceptor).getProxy();
+		return (T) new ProxyFactory(proxyInterface, interceptor).getProxy();		// 根据必要的生产原料，返回织入了横切逻辑的目标对象的代理实现
 	}
 
 	/**

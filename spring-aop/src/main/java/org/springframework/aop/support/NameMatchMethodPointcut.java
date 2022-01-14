@@ -35,6 +35,8 @@ import org.springframework.util.PatternMatchUtils;
  * @author Rob Harrop
  * @since 11.02.2004
  * @see #isMatch
+ *
+ * 根据自身指定的一组方法名称（无需全方法签名）与Joinpoint处的方法名称进行匹配。
  */
 @SuppressWarnings("serial")
 public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut implements Serializable {
@@ -45,7 +47,10 @@ public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut impleme
 	/**
 	 * Convenience method when we have only a single method name to match.
 	 * Use either this method or {@code setMappedNames}, not both.
-	 * @see #setMappedNames
+	 *
+	 * 单个名称匹配
+	 *
+	 * @see #setMappedNames	根据一组名称进行匹配
 	 */
 	public void setMappedName(String mappedName) {
 		setMappedNames(mappedName);

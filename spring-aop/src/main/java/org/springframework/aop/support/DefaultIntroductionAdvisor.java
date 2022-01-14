@@ -50,6 +50,8 @@ public class DefaultIntroductionAdvisor implements IntroductionAdvisor, ClassFil
 
 
 	/**
+	 * 只能指定Introduction类型的advice。
+	 *
 	 * Create a DefaultIntroductionAdvisor for the given advice.
 	 * @param advice the Advice to apply (may implement the
 	 * {@link org.springframework.aop.IntroductionInfo} interface)

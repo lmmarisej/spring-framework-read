@@ -32,6 +32,10 @@ import org.springframework.lang.Nullable;
  * @since 2.0.2
  * @see #setPointcut
  * @see #setAdviceBeanName
+ *
+ * 可以通过容器中的advice注册的beanName来关联对应的advice。
+ *
+ * 只有当对应的Pointcut匹配成功，才去实例化advice，减少了容器启动初期advisor和advice之间的耦合性。
  */
 @SuppressWarnings("serial")
 public class DefaultBeanFactoryPointcutAdvisor extends AbstractBeanFactoryPointcutAdvisor {

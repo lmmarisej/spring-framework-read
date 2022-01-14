@@ -27,6 +27,9 @@ import org.springframework.lang.Nullable;
  * @author Rod Johnson
  * @see MethodBeforeAdvice
  * @see ThrowsAdvice
+ *
+ * 场景
+ * 		记录程序运行状态。
  */
 public interface AfterReturningAdvice extends AfterAdvice {
 
@@ -40,6 +43,11 @@ public interface AfterReturningAdvice extends AfterAdvice {
 	 * Any exception thrown will be returned to the caller if it's
 	 * allowed by the method signature. Otherwise the exception
 	 * will be wrapped as a runtime exception.
+	 *
+	 * 方法正常成功后的回调，可以访问方法返回值、方法、方法参数以及所在的目标对象。
+	 *
+	 * 缺点
+	 * 		不能修改方法返回值，但是可以通过其它Advice来实现。
 	 */
 	void afterReturning(@Nullable Object returnValue, Method method, Object[] args, @Nullable Object target) throws Throwable;
 

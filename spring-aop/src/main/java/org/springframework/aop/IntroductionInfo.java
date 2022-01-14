@@ -27,6 +27,8 @@ package org.springframework.aop;
  *
  * @author Rod Johnson
  * @since 1.1.1
+ *
+ * 将被拦截的接口信息。
  */
 public interface IntroductionInfo {
 

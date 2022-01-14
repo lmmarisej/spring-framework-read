@@ -39,6 +39,11 @@ package org.springframework.core;
  * @see OrderComparator
  * @see org.springframework.core.annotation.Order
  * @see org.springframework.core.annotation.AnnotationAwareOrderComparator
+ *
+ * 值越低，优先级越高，优先级排在前面，将优先执行。
+ *
+ * 当某些Advisor的Pointcut匹配了同一个Joinpoint的时候，就会在同一个Joinpoint处执行多个Advice横切逻辑。
+ * 对于某些Advisor来说，颠倒顺序会造成某个Advisor失效，需要为其指定优先级来避免。
  */
 public interface Ordered {
 

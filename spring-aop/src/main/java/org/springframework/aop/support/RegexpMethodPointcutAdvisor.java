@@ -41,6 +41,8 @@ import org.springframework.util.ObjectUtils;
  * @see #setPattern
  * @see #setPatterns
  * @see JdkRegexpMethodPointcut
+ *
+ * 限定自身可以使用的pointcut类型，即只能通过正则表达式为其设置相应的pointcut。
  */
 @SuppressWarnings("serial")
 public class RegexpMethodPointcutAdvisor extends AbstractGenericPointcutAdvisor {

@@ -155,6 +155,11 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	}
 
 
+	/**
+	 * 让程序执行继续沿着调用链传播。
+	 *
+	 * 当某一MethodInvocation没有调用proceed，那么程序将在当前MethodInvocation处短路，Joinpoint上的调用链将被中断。
+	 */
 	@Override
 	@Nullable
 	public Object proceed() throws Throwable {

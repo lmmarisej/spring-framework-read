@@ -48,7 +48,9 @@ import java.lang.reflect.Method;
  * @author Rod Johnson
  * @since 11.11.2003
  * @see Pointcut
- * @see ClassFilter
+ * @see ClassFilter 与ClassFilter分开定义是为了可以重用不同级别的匹配定义，并且能进行组合操作，或者强制让某个子类只重写相应的方法定义等。
+ *
+ * 匹配将要被执行织入操作的方法。
  */
 public interface MethodMatcher {
 
@@ -61,6 +63,8 @@ public interface MethodMatcher {
 	 * @param method the candidate method
 	 * @param targetClass the target class
 	 * @return whether or not this method matches statically
+	 *
+	 *
 	 */
 	boolean matches(Method method, Class<?> targetClass);
 
@@ -68,17 +72,19 @@ public interface MethodMatcher {
 	 * Is this MethodMatcher dynamic, that is, must a final call be made on the
 	 * {@link #matches(java.lang.reflect.Method, Class, Object[])} method at
 	 * runtime even if the 2-arg matches method returns {@code true}?
-	 * <p>Can be invoked when an AOP proxy is created, and need not be invoked
-	 * again before each method invocation,
+	 * <p>Can be invoked when an AOP proxy is created, and need not be invoked again before each method invocation,
 	 * @return whether or not a runtime match via the 3-arg
-	 * {@link #matches(java.lang.reflect.Method, Class, Object[])} method
-	 * is required if static matching passed
+	 * {@link #matches(java.lang.reflect.Method, Class, Object[])} method is required if static matching passed
+	 *
+	 * 返回false，表示不会考虑具体的Joinpoint的方法参数，被称为static matching，不用检查参数，对于同类型的方法匹配结果，可以在框架内部进行
+	 * 缓存，以提高性能。
+	 *
+	 * 返回true，也被称为dynamic MethodMatcher，每次需要检查方法参数，因此无法对匹配结果进行缓存。
 	 */
 	boolean isRuntime();
 
 	/**
-	 * Check whether there a runtime (dynamic) match for this method,
-	 * which must have matched statically.
+	 * Check whether there a runtime (dynamic) match for this method, which must have matched statically.
 	 * <p>This method is invoked only if the 2-arg matches method returns
 	 * {@code true} for the given method and target class, and if the
 	 * {@link #isRuntime()} method returns {@code true}. Invoked
@@ -89,6 +95,8 @@ public interface MethodMatcher {
 	 * @param args arguments to the method
 	 * @return whether there's a runtime match
 	 * @see MethodMatcher#matches(Method, Class)
+	 *
+	 * 每次都检查这些方法调用参数，以强化拦截条件。
 	 */
 	boolean matches(Method method, Class<?> targetClass, Object... args);
 

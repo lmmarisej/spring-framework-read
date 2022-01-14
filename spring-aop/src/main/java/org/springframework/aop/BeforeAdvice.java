@@ -26,7 +26,12 @@ import org.aopalliance.aop.Advice;
  *
  * @author Rod Johnson
  * @see AfterAdvice
+ *
+ * 所实现的逻辑都将在相应的Joinpoint之前执行。
+ *
+ * 作用
+ * 		可以用来进行整个系统的某些资源初始化或者一些准备性工作。
  */
-public interface BeforeAdvice extends Advice {
+public interface BeforeAdvice extends Advice {		// 空实现，考虑到将来的扩展性以及可能支持属性级别的拦截
 
 }

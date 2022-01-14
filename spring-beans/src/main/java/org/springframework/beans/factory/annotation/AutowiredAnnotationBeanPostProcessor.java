@@ -261,7 +261,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	@Override
 	@Nullable
 	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName)
-			throws BeanCreationException {
+			throws BeanCreationException {		// 注解支持的属性注入
 
 		// Let's check for lookup methods here...
 		if (!this.lookupMethodsChecked.contains(beanName)) {

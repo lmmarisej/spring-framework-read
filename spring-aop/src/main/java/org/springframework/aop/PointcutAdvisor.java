@@ -22,6 +22,8 @@ package org.springframework.aop;
  * for which method-level matching doesn't apply.
  *
  * @author Rod Johnson
+ *
+ * 可以使用任何类型的Pointcut，以及差不多任何类型的advice。
  */
 public interface PointcutAdvisor extends Advisor {
 

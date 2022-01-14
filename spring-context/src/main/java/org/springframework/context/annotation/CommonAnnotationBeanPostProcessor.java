@@ -140,6 +140,8 @@ import org.springframework.util.StringValueResolver;
  * @see #setResourceFactory
  * @see org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor
  * @see org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
+ *
+ * 提供对JSR-250注解的支持。
  */
 @SuppressWarnings("serial")
 public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBeanPostProcessor

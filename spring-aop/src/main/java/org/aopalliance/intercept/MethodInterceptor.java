@@ -37,7 +37,12 @@ package org.aopalliance.intercept;
  *
  * @author Rod Johnson
  *
- * 提供方法拦截的能力。
+ * Spring AOP 没有提供 Around Advice，而是直接采用的 aopalliance 的标准接口：MethodInterceptor。
+ *
+ * 相比于 AfterReturningAdvice ，提供了对方法返回值进行修改的能力。
+ *
+ * 场景
+ * 		系统安全验证及检查、系统各处的性能检测、简单的日志记录。
  */
 @FunctionalInterface
 public interface MethodInterceptor extends Interceptor {
@@ -52,7 +57,7 @@ public interface MethodInterceptor extends Interceptor {
 	 *
 	 * @throws Throwable if the interceptors or the target object throws an exception
 	 *
-	 * 对代理对象方法调用入口。
+	 * 对代理对象方法调用入口，可以控制对对应 Joinpoint 的拦截行为，也就提供了 around Advice 的能力。
 	 */
 	Object invoke(MethodInvocation invocation) throws Throwable;
 

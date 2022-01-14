@@ -19,7 +19,7 @@ package org.springframework.aop;
 /**
  * Core Spring pointcut abstraction.
  *
- * 决定Advice通知应该作用于哪个连接点。
+ * 决定Advice通知应该作用于哪个连接点，定义了两个方法帮助捕捉系统中的相应Joinpoint。
  *
  * 作用
  * 		通过Pointcut来定义需要增强的方法和集合。

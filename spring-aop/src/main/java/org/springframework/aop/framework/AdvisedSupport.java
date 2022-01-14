@@ -56,7 +56,9 @@ import org.springframework.util.CollectionUtils;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @see org.springframework.aop.framework.AopProxy
+ * @see org.springframework.aop.framework.AopProxy	方便AopProxy通过AdvisedSupport取得必要信息
+ *
+ * 设置代理对象生成的一些控制属性。
  */
 public class AdvisedSupport extends ProxyConfig implements Advised {
 
@@ -194,6 +196,10 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 	/**
 	 * Set the interfaces to be proxied.
+	 *
+	 * Spring的Introduction支持只能通过接口定义当前对象添加新的行为，因此需要在织入时指定新织入的接口类型。
+	 *
+	 * 对于原来代理的对象不受限制。
 	 */
 	public void setInterfaces(Class<?>... interfaces) {
 		Assert.notNull(interfaces, "Interfaces must not be null");

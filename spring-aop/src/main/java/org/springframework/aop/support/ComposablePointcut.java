@@ -40,6 +40,8 @@ import org.springframework.util.Assert;
  * @author Rob Harrop
  * @since 11.11.2003
  * @see Pointcuts
+ *
+ * 为Spring AOP 的 Pointcut提供逻辑运算（and、or）
  */
 public class ComposablePointcut implements Pointcut, Serializable {
 

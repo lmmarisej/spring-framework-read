@@ -28,7 +28,15 @@ import org.aopalliance.intercept.MethodInterceptor;
  *
  * @author Rod Johnson
  * @see DynamicIntroductionAdvice
+ *
+ * 对目标对象进行拦截并添加Introduction逻辑，可以直接实现IntroductionInterceptor，在其子类invoke中实现所有的拦截逻辑。
+ *
+ * 只能应用对对象级别的拦截，而不是通常advice方法级别的拦截，所以无需指定Joinpoint，只需指定目标接口类型。
+ *
+ * Spring中，为目标对象添加新的属性和行为必须声明相应的接口以及相应的实现。通过特定的拦截器将新的接口定义以及实现类中的逻辑附加到目标对象之上。
  */
-public interface IntroductionInterceptor extends MethodInterceptor, DynamicIntroductionAdvice {
+public interface IntroductionInterceptor 	// 代表新的逻辑Introduction
+		extends MethodInterceptor, 			// 通过MethodInterceptor执行新逻辑
+		DynamicIntroductionAdvice {
 
 }

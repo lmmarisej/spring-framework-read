@@ -48,6 +48,8 @@ import org.springframework.util.Assert;
  * @since 16.11.2003
  * @see #suppressInterface
  * @see DelegatePerTargetObjectIntroductionInterceptor
+ *
+ * 不会自己实现将要添加到目标对象上新的逻辑行为，而是委派给其它实现类。
  */
 @SuppressWarnings("serial")
 public class DelegatingIntroductionInterceptor extends IntroductionInfoSupport

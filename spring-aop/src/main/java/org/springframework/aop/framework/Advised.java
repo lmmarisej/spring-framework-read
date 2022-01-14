@@ -28,12 +28,12 @@ import org.springframework.aop.TargetSource;
  *
  * <p>Any AOP proxy obtained from Spring can be cast to this interface to allow manipulation of its AOP advice.
  *
- * 对所有的SpringAOP中advice都支持的中间层。
- *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 13.03.2003
  * @see org.springframework.aop.framework.AdvisedSupport
+ *
+ * 承载生成代理对象所需要的必要信息。如：目标类、Advice（加入的横切逻辑）、Advisor。
  */
 public interface Advised extends TargetClassAware {
 
@@ -45,6 +45,8 @@ public interface Advised extends TargetClassAware {
 
 	/**
 	 * Are we proxying the full target class instead of specified interfaces?
+	 *
+	 * true使用CGLib代理，默认为false。
 	 */
 	boolean isProxyTargetClass();
 

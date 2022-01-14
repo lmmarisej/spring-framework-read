@@ -28,6 +28,8 @@ import org.springframework.aop.Pointcut;
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @see NameMatchMethodPointcut
+ *
+ * 细化AbstractGenericPointcutAdvisor，限定自身可以使用的Pointcut类型为NameMatchMethodPointcut，并且外部不能更改。
  */
 @SuppressWarnings("serial")
 public class NameMatchMethodPointcutAdvisor extends AbstractGenericPointcutAdvisor {
@@ -57,6 +59,8 @@ public class NameMatchMethodPointcutAdvisor extends AbstractGenericPointcutAdvis
 	 * Use either this method or {@code setMappedNames}, not both.
 	 * @see #setMappedNames
 	 * @see NameMatchMethodPointcut#setMappedName
+	 *
+	 * 设置将被拦截的方法名称。
 	 */
 	public void setMappedName(String mappedName) {
 		this.pointcut.setMappedName(mappedName);

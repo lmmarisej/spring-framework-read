@@ -44,13 +44,14 @@ public interface Joinpoint {
 
 	/**
 	 * Proceed to the next interceptor in the chain.
-	 *
-	 * 可以是target方法的直接调用，也可以是拦截器链的调用，拦截器链最后一个元素以target方法的调用而结束。
-	 *
 	 * <p>The implementation and the semantics of this method depends
 	 * on the actual joinpoint type (see the children interfaces).
 	 * @return see the children interfaces' proceed definition
 	 * @throws Throwable if the joinpoint throws an exception
+	 *
+	 * 可以是target方法的直接调用，也可以是拦截器链的调用，拦截器链最后一个元素以target方法的调用而结束。
+	 *
+	 * 可以在proceed执行之前或之后插入相应的逻辑，甚至捕获proceed抛出的异常。
 	 */
 	Object proceed() throws Throwable;
 

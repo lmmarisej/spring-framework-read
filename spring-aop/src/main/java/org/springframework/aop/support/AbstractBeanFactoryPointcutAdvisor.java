@@ -41,7 +41,9 @@ import org.springframework.util.Assert;
  * @see DefaultBeanFactoryPointcutAdvisor
  */
 @SuppressWarnings("serial")
-public abstract class AbstractBeanFactoryPointcutAdvisor extends AbstractPointcutAdvisor implements BeanFactoryAware {
+public abstract class AbstractBeanFactoryPointcutAdvisor extends AbstractPointcutAdvisor
+		implements BeanFactoryAware		// 绑定到了 BeanFactory，因此应用一定会使用到 IoC 容器
+{
 
 	@Nullable
 	private String adviceBeanName;

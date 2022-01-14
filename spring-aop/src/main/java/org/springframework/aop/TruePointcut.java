@@ -22,6 +22,8 @@ import java.io.Serializable;
  * Canonical Pointcut instance that always matches.
  *
  * @author Rod Johnson
+ *
+ * 默认会对系统中所有对象，以及对象上所有被支持的Joinpoint进行匹配。
  */
 @SuppressWarnings("serial")
 final class TruePointcut implements Pointcut, Serializable {

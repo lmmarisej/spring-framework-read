@@ -134,7 +134,8 @@ public interface FactoryBean<T> {
 	 * <p>The default implementation returns {@code true}, since a
 	 * {@code FactoryBean} typically manages a singleton instance.
 	 *
-	 * 是否单例
+	 * 明确是否单例
+	 *
 	 * @return whether the exposed object is a singleton
 	 *
 	 * @see #getObject()

@@ -102,7 +102,7 @@ public abstract class ClassFilters {
 		public boolean matches(Class<?> clazz) {
 			for (ClassFilter filter : this.filters) {
 				if (filter.matches(clazz)) {
-					return true;
+					return true;		// 任意一个满足即可
 				}
 			}
 			return false;
@@ -143,7 +143,7 @@ public abstract class ClassFilters {
 		public boolean matches(Class<?> clazz) {
 			for (ClassFilter filter : this.filters) {
 				if (!filter.matches(clazz)) {
-					return false;
+					return false;					// 任意一个不满足都不行
 				}
 			}
 			return true;

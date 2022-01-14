@@ -30,6 +30,8 @@ import org.aopalliance.aop.Advice;
  * such as <b>before</b> and <b>after</b> advice, which need not be
  * implemented using interception.
  *
+ * Spring 的 Aspect，与正常的 Aspect 有些许不同，Advisor 通常只能持有一个 Pointcut 和一个 Advice。
+ *
  * 将Advice和Pointcut结合起来，提供即开即用的AOP基础设施。
  *
  * @author Rod Johnson
