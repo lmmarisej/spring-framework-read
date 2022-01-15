@@ -51,13 +51,15 @@ import org.aopalliance.aop.Advice;
  * }
  * </pre>
  *
+ * 实现通知的方式可议是任何方式，比如Interceptors拦截器得方式。
+ *
  * 在SpringAOP中，对目标对象的增强都是通过拦截器来完成的。
  *
  * @author Rod Johnson
  * @see Joinpoint
  */
-public interface Interceptor
-		extends Advice		// 拦截器也属于通知，拦截器封装了在target方法调用前后织入的逻辑
+public interface Interceptor	// 以拦截器方式去实现通知的效果
+		extends Advice			// 拦截器也属于通知，拦截器封装了在target方法调用前后织入的逻辑
 {
 
 }

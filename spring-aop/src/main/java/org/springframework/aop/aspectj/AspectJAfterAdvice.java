@@ -29,6 +29,8 @@ import org.springframework.aop.AfterAdvice;
  *
  * @author Rod Johnson
  * @since 2.0
+ *
+ * spring aop 对 AfterAdvice 的包装。
  */
 @SuppressWarnings("serial")
 public class AspectJAfterAdvice extends AbstractAspectJAdvice

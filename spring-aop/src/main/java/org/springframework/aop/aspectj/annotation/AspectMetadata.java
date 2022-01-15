@@ -62,6 +62,13 @@ public class AspectMetadata implements Serializable {
 	/**
 	 * AspectJ reflection information (AspectJ 5 / Java 5 specific).
 	 * Re-resolved on deserialization since it isn't serializable itself.
+	 *
+	 * 实例化模式。
+	 *
+	 * perthis
+	 * 		指定的Pointcut匹配后，为相应的代理对象实例化各自的Aspect实例。
+	 * pertarget
+	 * 		指定的Pointcut匹配后，为匹配的单独目标对象实例化相应的Aspect实例。
 	 */
 	private transient AjType<?> ajType;
 

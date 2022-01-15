@@ -27,6 +27,8 @@ import java.lang.reflect.Constructor;
  *
  * @author Rod Johnson
  * @see ConstructorInterceptor
+ *
+ * 构造器相关。
  */
 public interface ConstructorInvocation extends Invocation {
 

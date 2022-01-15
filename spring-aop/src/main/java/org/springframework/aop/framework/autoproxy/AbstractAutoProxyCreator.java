@@ -89,7 +89,7 @@ import org.springframework.util.StringUtils;
  * @see DefaultAdvisorAutoProxyCreator
  * @since 13.10.2003
  *
- * Spring AOP给出的自动代理机制，帮助我们解决使用ProxyFactoryBean工作量较大的问题。
+ * Spring AOP给出的自动代理机制，将容器内的advisor进行织入，帮助我们解决使用ProxyFactoryBean工作量较大的问题。
  *
  * 子类只只需要提供规则匹配一类的逻辑。
  */

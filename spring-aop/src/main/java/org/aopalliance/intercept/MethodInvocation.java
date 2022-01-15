@@ -27,6 +27,8 @@ import java.lang.reflect.Method;
  * @see MethodInterceptor
  *
  * 将方法调用封装为连接点，作为方法拦截器使用。
+ *
+ * 方法调用时，对这部分进行描述。
  */
 public interface MethodInvocation extends Invocation {
 
@@ -34,7 +36,9 @@ public interface MethodInvocation extends Invocation {
 	 * Get the method being called.
 	 * <p>This method is a friendly implementation of the {@link Joinpoint#getStaticPart()} method (same result).
 	 *
-	 * 被调用的方法。
+	 * 返回正在被调用得方法。
+	 *
+	 * 效果同父类 Joinpoint 的 `AccessibleObject getStaticPart()` 这个方法。
 	 *
 	 * @return the method being called
 	 */

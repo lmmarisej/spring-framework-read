@@ -31,6 +31,8 @@ import org.aopalliance.aop.Advice;
  *
  * 作用
  * 		可以用来进行整个系统的某些资源初始化或者一些准备性工作。
+ *
+ * 	拥有最高优先级的 BeforeAdvice 最先执行。
  */
 public interface BeforeAdvice extends Advice {		// 空实现，考虑到将来的扩展性以及可能支持属性级别的拦截
 

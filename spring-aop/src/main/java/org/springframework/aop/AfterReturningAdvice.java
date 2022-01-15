@@ -30,6 +30,8 @@ import org.springframework.lang.Nullable;
  *
  * 场景
  * 		记录程序运行状态。
+ *
+ * 	具有最高优先级的 AfterReturningAdvice 最后执行。
  */
 public interface AfterReturningAdvice extends AfterAdvice {
 

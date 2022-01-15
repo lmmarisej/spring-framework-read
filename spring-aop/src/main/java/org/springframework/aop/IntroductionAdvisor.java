@@ -31,13 +31,14 @@ package org.springframework.aop;
  *
  * 只能应用于类级别的拦截，只能使用Introduction型的advice。
  *
- * 纯粹为Introduction而生。
+ * 纯粹为Introduction而生，Introduction属于per-instance类型的advice，目标对象通常为prototype。
  */
-public interface IntroductionAdvisor extends Advisor, IntroductionInfo {
+public interface IntroductionAdvisor extends Advisor,
+		IntroductionInfo		// 在SpringAOP中，Introduction的实现是通过将需要添加的新的行为逻辑，以新的接口定义增加到目标对象上。
+{
 
 	/**
-	 * Return the filter determining which target classes this introduction
-	 * should apply to.
+	 * Return the filter determining which target classes this introduction should apply to.
 	 * <p>This represents the class part of a pointcut. Note that method
 	 * matching doesn't make sense to introductions.
 	 * @return the class filter

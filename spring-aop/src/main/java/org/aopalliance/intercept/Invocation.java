@@ -23,7 +23,7 @@ package org.aopalliance.intercept;
  *
  * @author Rod Johnson
  *
- * 在被拦截点基础上，额外封装了方法调用的部分信息。
+ * 表示程序中的调用，该调用是一个可以被拦截器拦截的连接点。
  */
 public interface Invocation extends Joinpoint {
 
@@ -32,6 +32,8 @@ public interface Invocation extends Joinpoint {
 	 * It is possible to change element values within this array to change the arguments.
 	 *
 	 * @return the argument of the invocation
+	 *
+	 * 获得参数们，比如方法的入参。
 	 */
 	Object[] getArguments();		// 将参数封装为数组对象，就有了能够修改调用者传入的参数的能力
 

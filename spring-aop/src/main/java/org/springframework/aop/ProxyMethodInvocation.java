@@ -32,12 +32,18 @@ import org.springframework.lang.Nullable;
  * @since 1.1.3
  * @see org.springframework.aop.framework.ReflectiveMethodInvocation
  * @see org.springframework.aop.support.DelegatingIntroductionInterceptor
+ *
+ * 对MethodInvocation 的一个扩展。
+ *
+ * 允许访问方法、被调用的代理对象以及其它相关信息。
  */
 public interface ProxyMethodInvocation extends MethodInvocation {
 
 	/**
 	 * Return the proxy that this method invocation was made through.
 	 * @return the original proxy object
+	 *
+	 * 代理对象。
 	 */
 	Object getProxy();
 
@@ -62,6 +68,8 @@ public interface ProxyMethodInvocation extends MethodInvocation {
 	MethodInvocation invocableClone(Object... arguments);
 
 	/**
+	 * 设置参数，增强器、通知们执行的时候可能会用到。
+	 *
 	 * Set the arguments to be used on subsequent invocations in the any advice
 	 * in this chain.
 	 * @param arguments the argument array
@@ -69,6 +77,8 @@ public interface ProxyMethodInvocation extends MethodInvocation {
 	void setArguments(Object... arguments);
 
 	/**
+	 * 添加一些kv属性。这些kv并不会用于AOP框架内，而是保存下来给特殊的一些拦截器使用。
+	 *
 	 * Add the specified user attribute with the given value to this invocation.
 	 * <p>Such attributes are not used within the AOP framework itself. They are
 	 * just kept as part of the invocation object, for use in special interceptors.

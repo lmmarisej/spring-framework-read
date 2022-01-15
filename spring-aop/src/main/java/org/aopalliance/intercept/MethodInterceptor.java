@@ -37,6 +37,9 @@ package org.aopalliance.intercept;
  *
  * @author Rod Johnson
  *
+ * AspectJ 定义的通知们（增强器们），或者是自己实现的MethodBeforeAdvice、AfterReturningAdvice…(总是都是org.aopalliance.aop.Advice一个通知器)，
+ * 最终都会被包装成一个org.aopalliance.intercept.MethodInterceptor，最终交给MethodInvocation（子类ReflectiveMethodInvocation去执行，它会把你所有的增强器都给执行了，这就是我们面向切面编程的核心思路过程）。
+ *
  * Spring AOP 没有提供 Around Advice，而是直接采用的 aopalliance 的标准接口：MethodInterceptor。
  *
  * 相比于 AfterReturningAdvice ，提供了对方法返回值进行修改的能力。
@@ -57,8 +60,11 @@ public interface MethodInterceptor extends Interceptor {
 	 *
 	 * @throws Throwable if the interceptors or the target object throws an exception
 	 *
+	 * 可以在此方法里，在方法执行之前、之后做对应的处理。
+	 *
 	 * 对代理对象方法调用入口，可以控制对对应 Joinpoint 的拦截行为，也就提供了 around Advice 的能力。
 	 */
-	Object invoke(MethodInvocation invocation) throws Throwable;
+	Object invoke(MethodInvocation invocation)	// 在advice中，对joinpoint进行操作；需要执行的时候，调用invocation.proceed()方法即可。
+			throws Throwable;
 
 }

@@ -58,6 +58,10 @@ import org.springframework.lang.Nullable;
  * @see #invocableClone
  * @see #setUserAttribute
  * @see #getUserAttribute
+ *
+ * 执行拦截的核心逻辑。
+ *
+ * 会让所有的通知器都执行。
  */
 public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Cloneable {
 
@@ -138,6 +142,8 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	 * Return the method invoked on the proxied interface.
 	 * May or may not correspond with a method invoked on an underlying
 	 * implementation of that interface.
+	 *
+	 * 返回的可能是桥接方法。
 	 */
 	@Override
 	public final Method getMethod() {
@@ -156,7 +162,9 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 
 
 	/**
-	 * 让程序执行继续沿着调用链传播。
+	 * 让程序执行继续沿着调用链传播，是代理执行的入口，把所有的增强器都拿出来递归执行。
+	 *
+	 * 要执行方法、执行通知、都是在此处搞定。
 	 *
 	 * 当某一MethodInvocation没有调用proceed，那么程序将在当前MethodInvocation处短路，Joinpoint上的调用链将被中断。
 	 */
@@ -185,7 +193,7 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 			else {
 				// Dynamic matching failed.
 				// Skip this interceptor and invoke the next in the chain.
-				// 不匹配，那么proceed会被递归调用，直到所有的拦截器都被运行过为止
+				// 不匹配，那么proceed会被递归调用（继续执行下一个拦截器），直到所有的拦截器都被运行过为止
 				return proceed();
 			}
 		}
@@ -194,19 +202,20 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 		// 											因此，我们得出，他们两个的区别就是Advisor和Advice的区别。
 		else {
 			// It's an interceptor, so we just invoke it: The pointcut will have been evaluated statically before this object was constructed.
-			// 如果是interceptor，直接调用interceptor对应的方法
+			// 行此拦截器（只有匹配上的方法才会被拦截进来）。如果是interceptor，直接调用interceptor对应的方法
 			return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
 		}
 	}
 
 	/**
-	 * Invoke the joinpoint using reflection.
+	 * Invoke the joinpoint using reflection.				// method.invoke(target, args);
 	 * Subclasses can override this to use custom invocation.
 	 * @return the return value of the joinpoint
 	 * @throws Throwable if invoking the joinpoint resulted in an exception
 	 */
 	@Nullable
 	protected Object invokeJoinpoint() throws Throwable {
+		// 此处传入的是target，而不能是proxy，否则进入死循环
 		return AopUtils.invokeJoinpointUsingReflection(this.target, this.method, this.arguments);
 	}
 

@@ -21,7 +21,8 @@ import java.lang.reflect.Method;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.aspectj.lang.ProceedingJoinPoint;
+// 通常情况下我们需要通过 ProceedingJoinPoint 的 proceed 方法继续调用链的执行
+import org.aspectj.lang.ProceedingJoinPoint;		// 对于 AroundAdvice 来说，他的第一个参数必须是 ProceedingJoinPoint，并且必须指定
 import org.aspectj.weaver.tools.JoinPointMatch;
 
 import org.springframework.aop.ProxyMethodInvocation;

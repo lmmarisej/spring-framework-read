@@ -80,10 +80,16 @@ import org.springframework.util.StringUtils;
  * @author Ramnivas Laddad
  * @author Dave Syer
  * @since 2.0
+ *
+ * 持有反射获取的Pointcut表达式。
+ *
+ * 通过反射解析Aspect中@Pointcut定义的AspectJ形式的Pointcut定义之后，在SpringAOP内部都会构造一个对应的AspectJExpressionPointcut对象实例。
  */
 @SuppressWarnings("serial")
 public class AspectJExpressionPointcut extends AbstractExpressionPointcut
-		implements ClassFilter, IntroductionAwareMethodMatcher, BeanFactoryAware {
+		implements
+		ClassFilter, IntroductionAwareMethodMatcher,	// 通过 ClassFilter、MethodMatcher 对具体的 Pointcut 进行具体的匹配
+		BeanFactoryAware {
 
 	private static final Set<PointcutPrimitive> SUPPORTED_PRIMITIVES = new HashSet<>();
 
@@ -216,6 +222,8 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 
 	/**
 	 * Build the underlying AspectJ pointcut expression.
+	 *
+	 * 使用 PointcutParser 对 Pointcut 表达式进行解析。
 	 */
 	private PointcutExpression buildPointcutExpression(@Nullable ClassLoader classLoader) {
 		PointcutParser parser = initializePointcutParser(classLoader);

@@ -40,6 +40,8 @@ package org.aopalliance.intercept;
  * </pre>
  *
  * @author Rod Johnson
+ *
+ * 拦截构造器 。
  */
 public interface ConstructorInterceptor extends Interceptor  {
 
@@ -53,6 +55,8 @@ public interface ConstructorInterceptor extends Interceptor  {
 	 * the interceptor
 	 * @throws Throwable if the interceptors or the target object
 	 * throws an exception
+	 *
+	 * 构造实例。
 	 */
 	Object construct(ConstructorInvocation invocation) throws Throwable;
 

@@ -26,13 +26,24 @@ package org.aopalliance.aop;	// Spring AOP加入开源 AOP aopalliance 组织，
  * per-class类型的advice
  * 		可以在目标对象类的所有实例之间共享。
  * 		通常只是提供方法拦截的功能，不会为目标对象类保存任何状态或者添加新的特性。
- * 	例如
- * 		Before Advice、After Returning Advice、Throws Advice、Around Advice
+ *
+ * 		例如
+ * 			Before Advice、After Returning Advice、Throws Advice、Around Advice
  *
  * per-instance的advice
  * 		不会在目标类所有对象实例之间共享，会为不同的实例对象保存他们各自的状态以及相关的逻辑。
- * 	例如
- * 		DelegatePerTargetObjectIntroductionInterceptor
+ *
+ * 		例如
+ * 			DelegatePerTargetObjectIntroductionInterceptor
+ *
+ * 	在 Aspect 中最先声明的 Advice 拥有最高优先级。
+ *
+ * 多个Advice匹配同一个Joinpoint，而多个advice不在同一个Aspect
+ * 		使用SpringIoC容器注册并使用这些Aspect
+ * 			多个Aspect内的advice执行顺序需要通过ordered来设置以明确。
+ * 		通过编程使用Aspect
+ * 			Aspect内Advice的执行顺序完全由添加到AspectJProxyFactory的顺序来决定。
+ *
  *
  * @author Rod Johnson
  * @version $Id: Advice.java,v 1.1 2004/03/19 17:02:16 johnsonr Exp $

@@ -33,6 +33,8 @@ import java.lang.reflect.AccessibleObject;
  * joinpoint. It is passed to the interceptors that are installed on
  * the static joinpoint.
  *
+ * 表示运行时的连接点。
+ *
  * 用来封装需要被拦截的点（可能是方法、类等）。
  *
  * 一个实现了Joinpoint类，就应该能被拦截器拦截，因此这里封装了应该给拦截器提供的被拦截点的信息。
@@ -49,6 +51,8 @@ public interface Joinpoint {
 	 * @return see the children interfaces' proceed definition
 	 * @throws Throwable if the joinpoint throws an exception
 	 *
+	 * 执行此拦截点，并进入到下一个连接点。
+	 *
 	 * 可以是target方法的直接调用，也可以是拦截器链的调用，拦截器链最后一个元素以target方法的调用而结束。
 	 *
 	 * 可以在proceed执行之前或之后插入相应的逻辑，甚至捕获proceed抛出的异常。
@@ -59,7 +63,7 @@ public interface Joinpoint {
 	 * Return the object that holds the current joinpoint's static part.
 	 * <p>For instance, the target object for an invocation.
 	 *
-	 * 被拦截的对象。
+	 * 一般指的target，被拦截的对象。
 	 *
 	 * @return the object (can be null if the accessible object is static)
 	 */
@@ -68,6 +72,8 @@ public interface Joinpoint {
 	/**
 	 * Return the static part of this joinpoint.
 	 * <p>The static part is an accessible object on which a chain of interceptors are installed.
+	 *
+	 * 一般就为当前的Method，目前的唯一实现是MethodInvocation。
 	 */
 	AccessibleObject getStaticPart();
 

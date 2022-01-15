@@ -25,6 +25,8 @@ import org.aopalliance.aop.Advice;
  * @author Juergen Hoeller
  * @since 2.0.3
  * @see BeforeAdvice
+ *
+ * 不管是正常返回，还是异常返回都会触发该advice执行，适合用于释放某些系统资源的场景。
  */
 public interface AfterAdvice extends Advice {
 
