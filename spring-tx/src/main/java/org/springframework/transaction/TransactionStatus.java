@@ -30,16 +30,14 @@ import java.io.Flushable;
  * by the underlying transaction manager.
  * <p>
  *
- * 存放事物处理信息的主要数据对象，通过与线程绑定来实现事物的隔离性。
- *
- * 掌管事物执行的详细信息，包括具体的事物对象、事物执行状态、事物设置状态等。
- *
  * @author Juergen Hoeller
  * @see #setRollbackOnly()
  * @see PlatformTransactionManager#getTransaction
  * @see org.springframework.transaction.support.TransactionCallback#doInTransaction
  * @see org.springframework.transaction.interceptor.TransactionInterceptor#currentTransactionStatus()
  * @since 27.03.2003
+ *
+ * 提供相应的方法查询事物状态、表示当前事务以回滚、支持内部嵌套事物。
  */
 public interface TransactionStatus extends TransactionExecution, SavepointManager, Flushable {
 
@@ -50,7 +48,8 @@ public interface TransactionStatus extends TransactionExecution, SavepointManage
 	 * {@link #isNewTransaction()}. For programmatic handling of custom savepoints, use the
 	 * operations provided by {@link SavepointManager}.
 	 * <p>
-	 * 是否有保存点
+	 *
+	 * 帮助我们使用Savepoint机制来创建嵌套事务。
 	 *
 	 * @see #isNewTransaction()
 	 * @see #createSavepoint()

@@ -67,8 +67,6 @@ import org.springframework.util.ClassUtils;
  * In combination with {@link HibernateTransactionManager}, this naturally allows for
  * mixing JPA access code with native Hibernate access code within the same transaction.
  *
- * 用来对Hibernate的session进行管理，读取Hibernate配置、生成sessionFactory。
- *
  * @author Juergen Hoeller
  * @since 4.2
  * @see #setDataSource
@@ -76,11 +74,18 @@ import org.springframework.util.ClassUtils;
  * @see HibernateTransactionManager
  * @see LocalSessionFactoryBuilder
  * @see org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+ *
+ * 是我们在Spring中配置和获取SessionFactory最常用的方式。
+ *
+ * 可以通过LocalSessionFactoryBean配置Hibernate数据访问相关的所有资源，包括DataSource、配置文件位置、映射文件位置甚至处理LOB数据的LobHandler。
  */
 public class LocalSessionFactoryBean extends HibernateExceptionTranslator
-		implements FactoryBean<SessionFactory>, ResourceLoaderAware, BeanFactoryAware, InitializingBean, DisposableBean {
+		implements
+		FactoryBean<SessionFactory>,	// 采用FactoryBean的形式对SessionFactory的配置和获取进行封装
+		ResourceLoaderAware, BeanFactoryAware, InitializingBean, DisposableBean {
+
 	/**
-	 * 数据源
+	 * 通过 LocalSessionFactoryBean 构建 SessionFactory 时，使用的是 DataSource，而不是 Hibernate 内部的 ConnectionProvider。
 	 */
 	@Nullable
 	private DataSource dataSource;
@@ -244,8 +249,9 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator
 	/**
 	 * Set the DataSource to be used by the SessionFactory.
 	 * If set, this will override corresponding settings in Hibernate properties.
-	 * <p>If this is set, the Hibernate settings should not define
-	 * a connection provider to avoid meaningless double configuration.
+	 * <p>If this is set, the Hibernate settings should not define a connection provider to avoid meaningless double configuration.
+	 *
+	 * Spring将根据传入的DataSource，来决定将要构建的SessionFactory提供什么样的ConnectionProvider。
 	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;

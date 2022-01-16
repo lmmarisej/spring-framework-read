@@ -24,13 +24,13 @@ import org.springframework.transaction.TransactionDefinition;
  * As custom {@code rollbackOn} is only possible with AOP, it resides in the AOP-related
  * transaction subpackage.
  *
- * 对事物处理属性的数据抽象。
- *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 16.03.2003
  * @see DefaultTransactionAttribute
  * @see RuleBasedTransactionAttribute
+ *
+ * 主要面向SpringAOP声明式事物管理的场合。
  */
 public interface TransactionAttribute extends TransactionDefinition {
 
@@ -39,7 +39,8 @@ public interface TransactionAttribute extends TransactionDefinition {
 	 * <p>This may be used for choosing a corresponding transaction manager
 	 * to process this specific transaction.
 	 *
-	 * 获取事务定义的限定符
+	 * 获取事务定义的限定符。
+	 *
 	 * @since 3.0
 	 */
 	@Nullable
@@ -48,7 +49,8 @@ public interface TransactionAttribute extends TransactionDefinition {
 	/**
 	 * Should we roll back on the given exception?
 	 *
-	 * 判断是否是需要处理的异常
+	 * 指定业务方法在抛出那些异常情况下回滚。
+	 *
 	 * @param ex the exception to evaluate
 	 * @return whether to perform a rollback or not
 	 */

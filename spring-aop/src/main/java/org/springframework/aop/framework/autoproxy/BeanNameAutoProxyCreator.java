@@ -53,7 +53,7 @@ import org.springframework.util.StringUtils;
 public class BeanNameAutoProxyCreator extends AbstractAutoProxyCreator {
 
 	@Nullable
-	private List<String> beanNames;
+	private List<String> beanNames;		// 管理列表
 
 
 	/**

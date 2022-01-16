@@ -36,6 +36,8 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @see TransactionAttributeEditor
  * @since 09.04.2003
+ *
+ * 同时指定多个回滚规则。
  */
 @SuppressWarnings("serial")
 public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute implements
@@ -43,13 +45,11 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute i
 
 	/**
 	 * Prefix for rollback-on-exception rules in description strings.
-	 * 异常回滚的前缀
 	 */
 	public static final String PREFIX_ROLLBACK_RULE = "-";
 
 	/**
 	 * Prefix for commit-on-exception rules in description strings.
-	 * 异常提交的前缀
 	 */
 	public static final String PREFIX_COMMIT_RULE = "+";
 

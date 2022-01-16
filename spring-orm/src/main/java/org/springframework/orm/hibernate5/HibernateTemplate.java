@@ -78,13 +78,15 @@ import org.springframework.util.ReflectionUtils;
  * HibernateTemplate are deprecated in the meantime and primarily exist as a migration
  * helper for older Hibernate 3.x/4.x data access code in existing applications.</b>
  *
- * Spring通过IoC和AOP（事物）对Hibernate进行的封装。
+ * Spring通过IoC和AOP（事物）对Hibernate进行模板化的封装，在模板方法内部统一数据访问异常的处理。
+ *
+ * 统一Session的获取，以及释放管理逻辑进行封装。
  *
  * @author Juergen Hoeller
  * @since 4.2
  * @see #setSessionFactory
  * @see HibernateCallback
- * @see Session
+ * @see Session		所有的数据访问都需要经过Session的支持才能完成。
  * @see LocalSessionFactoryBean
  * @see HibernateTransactionManager
  * @see org.springframework.orm.hibernate5.support.OpenSessionInViewFilter
@@ -104,7 +106,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
-	 * session工厂。
+	 * 是所有数据访问资源的发源地，就像DataSource，获取了HibernateTemplate才能继续工作。
 	 */
 	@Nullable
 	private SessionFactory sessionFactory;
@@ -358,9 +360,6 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		}
 	}
 
-	/**
-	 * 通过这个回调来使用。
-	 */
 	@Override
 	@Nullable
 	public <T> T execute(HibernateCallback<T> action) throws DataAccessException {
@@ -388,6 +387,10 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	 * Hibernate Session to callback code
 	 * @return a result object returned by the action, or {@code null}
 	 * @throws DataAccessException in case of Hibernate errors
+	 *
+	 * 以本方法为中心，通过HibernateCallback回调接口为调用方公开的Session资源进行数据访问。
+	 *
+	 * 只要将Session资源的管理纳入一个模板方法，而不是让他任意的散落到代码各处，我们就能很大程度上避免Session资源泄露的危险。
 	 */
 	@SuppressWarnings("deprecation")
 	@Nullable
@@ -506,6 +509,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return get(entityClass, id, null);
 	}
 
+	// 通过指定的主键从数据库获取对应的对象数据。与Session的get行为是一致的。
 	@Override
 	@Nullable
 	public <T> T get(final Class<T> entityClass, final Serializable id, @Nullable final LockMode lockMode)
@@ -547,6 +551,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return load(entityClass, id, null);
 	}
 
+	// 根据主键从数据库加载对应的数据，没有将返回异常。与Session的load方法行为是一致的。
 	@Override
 	public <T> T load(final Class<T> entityClass, final Serializable id, @Nullable final LockMode lockMode)
 			throws DataAccessException {

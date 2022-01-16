@@ -34,15 +34,15 @@ import org.springframework.lang.Nullable;
  * org.springframework.jdbc.datasource.DataSourceTransactionManager}, which can serve as an
  * implementation guide for other transaction strategies.
  *
- * 事物处理器，在IoC容器中配置。
- *
- * 为具体的数据源配置了不同的事物处理器，以处理不同的数据源的事物处理，形成一个从抽象到具体事物处理的中间平台设计。
- *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see org.springframework.transaction.support.TransactionTemplate
  * @see org.springframework.transaction.interceptor.TransactionInterceptor
  * @since 16.05.2003
+ *
+ * Spring事物抽象的核心接口，为应用程序提供事物界定的统一方式。
+ *
+ * 参照TransactionDefinition的属性定义来开启相关事物。
  */
 public interface PlatformTransactionManager extends TransactionManager {
 
@@ -91,7 +91,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * resulting DataAccessException causing the transaction to fail. The original exception will be
 	 * propagated to the caller of this commit method in such a case.
 	 *
-	 * 提交事务
+	 * 将给定事物提交。
 	 *
 	 * @param status object returned by the {@code getTransaction} method
 	 * @throws UnexpectedRollbackException      in case of an unexpected rollback that the
@@ -117,7 +117,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * case of a commit exception. Consequently, a rollback call after commit failure will lead to
 	 * an IllegalTransactionStateException.
 	 *
-	 * 回滚事务
+	 * 将给定事物回滚。
 	 *
 	 * @param status object returned by the {@code getTransaction} method
 	 * @throws TransactionSystemException       in case of rollback or system errors (typically

@@ -29,6 +29,8 @@ import org.springframework.transaction.support.DelegatingTransactionDefinition;
  *
  * @author Juergen Hoeller
  * @since 1.2
+ *
+ * 存在的目的是被子类化，将所有的方法调用委派给另一个TransactionAttribute实现类。
  */
 @SuppressWarnings("serial")
 public abstract class DelegatingTransactionAttribute extends DelegatingTransactionDefinition

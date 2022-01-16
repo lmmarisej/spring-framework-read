@@ -100,7 +100,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  *   &lt;property name="target" ref="yourTarget"/&gt;
  * &lt;/bean&gt;</pre>
  *
- * 使用AOP功能，将事物处理的功能编织进来。
+ * 专门面向事物管理的FactoryBean。使用AOP功能，将事物处理的功能编织进来。
  *
  * 使用声明式事物时，需要配置。
  *

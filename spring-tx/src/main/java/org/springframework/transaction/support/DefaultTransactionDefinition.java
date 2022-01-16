@@ -30,7 +30,7 @@ import org.springframework.transaction.TransactionDefinition;
  * {@link org.springframework.transaction.interceptor.DefaultTransactionAttribute}.
  * <p>
  *
- * 持有事物处理属性。
+ * 提供各事物属性的默认值。
  *
  * @author Juergen Hoeller
  * @since 08.05.2003

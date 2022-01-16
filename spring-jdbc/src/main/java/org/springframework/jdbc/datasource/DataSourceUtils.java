@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
  * Spring's JDBC operation objects and the JDBC {@link DataSourceTransactionManager}. Can also be
  * used directly in application code.
  *
- * 辅助类，用于对数据Connection进行管理。
+ * 辅助类，用于对数据Connection进行管理，具备异常转换能力。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -99,6 +99,8 @@ public abstract class DataSourceUtils {
 	 * @return a JDBC Connection from the given DataSource
 	 * @throws SQLException if thrown by JDBC methods
 	 * @see #doReleaseConnection
+	 *
+	 * 判断当前线程是否绑定有Connection，有则直接返回，无则从dataSource获取Connection绑定到线程并返回。
 	 */
 	public static Connection doGetConnection(DataSource dataSource) throws SQLException {
 		Assert.notNull(dataSource, "No DataSource specified");
@@ -107,8 +109,7 @@ public abstract class DataSourceUtils {
 		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager
 				.getResource(dataSource);
 		// 从链接持有器中获取链接对象
-		if (conHolder != null && (conHolder.hasConnection() || conHolder
-				.isSynchronizedWithTransaction())) {
+		if (conHolder != null && (conHolder.hasConnection() || conHolder.isSynchronizedWithTransaction())) {
 			conHolder.requested();
 			if (!conHolder.hasConnection()) {
 				logger.debug("Fetching resumed JDBC Connection from DataSource");

@@ -52,6 +52,8 @@ import org.springframework.util.Assert;
  * @see #setSessionFactory
  * @see #getHibernateTemplate
  * @see org.springframework.orm.hibernate5.HibernateTemplate
+ *
+ * 通过继承HibernateDaoSupport，即可获得HibernateTemplate的数据访问支持。
  */
 public abstract class HibernateDaoSupport extends DaoSupport {
 

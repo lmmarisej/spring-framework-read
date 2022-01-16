@@ -34,8 +34,9 @@ import org.springframework.util.Assert;
  *
  * <p>Note: This is an SPI class, not intended to be used by applications.
  *
+ * 在事物之前获取一个Connection，然后将Connection绑定到当前调用线程，之后的数据访问直接从当前线程获取Connection。
+ * 当所有的数据访问对象从这个Connection完成数据访问工作时，我们就用这个Connection实例提交或回滚数据，最后解除线程与他的绑定。
  *
- * 数据库链接对象. 从
  * @author Juergen Hoeller
  * @since 06.05.2003
  * @see DataSourceTransactionManager

@@ -80,6 +80,8 @@ import org.springframework.util.ReflectionUtils;
  * @since 4.2
  * @see HibernateExceptionTranslator
  * @see HibernateTransactionManager
+ *
+ * 帮助以实现从HibernateException异常转义到Spring统一异常体系。
  */
 public abstract class SessionFactoryUtils {
 
@@ -221,6 +223,8 @@ public abstract class SessionFactoryUtils {
 	 * @return the corresponding DataAccessException instance
 	 * @see HibernateExceptionTranslator#convertHibernateAccessException
 	 * @see HibernateTransactionManager#convertHibernateAccessException
+	 *
+	 * 转义到Spring异常体系。
 	 */
 	public static DataAccessException convertHibernateAccessException(HibernateException ex) {
 		if (ex instanceof JDBCConnectionException) {

@@ -103,6 +103,9 @@ import org.springframework.util.StringUtils;
  * @see RowCallbackHandler
  * @see RowMapper
  * @see org.springframework.jdbc.support.SQLExceptionTranslator
+ *
+ * 1. 封装基于JDBC数据访问代码，提供统一的格式和规范来使用JDBC API。
+ * 2. 对SQLException所提供的异常信息在框架内进行统一转译，将基于JDBC的访问异常纳入Spring自身异常层次体系中，简化客户端异常处理。
  */
 public class JdbcTemplate
 		extends JdbcAccessor

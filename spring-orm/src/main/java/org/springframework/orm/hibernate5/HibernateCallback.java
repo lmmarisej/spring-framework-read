@@ -32,6 +32,8 @@ import org.springframework.lang.Nullable;
  * @param <T> the result type
  * @see HibernateTemplate
  * @see HibernateTransactionManager
+ *
+ * 以便调用方可以根据各自的数据需求进行定义。
  */
 @FunctionalInterface
 public interface HibernateCallback<T> {
