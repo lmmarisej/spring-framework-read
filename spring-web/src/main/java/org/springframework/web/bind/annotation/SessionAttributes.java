@@ -54,6 +54,8 @@ import org.springframework.core.annotation.AliasFor;
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @since 2.5
+ *
+ * 支持按请求参数类型放入session管理。
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
