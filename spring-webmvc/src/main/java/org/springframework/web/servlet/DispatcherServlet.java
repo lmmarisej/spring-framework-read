@@ -150,18 +150,21 @@ import org.springframework.web.util.WebUtils;
  * 3.0+ environments, which support programmatic registration of servlet instances.
  * See the {@link #DispatcherServlet(WebApplicationContext)} javadoc for details.
  *
- * 作为J2EE核心模式中前端控制器模式，所有的web请求都需要通过本类的实例处理，进行转发、匹配，数据处理后，转由页面进行展现。
- *
- * 负责建立自己持有的IoC容器、请求映射与分发。
- *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @author Chris Beams
  * @author Rossen Stoyanchev
  * @see org.springframework.web.HttpRequestHandler
- * @see org.springframework.web.servlet.mvc.Controller
- * @see org.springframework.web.context.ContextLoaderListener
+ * @see org.springframework.web.servlet.mvc.Controller		DispatcherServlet针对请求的具体逻辑委托给Controller去处理。
+ * @see org.springframework.web.context.ContextLoaderListener	基于该事件启动DispatcherServlet。
+ *
+ * SpringMVC属于请求驱动的Web框架，以单一的Servlet作为整个应用程序的Controller（免去大量配置），将流程控制信息外部化，对请求期间的各种关注
+ * 点进行了合理而完全的分离，具体的Web请求处理逻辑给次级控制器类处理的方式，瘦身为灵活及复用。
+ *
+ * 作为J2EE核心模式中前端控制器模式，所有的web请求都需要通过本类的实例处理，进行转发、匹配，数据处理后，转由页面进行展现。
+ *
+ * 负责建立自己持有的IoC容器、请求映射与分发。
  */
 @SuppressWarnings("serial")
 public class DispatcherServlet		// DispatcherServlet的启动过程也就是SpringMVC的启动过程
@@ -352,7 +355,7 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 
 	/** List of ViewResolvers used by this servlet. */
 	@Nullable
-	private List<ViewResolver> viewResolvers;
+	private List<ViewResolver> viewResolvers;	// 当根据视图名查找具体view实例时，将根据list顺序查找，任何一个ViewResolver返回非空view，代表查找结束
 
 
 	/**
@@ -614,6 +617,7 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 			if (!matchingBeans.isEmpty()) {
 				this.handlerMappings = new ArrayList<>(matchingBeans.values());
 				// We keep HandlerMappings in sorted order.
+				// 通过 Order 对 handlerMapping 进行排序，DispatcherServlet 优先使用排在前面的 handlerMapping
 				AnnotationAwareOrderComparator.sort(this.handlerMappings);
 			}
 		}
@@ -1033,18 +1037,21 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 			Exception dispatchException = null;
 
 			try {
-				processedRequest = checkMultipart(request);
+				processedRequest = checkMultipart(request);		// 首先检查当前请求是否是文件上传
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
-				mappedHandler = getHandler(processedRequest);		// 从handlerMapping找到对应的handler
+				// 获取本次请求对应的拦截器+handler（Controller）
+				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);		// 404
 					return;
 				}
 
 				// Determine handler adapter for the current request.
-				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());		// 找到处理这个handler的适配器，包括合法性检测
+				// 找到处理这个handler的适配器，包括合法性检测。
+				// DispatcherServlet不直接调用mappedHandler，而是通过HandlerAdapter来间接调用mappedHandler。降低耦合。
+				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
 				String method = request.getMethod();
@@ -1056,20 +1063,23 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 					}
 				}
 
-				if (!mappedHandler.applyPreHandle(processedRequest, response)) {		// 前置拦截
+				// 执行对 Controller 的前置拦截
+				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
-				// 触发controller中对handler.handle方法的调用
-				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());	// 执行handler，得到ModelAndView结果
+				// 使用Controller中开发者用户编写的逻辑，处理本次web请求；处理结果以 ModelAndView 形式返回。
+				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
 					return;
 				}
 
-				applyDefaultViewName(processedRequest, mv);		// 通过RequestToViewNameTranslator对视图名的翻译和转换
-				mappedHandler.applyPostHandle(processedRequest, response, mv);			// 后置拦截
+				// 通过RequestToViewNameTranslator对视图名的翻译和转换
+				applyDefaultViewName(processedRequest, mv);
+				// 执行对 Controller 的后置拦截
+				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
 				dispatchException = ex;
@@ -1083,7 +1093,7 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
-			triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
+			triggerAfterCompletion(processedRequest, response, mappedHandler, ex);		// 出现异常，finally拦截，清理资源
 		}
 		catch (Throwable err) {
 			triggerAfterCompletion(processedRequest, response, mappedHandler,
@@ -1093,13 +1103,13 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				// Instead of postHandle and afterCompletion
 				if (mappedHandler != null) {
-					mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);
+					mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);	// 异步处理拦截
 				}
 			}
 			else {
 				// Clean up any resources used by a multipart request.
 				if (multipartRequestParsed) {
-					cleanupMultipart(processedRequest);
+					cleanupMultipart(processedRequest);		// 释放文件上传请求资源
 				}
 			}
 		}
@@ -1158,7 +1168,7 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 
 		if (mappedHandler != null) {
 			// Exception (if any) is already handled..
-			mappedHandler.triggerAfterCompletion(request, response, null);
+			mappedHandler.triggerAfterCompletion(request, response, null);		// 正常处理完成，清理资源
 		}
 	}
 
@@ -1292,7 +1302,7 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
 			for (HandlerAdapter adapter : this.handlerAdapters) {
-				if (adapter.supports(handler)) {		// 通过判断，可以知道这个handler是不是controller接口的实现 @see SimpleControllerHandlerAdapter
+				if (adapter.supports(handler)) {		// 为 handler 找到其对应的 adapter
 					return adapter;
 				}
 			}

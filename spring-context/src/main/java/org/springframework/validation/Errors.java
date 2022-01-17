@@ -87,6 +87,8 @@ public interface Errors {
 	 * result path "spouse.child."; popNestedPath() -> "spouse." again.
 	 * @param subPath the sub path to push onto the nested path stack
 	 * @see #popNestedPath
+	 *
+	 * 在调用对应对应嵌套对象的Validator之前，需要调用Errors#pushNestedPath来明确当前被验证对象的请求上下文。
 	 */
 	void pushNestedPath(String subPath);
 
@@ -94,6 +96,8 @@ public interface Errors {
 	 * Pop the former nested path from the nested path stack.
 	 * @throws IllegalStateException if there is no former nested path on the stack
 	 * @see #pushNestedPath
+	 *
+	 * 恢复之前的上下文路径。
 	 */
 	void popNestedPath() throws IllegalStateException;
 
@@ -133,6 +137,8 @@ public interface Errors {
 	 * @param field the field name (may be {@code null} or empty String)
 	 * @param errorCode error code, interpretable as a message key
 	 * @see #getNestedPath()
+	 *
+	 * 不能通过数据验证的属性域。
 	 */
 	void rejectValue(@Nullable String field, String errorCode);
 

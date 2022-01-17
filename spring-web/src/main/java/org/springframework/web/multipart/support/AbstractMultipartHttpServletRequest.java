@@ -40,6 +40,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
  * @author Juergen Hoeller
  * @author Arjen Poutsma
  * @since 06.10.2003
+ *
+ * 可以直接获取上传后的文件。
  */
 public abstract class AbstractMultipartHttpServletRequest extends HttpServletRequestWrapper
 		implements MultipartHttpServletRequest {

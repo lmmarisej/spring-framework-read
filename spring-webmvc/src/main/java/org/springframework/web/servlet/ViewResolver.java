@@ -34,6 +34,8 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.web.servlet.view.InternalResourceViewResolver
  * @see org.springframework.web.servlet.view.ResourceBundleViewResolver
  * @see org.springframework.web.servlet.view.XmlViewResolver
+ *
+ * 视图定位器。
  */
 public interface ViewResolver {
 
@@ -51,6 +53,8 @@ public interface ViewResolver {
 	 * (optional, to allow for ViewResolver chaining)
 	 * @throws Exception if the view cannot be resolved
 	 * (typically in case of problems creating an actual View object)
+	 *
+	 * 根据 Handler 处理请求后返回的 ModelAndView 中的视图名，为 DispatcherServlet 返回一个可用的 View 实例。
 	 */
 	@Nullable
 	View resolveViewName(String viewName, Locale locale) throws Exception;

@@ -30,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Juergen Hoeller
  * @since 13.10.2003
+ *
+ * 负责 MultipartFile 类型到 String 类型的转换。
  */
 public class StringMultipartFileEditor extends PropertyEditorSupport {
 

@@ -59,6 +59,10 @@ import org.springframework.web.servlet.View;
  * @see java.util.ResourceBundle#getBundle
  * @see java.util.PropertyResourceBundle
  * @see UrlBasedViewResolver
+ *
+ * 提供国际化的支持。
+ *
+ * 面向多视图，可以顾及多种视图类型的映射管理。
  */
 public class ResourceBundleViewResolver extends AbstractCachingViewResolver
 		implements Ordered, InitializingBean, DisposableBean {
@@ -67,7 +71,8 @@ public class ResourceBundleViewResolver extends AbstractCachingViewResolver
 	public static final String DEFAULT_BASENAME = "views";
 
 
-	private String[] basenames = new String[] {DEFAULT_BASENAME};
+	// 通过 setBasename 进行设置
+	private String[] basenames = new String[] {DEFAULT_BASENAME};		// 默认在根路径加载以views为basename的.properties文件。
 
 	private ClassLoader bundleClassLoader = Thread.currentThread().getContextClassLoader();
 

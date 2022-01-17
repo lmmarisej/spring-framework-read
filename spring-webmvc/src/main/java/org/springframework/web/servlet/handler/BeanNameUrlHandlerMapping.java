@@ -46,6 +46,8 @@ import org.springframework.util.StringUtils;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see SimpleUrlHandlerMapping
+ *
+ * 强制Handler的Bean名称必须去匹配视图中的链接路径。
  */
 public class BeanNameUrlHandlerMapping extends AbstractDetectingUrlHandlerMapping {
 

@@ -309,6 +309,7 @@ public class DelegatingFilterProxy extends GenericFilterBean {
 			}
 			return this.webApplicationContext;
 		}
+		// 从 ServletContext 中获取 IoC 容器
 		String attrName = getContextAttribute();
 		if (attrName != null) {
 			return WebApplicationContextUtils.getWebApplicationContext(getServletContext(), attrName);

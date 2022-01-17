@@ -108,9 +108,15 @@ import org.springframework.util.ReflectionUtils;
  * @since 3.1
  * @see #onStartup(Set, ServletContext)
  * @see WebApplicationInitializer
+ *
+ * 支持Servlet3.0+的Servlet容器实例化并调用。
  */
-@HandlesTypes(WebApplicationInitializer.class)
-public class SpringServletContainerInitializer implements ServletContainerInitializer {
+// @HandlesTypes定义本实现类希望处理的类型，理解为过滤器
+@HandlesTypes(WebApplicationInitializer.class)		// 2.由Servlet容器利用反射或字节码操作框架获取实现，给onStart方法传递了类路径下所有实现了WebApplicationInitializer类
+// 需要通过SPI注册本类
+public class SpringServletContainerInitializer	// 1.Servlet容器启动阶段依据java spi获取本实现
+		implements ServletContainerInitializer		// 3.对Servlet容器找到的所有的WebApplicationInitializer实现，传入本接口回调
+{
 
 	/**
 	 * Delegate the {@code ServletContext} to any {@link WebApplicationInitializer}
@@ -137,6 +143,8 @@ public class SpringServletContainerInitializer implements ServletContainerInitia
 	 * @param servletContext the servlet context to be initialized
 	 * @see WebApplicationInitializer#onStartup(ServletContext)
 	 * @see AnnotationAwareOrderComparator
+	 *
+	 * 提供可编程方式注册和初始化servlet组件。
 	 */
 	@Override
 	public void onStartup(@Nullable Set<Class<?>> webAppInitializerClasses, 		// 本地实现，SPI提供

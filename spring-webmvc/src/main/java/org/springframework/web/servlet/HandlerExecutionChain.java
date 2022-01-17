@@ -42,7 +42,7 @@ public class HandlerExecutionChain {
 	private static final Log logger = LogFactory.getLog(HandlerExecutionChain.class);
 
 	/**
-	 * 处理器对象
+	 * 在SpringMVC中，任何可被用来处理请求的对象统称为Handler
 	 */
 	private final Object handler;
 
@@ -154,7 +154,7 @@ public class HandlerExecutionChain {
 			for (int i = 0; i < interceptors.length; i++) {
 				HandlerInterceptor interceptor = interceptors[i];
 				if (!interceptor.preHandle(request, response, this.handler)) {
-					triggerAfterCompletion(request, response, null);
+					triggerAfterCompletion(request, response, null);	// 前置处理失败，清理资源
 					return false;
 				}
 				this.interceptorIndex = i;
@@ -165,6 +165,8 @@ public class HandlerExecutionChain {
 
 	/**
 	 * Apply postHandle methods of registered interceptors.
+	 *
+	 * Controller的后置拦截器。
 	 */
 	void applyPostHandle(HttpServletRequest request, HttpServletResponse response, @Nullable ModelAndView mv)
 			throws Exception {

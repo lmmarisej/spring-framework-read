@@ -43,6 +43,10 @@ import org.springframework.lang.Nullable;
  * @author Rossen Stoyanchev
  * @see org.springframework.web.servlet.view.AbstractView
  * @see org.springframework.web.servlet.view.InternalResourceView
+ *
+ * 将Servlet中的视图渲染逻辑剥离，统一抽象视图的生成策略。
+ *
+ * ViewResolver和View是Web视图处理的抽象层，屏蔽Web框架在使用不同的Web视图技术时候的差异性。通过引入
  */
 public interface View {
 

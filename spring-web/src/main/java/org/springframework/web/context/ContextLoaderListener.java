@@ -28,6 +28,8 @@ import javax.servlet.ServletContextListener;
  * constructor, allowing for programmatic configuration in Servlet 3.0+ environments.
  * See {@link org.springframework.web.WebApplicationInitializer} for usage examples.
  *
+ * 为整个Web应用程序加载顶层WebApplicationContext（ROOT WebApplicationContext），再绑定到 ServletContext。
+ *
  * Spring应用在web容器中的启动器，可以在web应用启动时载入IoC容器，负责完成IoC容器在Web环境中的启动工作。
  *
  * @author Juergen Hoeller

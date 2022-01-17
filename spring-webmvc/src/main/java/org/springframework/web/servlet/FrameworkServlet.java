@@ -522,7 +522,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 
 	/**
-	 * 初始化部分，伴随着Servlet的init方法调用而调用
+	 * 初始化部分，伴随着Servlet的init方法调用而调用。
 	 *
 	 * Overridden method of {@link HttpServletBean}, invoked after any bean properties
 	 * have been set. Creates this servlet's WebApplicationContext.
@@ -1040,14 +1040,11 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		long startTime = System.currentTimeMillis();
 		Throwable failureCause = null;
 
-		// 提取线程变量中的 LocaleContext
 		LocaleContext previousLocaleContext = LocaleContextHolder.getLocaleContext();
-		// 将请求转换为 LocaleContext
 		LocaleContext localeContext = buildLocaleContext(request);
 
-		// 提取线程变量中的 RequestAttributes
+		// 获取请求信息
 		RequestAttributes previousAttributes = RequestContextHolder.getRequestAttributes();
-		// 构建 ServletRequestAttributes
 		ServletRequestAttributes requestAttributes = buildRequestAttributes(request, response, previousAttributes);
 
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
@@ -1056,7 +1053,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		initContextHolders(request, localeContext, requestAttributes);
 
 		try {
-			doService(request, response);		// 对HTTP请求的处理
+			doService(request, response);
 		}
 		catch (ServletException | IOException ex) {
 			failureCause = ex;

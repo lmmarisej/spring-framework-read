@@ -60,8 +60,10 @@ package org.springframework.validation;
  *
  * @author Rod Johnson
  * @see SmartValidator
- * @see Errors
+ * @see Errors	可以在验证过程中，将错误信息添加到Errors中，执行验证结束后，可以通过Errors检索验证结果。
  * @see ValidationUtils
+ *
+ * 具体的验证逻辑的抽象。
  */
 public interface Validator {
 

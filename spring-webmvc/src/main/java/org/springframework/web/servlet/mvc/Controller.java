@@ -106,6 +106,10 @@ import org.springframework.web.servlet.ModelAndView;
  * @see org.springframework.context.ResourceLoaderAware
  * @see org.springframework.web.context.ServletContextAware
  * @see org.springframework.web.context.support.WebApplicationObjectSupport
+ *
+ * 作为DispatcherServlet的次级控制器，负责具体web请求的处理逻辑。
+ *
+ * 是 SpringMVC 框架支持的用于处理具体 Web 请求的 handler 类型之一。
  */
 @FunctionalInterface
 public interface Controller {

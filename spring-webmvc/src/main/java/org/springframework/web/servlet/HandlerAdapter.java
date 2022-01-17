@@ -46,6 +46,13 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @see org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter
  * @see org.springframework.web.servlet.handler.SimpleServletHandlerAdapter
+ *
+ * Spring MVC 不止支持 Controller 一种 Handler，HandlerAdapter 帮助我们可以使用其他类型的 Handler。HandlerAdapter 作为一个适配器，
+ * 屏蔽不同 Handler 类型给 DispatcherServlet 带来的差异性。
+ *
+ * 被 DispatcherServlet 调用，执行真正的 Controller 逻辑，以 ModelAndView 实例返回执行结果。
+ *
+ * 充当自身与处理程序对象之间的桥梁，实现松散耦合设计。DispatcherServlet 使用 HandlerAdapter 调用 handle，避免 Servlet 直接调用 handle。
  */
 public interface HandlerAdapter {
 

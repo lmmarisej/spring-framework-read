@@ -6,6 +6,8 @@
  * <p>This package and related packages are discussed in Chapters 12 and 13 of
  * <a href="https://www.amazon.com/exec/obidos/tg/detail/-/0764543857/">Expert One-On-One J2EE Design and Development</a>
  * by Rod Johnson (Wrox, 2002).
+ *
+ * 主要是对mvc的支持，包括restful协议。
  */
 @NonNullApi
 @NonNullFields

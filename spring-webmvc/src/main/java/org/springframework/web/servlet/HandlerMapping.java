@@ -46,14 +46,14 @@ import org.springframework.lang.Nullable;
  * interface to be able to specify a sorting order and thus a priority for getting
  * applied by DispatcherServlet. Non-Ordered instances get treated as lowest priority.
  *
- * 封装HTTP与Controller的映射关系。
- *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see org.springframework.core.Ordered
  * @see org.springframework.web.servlet.handler.AbstractHandlerMapping
  * @see org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
+ *
+ * Web请求与具体请求处理控制器之间的映射，实现运行时灵活的根据Web请求找到具体的处理类，避免了硬编码。
  */
 public interface HandlerMapping {
 

@@ -32,6 +32,8 @@ import org.springframework.lang.Nullable;
  *
  * @author Juergen Hoeller
  * @since 22.11.2003
+ *
+ * 将请求过程中出现的异常转化为Spring内部统一的异常。
  */
 public interface HandlerExceptionResolver {
 

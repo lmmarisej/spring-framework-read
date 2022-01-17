@@ -81,6 +81,12 @@ import javax.servlet.http.HttpServletRequest;
  * @see org.springframework.web.multipart.support.ByteArrayMultipartFileEditor
  * @see org.springframework.web.multipart.support.StringMultipartFileEditor
  * @see org.springframework.web.servlet.DispatcherServlet
+ *
+ * 位于HandlerMapping之前，如果是文件上传请求，会被处理。
+ *
+ * 服务端处理文件上传的主要组件。
+ *
+ * 有两个默认的实现，使用不同的库进行实现。
  */
 public interface MultipartResolver {
 

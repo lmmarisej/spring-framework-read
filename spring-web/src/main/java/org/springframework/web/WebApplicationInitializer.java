@@ -173,6 +173,8 @@ import javax.servlet.ServletException;
  * @see org.springframework.web.context.AbstractContextLoaderInitializer
  * @see org.springframework.web.servlet.support.AbstractDispatcherServletInitializer
  * @see org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer
+ *
+ * 实现以注册Servlet容器启动时自定义初始化操作。
  */
 public interface WebApplicationInitializer {
 

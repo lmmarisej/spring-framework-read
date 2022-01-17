@@ -39,20 +39,24 @@ import org.springframework.util.CollectionUtils;
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @author Rossen Stoyanchev
- * @see DispatcherServlet
+ * @see DispatcherServlet  负责将 ModelAndView 中的 模型数据 交给返回的 View 来处理最终的视图渲染工作。
  * @see ViewResolver
  * @see HandlerAdapter#handle
  * @see org.springframework.web.servlet.mvc.Controller#handleRequest
+ *
+ * 封装数据和视图。
+ *
+ * ModelAndView 的实例由 Handler 创建，最终交给 DispatcherServlet 使用。
  */
 public class ModelAndView {
 
 	/** View instance or view name String. */
 	@Nullable
-	private Object view;
+	private Object view;		// 可以是视图，也可以是视图名称；null表示Controller内部自行处理视图渲染
 
 	/** Model Map. */
 	@Nullable
-	private ModelMap model;
+	private ModelMap model;		// 模型数据
 
 	/** Optional HTTP status for the response. */
 	@Nullable

@@ -84,6 +84,8 @@ import org.springframework.web.servlet.View;
  * @see AbstractUrlBasedView
  * @see InternalResourceView
  * @see org.springframework.web.servlet.view.freemarker.FreeMarkerView
+ *
+ * 继承本类，通常只需要指定目标位置，ViewResolver就会按照视图名，抓取相应的目标文件、构造对应的View实例返回。
  */
 public class UrlBasedViewResolver extends AbstractCachingViewResolver implements Ordered {
 

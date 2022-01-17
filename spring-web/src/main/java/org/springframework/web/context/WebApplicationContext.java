@@ -37,7 +37,9 @@ import org.springframework.lang.Nullable;
  * WebApplicationContext implementations need to detect {@link ServletContextAware}
  * beans and invoke the {@code setServletContext} method accordingly.
  *
- * 为Web应用建立的扩展接口，用于满足在启动过程中的需要。例如，提供从Web容器中载入Resource的功能。
+ * 为Web应用提供应用所使用的的中间服务。
+ *
+ * DataSource、DAO、Services定义等，都在WebApplicationContext中注册。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

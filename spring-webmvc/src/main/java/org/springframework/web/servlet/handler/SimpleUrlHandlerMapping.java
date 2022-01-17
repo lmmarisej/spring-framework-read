@@ -49,14 +49,18 @@ import org.springframework.util.CollectionUtils;
  * {@link #setAlwaysUseFullPath "alwaysUseFullPath"} property. For details on the
  * pattern options, see the {@link org.springframework.util.AntPathMatcher} javadoc.
  *
- * 定义了一个map来持有一系列映射关系，以根据HTTP请求确定一个对应的HandlerExecutionChain。
-
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @see #setMappings
  * @see #setUrlMap
  * @see BeanNameUrlHandlerMapping
+ *
+ * 进一步解除请求URL与Handler的beanName之间的耦合，支持更加灵活的表达方式。
+ *
+ * 定义了一个map来持有一系列映射关系，以根据HTTP请求确定一个对应的HandlerExecutionChain。
+ *
+ * 支持ANT路径形式的模式匹配。
  */
 public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
