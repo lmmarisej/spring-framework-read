@@ -52,6 +52,23 @@ import org.springframework.ui.Model;
  * @author Juergen Hoeller
  * @author Rossen Stoyanchev
  * @since 2.5
+ *
+ * 从模型中检索参数，在同一控制器中的 @RequestMapping 方法之前被调用。
+ *
+ * 示例：
+ *
+ * 		方法注解
+ * 			// 在同一控制器中，在@RequestMapping方法之前调用控制器中的@ModelAttribute方法。
+ * 			// @ModelAttribute 也可以在 @ControllerAdvice 中定义等。
+ *          @ModelAttribute("cities")		// checkOptions执行后，将在模型中添加属性，键为cities。
+ * 			public List<String> checkOptions() {
+ * 			 	return new Arrays.asList(new[]{“Sofia”,”Pleven","Ruse”});	//and so on
+ * 			}
+ *
+ * 		方法参数
+ * 			// 将表单中的值绑定到 Pojo class，以在控制器类中执行我们的逻辑
+ * 			@RequestMapping(value = "/addEmployee", method = RequestMethod.POST)
+ * 			public String submit(@ModelAttribute("employee") Employee employee)
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

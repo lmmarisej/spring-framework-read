@@ -30,6 +30,8 @@ import org.springframework.lang.Nullable;
  * @since 2.5
  * @see AnnotatedGenericBeanDefinition
  * @see org.springframework.core.type.AnnotationMetadata
+ *
+ * 解析POJO注解定义的BeanDefinition为AnnotatedBeanDefinition。
  */
 public interface AnnotatedBeanDefinition extends BeanDefinition {
 

@@ -40,9 +40,27 @@ import org.springframework.core.annotation.AliasFor;
  *
  * @author Rossen Stoyanchev
  * @since 4.3
- * @see RequestMapping
- * @see SessionAttributes
- * @see RequestAttribute
+ * @see RequestMapping		在RequestMapping标注的方法中，可以通过`@ModelAttribute("mycounter") MyCounter myCounter`取出。
+ * @see SessionAttributes	可以通过类型指定。
+ * @see RequestAttribute	简单参数绑定。
+ *
+ * 标注那些数据需要通过session进行管理。
+ *
+ * 示例
+ *      @Controller
+ * 		@RequestMapping("/counter")
+ * 		@SessionAttributes("mycounter")			// 步骤一：指明将模型数据中mycounter，放入session中管理
+ * 		public class CounterController
+ *
+ * 			// 步骤二：在model中存visitor
+ * 			@ModelAttribute("mycounter")
+ * 				return new Visitor(....);
+ *
+ * 			// 或者：换一种存入model的方式
+ * 			@RequestMapping("/**")
+ * 			String handleRequestById()
+ * 					model.addAttribute("mycounter", "trades");
+ *
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

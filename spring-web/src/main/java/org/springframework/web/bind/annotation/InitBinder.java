@@ -39,8 +39,19 @@ import java.lang.annotation.Target;
  *
  * @author Juergen Hoeller
  * @since 2.5
- * @see org.springframework.web.bind.WebDataBinder
+ * @see org.springframework.web.bind.WebDataBinder 		@InitBinder注解与WebDataBinder一起使用，用作到达控制器的每个请求的预处理器。
  * @see org.springframework.web.context.request.WebRequest
+ *
+ * 自定义控制和格式化发送到控制器的请求。
+ *
+ * 示例
+ * 		@RequestMapping
+ * 		@Controller
+ * 		class XxxController
+ * 			@Initbinder
+ * 			public void initBinder(WebDataBinder dataBinder)
+ * 				StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
+ * 				dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -283,7 +283,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			}
 			// 进行 handlerMethod 注册
 			methods.forEach((method, mapping) -> {
-				// 获取执行方法,
+				// 获取执行方法
 				Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
 				registerHandlerMethod(handler, invocableMethod, mapping);
 			});

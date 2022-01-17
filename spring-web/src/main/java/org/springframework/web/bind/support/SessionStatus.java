@@ -29,12 +29,16 @@ package org.springframework.web.bind.support;
  * @since 2.5
  * @see org.springframework.web.bind.annotation.RequestMapping
  * @see org.springframework.web.bind.annotation.SessionAttributes
+ *
+ * 管理请求处理之后的session状态。
  */
 public interface SessionStatus {
 
 	/**
 	 * Mark the current handler's session processing as complete, allowing for
 	 * cleanup of session attributes.
+	 *
+	 * 在 RequestMapping 方法参数中由框架自动注入 SessionStatus，在方法中调用 setComplete 将 SessionAttributes 使用完的数据清除出 session。
 	 */
 	void setComplete();
 

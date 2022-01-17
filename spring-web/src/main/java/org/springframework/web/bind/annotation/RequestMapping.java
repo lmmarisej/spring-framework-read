@@ -69,6 +69,10 @@ import org.springframework.core.annotation.AliasFor;
  * @see PatchMapping
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
  * @see org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter
+ *
+ * 支持在类和方法上使用，在类上通常表示请求映射信息的提供者，在方法上表名当前方法是一个web请求处理方法。
+ *
+ * 支持在请求处理方法中自动注入：WebRequest、Reader、Writer、Map（ModelMap）。
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

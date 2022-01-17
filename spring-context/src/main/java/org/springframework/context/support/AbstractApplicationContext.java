@@ -612,7 +612,7 @@ public abstract class AbstractApplicationContext
 
                 // 调用容器中的后置处理器处理BeanFactory，这些后处理器在Bean定义中向容器注册
                 // Invoke factory processors registered as beans in the context.
-                invokeBeanFactoryPostProcessors(beanFactory);
+                invokeBeanFactoryPostProcessors(beanFactory);		// 解析xml、注解元信息中的bean，并注册到容器
 
                 // 注册bean的后置处理器处理Bean，在Bean的创建过程中调用，调用时机：初始化（Initializing）Bean时
                 // Register bean processors that intercept bean creation.

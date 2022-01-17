@@ -41,6 +41,16 @@ import org.springframework.lang.Nullable;
  * @see BeanPropertyBindingResult
  * @see DirectFieldBindingResult
  * @see MapBindingResult
+ *
+ * 指示存储验证结果的对象应如何存储和检索验证结果。
+ *
+ * 示例
+ * 		@ResponseBody
+ * 		String nutzer(@ModelAttribute(value="nutzer") Nutzer nutzer, BindingResult ergebnis)	// Interceptor会进行拦截validate，失败会绑定错误数据在此
+ * 			if(ergebnis.hasErrors())
+ * 				return error;
+ * 			elsel
+ * 				return OK;
  */
 public interface BindingResult extends Errors {
 

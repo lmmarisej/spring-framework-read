@@ -26,6 +26,13 @@ import org.springframework.web.context.request.WebRequest;
  * @author Juergen Hoeller
  * @author Rossen Stoyanchev
  * @since 2.5
+ *
+ * 为多个基于注解的Controller的数据绑定提供服务。
+ *
+ * 示例
+ * 		class DateBindingInitializer implements WebBindingInitializer
+ * 			void initBinder(WebDataBinder binder, WebRequest request)
+ * 				binder.registerCustomEditor(Date.class, new DateEditor());
  */
 public interface WebBindingInitializer {
 

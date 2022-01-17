@@ -35,6 +35,10 @@ import org.springframework.core.annotation.AliasFor;
  * @since 4.3
  * @see RequestMapping
  * @see SessionAttribute
+ *
+ * 将请求参数与RequestMapping方法参数进行绑定。
+ *
+ * 框架中需要存在对应的转换器，将提交参数转换为指定类型。
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

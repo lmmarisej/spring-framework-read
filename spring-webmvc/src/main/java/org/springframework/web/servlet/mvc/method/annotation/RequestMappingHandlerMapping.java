@@ -262,6 +262,8 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	 * the supplied {@code annotatedElement} is a class or method.
 	 * @see #getCustomTypeCondition(Class)
 	 * @see #getCustomMethodCondition(Method)
+	 *
+	 * 将使用 @RequestMapping 注解的POJO中的元信息提取封装为  RequestMappingInfo。
 	 */
 	@Nullable
 	private RequestMappingInfo createRequestMappingInfo(AnnotatedElement element) {
