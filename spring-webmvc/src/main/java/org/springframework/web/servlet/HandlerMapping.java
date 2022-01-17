@@ -54,6 +54,8 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
  *
  * Web请求与具体请求处理控制器之间的映射，实现运行时灵活的根据Web请求找到具体的处理类，避免了硬编码。
+ *
+ * 每一个 HandlerMapping 负责一组 web 请求处理的映射关系。
  */
 public interface HandlerMapping {
 
@@ -134,7 +136,7 @@ public interface HandlerMapping {
 	/**
 	 * 完成请求映射处理。
 	 *
-	 * 返回一个HandlerExecutionChain，持有handler本身，以及处理这个HTTP请求相关的拦截器链。
+	 * 返回一个HandlerExecutionChain，持有 handler + Web 请求相关的拦截器链。
 	 *
 	 * Return a handler and any interceptors for this request. The choice may be made
 	 * on request URL, session state, or any factor the implementing class chooses.

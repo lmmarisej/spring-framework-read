@@ -652,7 +652,7 @@ public class DispatcherServlet		// DispatcherServlet的启动过程也就是Spri
 		this.handlerAdapters = null;
 
 		// 是否只加载 beanName为handlerAdapter的对象
-		// detectAllHandlerAdapters 表示是了加载方式, true 按类型,falss按BeanName+类型加载
+		// detectAllHandlerAdapters 表示是了加载方式, true 按类型，false按BeanName+类型加载
 		if (this.detectAllHandlerAdapters) {
 			// Find all HandlerAdapters in the ApplicationContext, including ancestor contexts.
 			Map<String, HandlerAdapter> matchingBeans =

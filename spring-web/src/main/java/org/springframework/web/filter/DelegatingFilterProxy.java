@@ -79,6 +79,13 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @see #DelegatingFilterProxy(String, WebApplicationContext)
  * @see javax.servlet.ServletContext#addFilter(String, Filter)
  * @see org.springframework.web.WebApplicationInitializer
+ *
+ * 作为 Filter 的 Proxy 对象。
+ *
+ * 负责从绑定在 ServletContext 的 WebApplicationContext 中获取将使用的 Filter 委派对象，让原本需要配置在 web.xml 中才能生效的 Filter
+ * 如今只需配置在 WebApplicationContext 中就能发挥 Filter 的作用。
+ *
+ * 以便我们编写的 Filter 能被 IoC 支持。
  */
 public class DelegatingFilterProxy extends GenericFilterBean {
 
@@ -91,6 +98,8 @@ public class DelegatingFilterProxy extends GenericFilterBean {
 	@Nullable
 	private String targetBeanName;
 
+	// DelegatingFilterProxy 默认不负责管理 Filter 的生命周期，由 WebApplicationContext 管理。
+	// 设置为 true 之后，DelegatingFilterProxy 会接管 delegate 的声明周期。
 	private boolean targetFilterLifecycle = false;
 
 	@Nullable
@@ -193,6 +202,8 @@ public class DelegatingFilterProxy extends GenericFilterBean {
 	 * The target bean must implement the standard Servlet Filter interface.
 	 * <p>By default, the {@code filter-name} as specified for the
 	 * DelegatingFilterProxy in {@code web.xml} will be used.
+	 *
+	 * 指定该 Filter 在 SpringIoC 中的 BeanName。建立委派关系。
 	 */
 	public void setTargetBeanName(@Nullable String targetBeanName) {
 		this.targetBeanName = targetBeanName;
@@ -263,7 +274,7 @@ public class DelegatingFilterProxy extends GenericFilterBean {
 					}
 					delegateToUse = initDelegate(wac);
 				}
-				this.delegate = delegateToUse;
+				this.delegate = delegateToUse;		// 将指定的IoC容器中的FilterBean与DelegatingFilterProxy建立委派关系
 			}
 		}
 
@@ -320,8 +331,7 @@ public class DelegatingFilterProxy extends GenericFilterBean {
 	}
 
 	/**
-	 * Initialize the Filter delegate, defined as bean the given Spring
-	 * application context.
+	 * Initialize the Filter delegate, defined as bean the given Spring application context.
 	 * <p>The default implementation fetches the bean from the application context
 	 * and calls the standard {@code Filter.init} method on it, passing
 	 * in the FilterConfig of this Filter proxy.

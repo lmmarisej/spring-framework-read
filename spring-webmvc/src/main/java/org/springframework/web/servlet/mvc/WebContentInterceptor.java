@@ -169,10 +169,11 @@ public class WebContentInterceptor extends WebContentGenerator implements Handle
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws ServletException {
 
-		checkRequest(request);
+		checkRequest(request);		// 检查请求方法的类型是否在支持方法之列；不支持方法抛出 HttpRequestMethodNotSupportedException 异常阻断请求
 
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request, HandlerMapping.LOOKUP_PATH);
 
+		// 对请求内容对应的缓存行为进行管理
 		CacheControl cacheControl = lookupCacheControl(lookupPath);
 		Integer cacheSeconds = lookupCacheSeconds(lookupPath);
 		if (cacheControl != null) {

@@ -46,7 +46,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.ui.context.Theme
  * @see org.springframework.ui.context.ThemeSource
  *
- * 为用户提供不同的主题。
+ * 解析并获取对应当前请求的主题是什么。
  */
 public interface ThemeResolver {
 
@@ -65,6 +65,8 @@ public interface ThemeResolver {
 	 * @param themeName the new theme name ({@code null} or empty to reset it)
 	 * @throws UnsupportedOperationException if the ThemeResolver implementation
 	 * does not support dynamic changing of the theme
+	 *
+	 * 修改主题。
 	 */
 	void setThemeName(HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable String themeName);
 

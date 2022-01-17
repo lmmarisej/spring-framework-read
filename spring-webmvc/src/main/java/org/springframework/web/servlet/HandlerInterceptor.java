@@ -72,6 +72,10 @@ import org.springframework.web.method.HandlerMethod;
  * @see org.springframework.web.servlet.i18n.LocaleChangeInterceptor
  * @see org.springframework.web.servlet.theme.ThemeChangeInterceptor
  * @see javax.servlet.Filter
+ *
+ * 位于 DispatcherServlet 之内，可以在 Handler 执行前后对处理流程进行拦截操作。
+ *
+ * 具有很强的灵活性，HandlerMapping#getHandler 不同的 HandlerMapping 对多组不同的 Handler 使用不同的 HandlerInterceptor。
  */
 public interface HandlerInterceptor {
 
@@ -93,6 +97,11 @@ public interface HandlerInterceptor {
 	 * next interceptor or the handler itself. Else, DispatcherServlet assumes
 	 * that this interceptor has already dealt with the response itself.
 	 * @throws Exception in case of errors
+	 *
+	 * 在 handle 处理请求之前执行。
+	 *
+	 * true：允许后续处理流程继续执行。
+	 * false：不允许后续处理流程继续执行。
 	 */
 	default boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -119,9 +128,14 @@ public interface HandlerInterceptor {
 	 * @param modelAndView the {@code ModelAndView} that the handler returned
 	 * (can also be {@code null})
 	 * @throws Exception in case of errors
+	 *
+	 * 在 Handler 处理之后，在视图解析渲染之前执行。
 	 */
-	default void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			@Nullable ModelAndView modelAndView) throws Exception {
+	default
+	void	// 不可阻断后续处理流程
+	postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			@Nullable ModelAndView modelAndView		// 可以对 ModelAndView 进行修改
+	) throws Exception {
 	}
 
 	/**
@@ -144,6 +158,10 @@ public interface HandlerInterceptor {
 	 * @param ex any exception thrown on handler execution, if any; this does not
 	 * include exceptions that have been handled through an exception resolver
 	 * @throws Exception in case of errors
+	 *
+	 * 在框架整个处理流程结束之后执行，或者说视图渲染完成之后执行。
+	 *
+	 * 可以用来处理资源清理。
 	 */
 	default void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
 			@Nullable Exception ex) throws Exception {

@@ -31,6 +31,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  * @author Juergen Hoeller
  * @since 20.06.2003
  * @see org.springframework.web.servlet.ThemeResolver
+ *
+ * 根据请求参数，重新设置用户主题。
  */
 public class ThemeChangeInterceptor extends HandlerInterceptorAdapter {
 

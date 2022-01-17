@@ -382,6 +382,7 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 		}
 
 		// Check whether a session is required.
+		// 检查本次请求是否需要Session
 		if (this.requireSession && request.getSession(false) == null) {
 			throw new HttpSessionRequiredException("Pre-existing session required but none found");
 		}

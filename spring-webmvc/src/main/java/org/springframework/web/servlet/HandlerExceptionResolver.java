@@ -33,7 +33,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 22.11.2003
  *
- * 将请求过程中出现的异常转化为Spring内部统一的异常。
+ * 仅限于 Handler 查找以及 Handler 执行期间，接手该异常并处理。
  */
 public interface HandlerExceptionResolver {
 
@@ -50,6 +50,8 @@ public interface HandlerExceptionResolver {
 	 * @param ex the exception that got thrown during handler execution
 	 * @return a corresponding {@code ModelAndView} to forward to,
 	 * or {@code null} for default processing in the resolution chain
+	 *
+	 * 处理相关handler所关联的异常。
 	 */
 	@Nullable
 	ModelAndView resolveException(

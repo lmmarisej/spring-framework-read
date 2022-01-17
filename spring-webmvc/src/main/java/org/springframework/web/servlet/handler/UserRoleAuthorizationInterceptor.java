@@ -30,7 +30,7 @@ import org.springframework.lang.Nullable;
  *
  * @author Juergen Hoeller
  * @since 20.06.2003
- * @see javax.servlet.http.HttpServletRequest#isUserInRole
+ * @see javax.servlet.http.HttpServletRequest#isUserInRole	使用指定的一组用户角色对当前请求进行验证。验证不通过返回403。
  */
 public class UserRoleAuthorizationInterceptor extends HandlerInterceptorAdapter {
 
@@ -72,6 +72,8 @@ public class UserRoleAuthorizationInterceptor extends HandlerInterceptorAdapter 
 	 * @param handler chosen handler to execute, for type and/or instance evaluation
 	 * @throws javax.servlet.ServletException if there is an internal error
 	 * @throws java.io.IOException in case of an I/O error when writing the response
+	 *
+	 * 通过覆写本方法，以改变默认的web请求验证不通过处理逻辑。
 	 */
 	protected void handleNotAuthorized(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws ServletException, IOException {
