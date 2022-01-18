@@ -35,6 +35,8 @@ import javax.mail.internet.MimeMessage;
  * @see JavaMailSender#send(MimeMessagePreparator)
  * @see JavaMailSender#send(MimeMessagePreparator[])
  * @see MimeMessageHelper
+ *
+ * 回调接口，准备好JavaMail MIME 消息后回调。
  */
 @FunctionalInterface
 public interface MimeMessagePreparator {

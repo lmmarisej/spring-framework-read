@@ -28,6 +28,8 @@ package org.springframework.mail;
  * @author Juergen Hoeller
  * @since 10.09.2003
  * @see org.springframework.mail.javamail.JavaMailSender
+ *
+ * 发送邮件，只支持发送普通文本邮件的功能。
  */
 public interface MailSender {
 

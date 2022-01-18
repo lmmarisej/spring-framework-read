@@ -32,6 +32,8 @@ import java.util.Date;
  * @since 1.1.5
  * @see SimpleMailMessage
  * @see org.springframework.mail.javamail.MimeMessageHelper
+ *
+ * 抽象邮件信息。
  */
 public interface MailMessage {
 

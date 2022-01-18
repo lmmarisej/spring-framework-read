@@ -36,6 +36,8 @@ import org.springframework.mail.MailParseException;
  * @since 1.1.5
  * @see MimeMessageHelper
  * @see javax.mail.internet.MimeMessage
+ *
+ * 支持更丰富的MIME类型邮件信息。
  */
 public class MimeMailMessage implements MailMessage {
 

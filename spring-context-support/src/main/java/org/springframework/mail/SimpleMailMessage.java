@@ -25,8 +25,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Models a simple mail message, including data such as the from, to, cc, subject,
- * and text fields.
+ * Models a simple mail message, including data such as the from, to, cc, subject, and text fields.
  *
  * <p>Consider {@code JavaMailSender} and JavaMail {@code MimeMessages} for creating
  * more sophisticated messages, for example messages with attachments, special

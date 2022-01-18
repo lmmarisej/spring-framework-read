@@ -59,6 +59,8 @@ import org.springframework.mail.MailSender;
  * @see JavaMailSenderImpl
  * @see MimeMessagePreparator
  * @see MimeMessageHelper
+ *
+ * 增加了发送MIME邮件的功能。
  */
 public interface JavaMailSender extends MailSender {
 

@@ -67,6 +67,8 @@ import org.springframework.util.Assert;
  * @see #setPort
  * @see #setUsername
  * @see #setPassword
+ *
+ * 使用 JavaMail API 实现。
  */
 public class JavaMailSenderImpl implements JavaMailSender {
 
