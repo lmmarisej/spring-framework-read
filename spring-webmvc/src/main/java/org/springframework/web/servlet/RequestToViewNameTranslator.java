@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @since 2.0
+ *
+ * 根据约定从请求的 URL 中提取，提取后交给 ViewResolver。
  */
 public interface RequestToViewNameTranslator {
 
