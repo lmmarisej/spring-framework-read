@@ -61,6 +61,8 @@ import org.springframework.util.concurrent.ListenableFuture;
  * @see java.util.concurrent.Executors
  * @see DefaultManagedTaskExecutor
  * @see ThreadPoolTaskExecutor
+ *
+ * 尝试使用 JDK 中的线程池。
  */
 public class ConcurrentTaskExecutor implements AsyncListenableTaskExecutor, SchedulingTaskExecutor {
 

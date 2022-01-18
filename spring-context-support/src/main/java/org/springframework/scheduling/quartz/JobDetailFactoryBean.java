@@ -46,6 +46,8 @@ import org.springframework.util.Assert;
  * @see #setGroup
  * @see org.springframework.beans.factory.BeanNameAware
  * @see org.quartz.Scheduler#DEFAULT_GROUP
+ *
+ * 帮助 JobDetail 提供执行上下文信息。
  */
 public class JobDetailFactoryBean
 		implements FactoryBean<JobDetail>, BeanNameAware, ApplicationContextAware, InitializingBean {

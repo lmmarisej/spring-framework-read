@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
  * @since 3.0
  * @see TaskScheduler#schedule(Runnable, Trigger)
  * @see org.springframework.scheduling.support.CronTrigger
+ *
+ * 一个Trigger只能有一个Job，但多个Trigger可以共用一个Job。因此，可以组合多个 Trigger 来调度同一个 Job。
  */
 public interface Trigger {
 

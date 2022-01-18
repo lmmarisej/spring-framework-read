@@ -42,6 +42,8 @@ import org.springframework.util.ErrorHandler;
  * @since 3.0
  * @deprecated as of 5.1, in favor of EE 7's
  * {@link org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler}
+ *
+ * 使用特定的调度程序来执行提交给他们的任务。
  */
 @Deprecated
 public class TimerManagerTaskScheduler extends TimerManagerAccessor implements TaskScheduler {

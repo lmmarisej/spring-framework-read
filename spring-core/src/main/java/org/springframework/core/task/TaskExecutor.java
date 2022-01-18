@@ -19,8 +19,7 @@ package org.springframework.core.task;
 import java.util.concurrent.Executor;
 
 /**
- * Simple task executor interface that abstracts the execution
- * of a {@link Runnable}.
+ * Simple task executor interface that abstracts the execution of a {@link Runnable}.
  *
  * <p>Implementations can use all sorts of different execution strategies,
  * such as: synchronous, asynchronous, using a thread pool, and more.
@@ -34,9 +33,13 @@ import java.util.concurrent.Executor;
  * @author Juergen Hoeller
  * @since 2.0
  * @see java.util.concurrent.Executor
+ *
+ * JDK 中的 Executor 相关类基于 JDK 1.5，Spring 的抽象 TaskExecutor 对 JDK 1.4 提供了支持。
  */
 @FunctionalInterface
-public interface TaskExecutor extends Executor {
+public interface TaskExecutor
+		extends Executor 	// 将任务的执行和任务的提交分离
+{
 
 	/**
 	 * Execute the given {@code task}.

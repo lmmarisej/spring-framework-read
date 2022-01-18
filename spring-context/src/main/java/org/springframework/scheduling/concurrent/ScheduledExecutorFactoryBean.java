@@ -69,6 +69,8 @@ import org.springframework.util.ObjectUtils;
  * @see ScheduledExecutorTask
  * @see java.util.concurrent.ScheduledExecutorService
  * @see java.util.concurrent.ScheduledThreadPoolExecutor
+ *
+ * 提供对 Quartz 的 Scheduler 进行管理。
  */
 @SuppressWarnings("serial")
 public class ScheduledExecutorFactoryBean extends ExecutorConfigurationSupport

@@ -42,7 +42,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 2.0
  * @see SchedulerFactoryBean#setJobFactory
- * @see QuartzJobBean
+ * @see QuartzJobBean SpringBeanJobFactory 对 QuartzJobBean 其进行改进，降低其侵略性。
  */
 public class SpringBeanJobFactory extends AdaptableJobFactory
 		implements ApplicationContextAware, SchedulerContextAware {

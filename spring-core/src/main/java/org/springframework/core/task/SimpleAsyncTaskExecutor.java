@@ -46,6 +46,8 @@ import org.springframework.util.concurrent.ListenableFutureTask;
  * @see SyncTaskExecutor
  * @see org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
  * @see org.springframework.scheduling.commonj.WorkManagerTaskExecutor
+ *
+ * 提供最基础的异步任务支持，为每个任务创建一个线程来执行。
  */
 @SuppressWarnings("serial")
 public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator

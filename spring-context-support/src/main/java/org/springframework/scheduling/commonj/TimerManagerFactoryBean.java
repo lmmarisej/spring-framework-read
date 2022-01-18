@@ -54,6 +54,10 @@ import org.springframework.lang.Nullable;
  * @see commonj.timers.TimerListener
  * @deprecated as of 5.1, in favor of EE 7's
  * {@link org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler}
+ *
+ * 对传统的 Timer 进行封装，内部提取 Timer 的相关信息，从而决定调度方法，对TimerTask进行调度。
+ *
+ * Timer 不如 Quartz，没有明确的 Trigger 概念（Timer自身就是Scheduler和Trigger），不像 Quartz 可以通过 cron 表达式指定复杂的调度规则。
  */
 @Deprecated
 public class TimerManagerFactoryBean extends TimerManagerAccessor

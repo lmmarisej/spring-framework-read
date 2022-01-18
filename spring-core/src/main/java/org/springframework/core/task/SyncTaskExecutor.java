@@ -35,6 +35,8 @@ import org.springframework.util.Assert;
  * @author Juergen Hoeller
  * @since 2.0
  * @see SimpleAsyncTaskExecutor
+ *
+ * 提交的任务直接在当前线程执行。
  */
 @SuppressWarnings("serial")
 public class SyncTaskExecutor implements TaskExecutor, Serializable {

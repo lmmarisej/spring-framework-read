@@ -77,6 +77,8 @@ import org.springframework.util.concurrent.ListenableFutureTask;
  * @see java.util.concurrent.ThreadPoolExecutor
  * @see ThreadPoolExecutorFactoryBean
  * @see ConcurrentTaskExecutor
+ *
+ * 提供线程池来重用处理任务的异步执行工作线程。
  */
 @SuppressWarnings("serial")
 public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport

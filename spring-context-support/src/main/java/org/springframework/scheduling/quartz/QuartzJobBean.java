@@ -52,6 +52,8 @@ import org.springframework.beans.PropertyAccessorFactory;
  * @see SchedulerFactoryBean#setSchedulerContextAsMap
  * @see SpringBeanJobFactory
  * @see SchedulerFactoryBean#setJobFactory
+ *
+ * 为 Job 提供以 Bean 的方式获取当前 Job 执行上下文的信息，Spring提供支持，将以编码形式提供Job信息改为配置提供Job信息。
  */
 public abstract class QuartzJobBean implements Job {
 
@@ -80,6 +82,10 @@ public abstract class QuartzJobBean implements Job {
 	 * applied as bean property values by execute. The contract is
 	 * exactly the same as for the standard Quartz execute method.
 	 * @see #execute
+	 *
+	 * 保证上下文信息在 Job 执行之前被注入。
+	 *
+	 * 缺点：具有侵略性。
 	 */
 	protected abstract void executeInternal(JobExecutionContext context) throws JobExecutionException;
 
