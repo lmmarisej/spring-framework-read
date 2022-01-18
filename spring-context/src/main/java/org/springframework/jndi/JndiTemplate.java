@@ -39,6 +39,8 @@ import org.springframework.util.CollectionUtils;
  * @author Juergen Hoeller
  * @see JndiCallback
  * @see #execute
+ *
+ * JNDI 的访问基石，帮助我们简化一系列的JNDI操作，包括对象的查找、绑定或者接触绑定等。
  */
 public class JndiTemplate {
 

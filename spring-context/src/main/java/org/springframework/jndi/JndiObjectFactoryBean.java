@@ -69,14 +69,16 @@ import org.springframework.util.ClassUtils;
  * @see #setLookupOnStartup
  * @see #setCache
  * @see JndiObjectTargetSource
+ *
+ * 根据请求的Jndi名称，查找并返回绑定到JNDI服务的相应资源引用。
  */
 public class JndiObjectFactoryBean extends JndiObjectLocator
 		implements FactoryBean<Object>, BeanFactoryAware, BeanClassLoaderAware {
 
 	@Nullable
-	private Class<?>[] proxyInterfaces;
+	private Class<?>[] proxyInterfaces;		// 当lookupOnStartup|cache==false时，需要指定proxyInterfaces接口，已使JndiObjectTargetSource可以构建相应的代理对象
 
-	private boolean lookupOnStartup = true;
+	private boolean lookupOnStartup = true;		// 对于不经常变动的JNDI资源，在JndiObjectFactoryBean启动时就查找并缓存之
 
 	private boolean cache = true;
 

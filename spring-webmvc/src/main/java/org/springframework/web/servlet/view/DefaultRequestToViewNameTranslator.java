@@ -40,7 +40,7 @@ import org.springframework.web.util.UrlPathHelper;
  *
  * <p>The stripping of the leading slash and file extension can be disabled
  * using the {@link #setStripLeadingSlash stripLeadingSlash} and
- * {@link #setStripExtension stripExtension} properties, respectively.
+ * {@link #setStripExtension stripExtension} properties, respectively.J
  *
  * <p>Find below some examples of request to view name translation.
  * <ul>
