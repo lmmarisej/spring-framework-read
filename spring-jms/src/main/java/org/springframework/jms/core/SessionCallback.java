@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
  * @since 1.1
  * @param <T> the result type
  * @see JmsTemplate#execute(SessionCallback)
+ *
+ * 提供用户自定义逻辑介入点。
  */
 @FunctionalInterface
 public interface SessionCallback<T> {

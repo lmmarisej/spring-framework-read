@@ -85,6 +85,8 @@ import org.springframework.util.Assert;
  * @see #setMessageConverter
  * @see javax.jms.MessageProducer
  * @see javax.jms.MessageConsumer
+ *
+ * 用于同步接收模板方法。
  */
 public class JmsTemplate extends JmsDestinationAccessor implements JmsOperations {
 
@@ -131,6 +133,8 @@ public class JmsTemplate extends JmsDestinationAccessor implements JmsOperations
 	}
 
 	/**
+	 * JmsTemplate 必须依赖 ConnectionFactory。
+	 *
 	 * Create a new JmsTemplate, given a ConnectionFactory.
 	 * @param connectionFactory the ConnectionFactory to obtain Connections from
 	 */

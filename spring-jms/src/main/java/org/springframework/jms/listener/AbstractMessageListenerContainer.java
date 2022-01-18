@@ -146,7 +146,7 @@ public abstract class AbstractMessageListenerContainer extends AbstractJmsListen
 	private volatile Object destination;
 
 	@Nullable
-	private volatile String messageSelector;
+	private volatile String messageSelector;		// 表达式语法
 
 	@Nullable
 	private volatile Object messageListener;
