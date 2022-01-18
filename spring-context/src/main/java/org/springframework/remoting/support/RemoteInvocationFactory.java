@@ -30,6 +30,8 @@ import org.aopalliance.intercept.MethodInvocation;
  * @see DefaultRemoteInvocationFactory
  * @see org.springframework.remoting.rmi.RmiClientInterceptor#setRemoteInvocationFactory
  * @see org.springframework.remoting.httpinvoker.HttpInvokerClientInterceptor#setRemoteInvocationFactory
+ *
+ * 将远程调用信息，以MethodInvocation封装返回给Service Accessor
  */
 public interface RemoteInvocationFactory {
 

@@ -29,6 +29,8 @@ import java.lang.reflect.InvocationTargetException;
  * @see DefaultRemoteInvocationFactory
  * @see org.springframework.remoting.rmi.RmiServiceExporter#setRemoteInvocationExecutor
  * @see org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter#setRemoteInvocationExecutor
+ *
+ * 根据RemoteInvocation，指定业务对象上对应的业务方法。
  */
 public interface RemoteInvocationExecutor {
 

@@ -45,6 +45,8 @@ import org.springframework.core.NestedRuntimeException;
  *
  * @author Juergen Hoeller
  * @since 14.05.2003
+ *
+ * Spring 内部的远程访问异常体系。
  */
 public class RemoteAccessException extends NestedRuntimeException {
 

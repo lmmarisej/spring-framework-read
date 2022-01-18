@@ -131,6 +131,7 @@ public class JaxWsSupportTests {
 	}
 
 
+	// 负责处理与远程调用的交互工作
 	public static class ServiceAccessor {
 
 		@WebServiceRef
