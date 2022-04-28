@@ -16,7 +16,7 @@
 
 package org.springframework.beans;
 
-import java.beans.PropertyDescriptor;
+import java.beans.PropertyDescriptor;        // 基于 Java 的内省机制实现了对属性的赋值工作
 
 /**
  * The central interface of Spring's low-level JavaBeans infrastructure.
@@ -35,25 +35,26 @@ import java.beans.PropertyDescriptor;
  * <p>A BeanWrapper's default for the "extractOldValueForEditor" setting
  * is "false", to avoid side effects caused by getter method invocations.
  * Turn this to "true" to expose present property values to custom editors.
- *
- * 使用BeanWrapper以方便操作Bean实例，可以免去直接使用Java反射API操作对象实例的繁琐。
+ * <p>
+ * 使用BeanWrapper以方便操作Bean实例，完成对属性的绑定，可以免去直接使用Java反射API操作对象实例的繁琐。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 13 April 2001
  * @see PropertyAccessor
  * @see PropertyEditorRegistry
  * @see PropertyAccessorFactory#forBeanPropertyAccess
  * @see org.springframework.beans.factory.BeanFactory
  * @see org.springframework.validation.BeanPropertyBindingResult
  * @see org.springframework.validation.DataBinder#initBeanPropertyAccess()
+ * @since 13 April 2001
  */
 public interface BeanWrapper
-		extends ConfigurablePropertyAccessor	// 支持以统一的方式对对象属性进行访问
+		extends ConfigurablePropertyAccessor    // 支持以统一的方式对对象属性进行访问
 {
 
 	/**
 	 * Return the limit for array and collection auto-growing.
+	 *
 	 * @since 4.1
 	 */
 	int getAutoGrowCollectionLimit();
@@ -61,6 +62,7 @@ public interface BeanWrapper
 	/**
 	 * Specify a limit for array and collection auto-growing.
 	 * <p>Default is unlimited on a plain BeanWrapper.
+	 *
 	 * @since 4.1
 	 */
 	void setAutoGrowCollectionLimit(int autoGrowCollectionLimit);
@@ -78,19 +80,23 @@ public interface BeanWrapper
 	Class<?> getWrappedClass();
 
 	/**
+	 * 获取属性描述器。
+	 *
 	 * Obtain the PropertyDescriptors for the wrapped object
 	 * (as determined by standard JavaBeans introspection).
-	 * 属性描述列表
+	 *
 	 * @return the PropertyDescriptors for the wrapped object
 	 */
 	PropertyDescriptor[] getPropertyDescriptors();
 
 	/**
+	 * 获取属性名称对应的属性描述对象。
+	 *
 	 * Obtain the property descriptor for a specific property
 	 * of the wrapped object.
-	 * 获取属性名称对应的属性描述对象
+	 *
 	 * @param propertyName the property to obtain the descriptor for
-	 * (may be a nested path, but no indexed/mapped property)
+	 *                     (may be a nested path, but no indexed/mapped property)
 	 * @return the property descriptor for the specified property
 	 * @throws InvalidPropertyException if there is no such property
 	 */

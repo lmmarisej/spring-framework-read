@@ -36,10 +36,11 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 基于 Java 提供的 反射与内省API 的扩展和进一步的封装。
+ *
  * Contextual descriptor about a type to convert from or to.
  * Capable of representing arrays and generic collection types.
  *
- * 类型描述
  * @author Keith Donald
  * @author Andy Clement
  * @author Juergen Hoeller
