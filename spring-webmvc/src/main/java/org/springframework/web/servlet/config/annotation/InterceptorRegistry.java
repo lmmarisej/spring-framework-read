@@ -34,7 +34,7 @@ import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapt
  * @author Keith Donald
  * @since 3.1
  */
-public class InterceptorRegistry {
+public class InterceptorRegistry {		// 一个InterceptorRegistry实例就代表一个过滤器链
 
 	private final List<InterceptorRegistration> registrations = new ArrayList<>();
 

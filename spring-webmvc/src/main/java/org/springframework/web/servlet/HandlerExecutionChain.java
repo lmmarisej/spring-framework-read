@@ -173,7 +173,7 @@ public class HandlerExecutionChain {
 
 		HandlerInterceptor[] interceptors = getInterceptors();
 		if (!ObjectUtils.isEmpty(interceptors)) {
-			for (int i = interceptors.length - 1; i >= 0; i--) {
+			for (int i = interceptors.length - 1; i >= 0; i--) {	// 注意这里是倒序遍历，也就是说最先applyPreHandle的最后applyPostHandle
 				HandlerInterceptor interceptor = interceptors[i];
 				interceptor.postHandle(request, response, this.handler, mv);
 			}

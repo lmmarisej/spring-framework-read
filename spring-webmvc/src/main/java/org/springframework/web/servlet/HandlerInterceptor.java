@@ -75,7 +75,7 @@ import org.springframework.web.method.HandlerMethod;
  *
  * 位于 DispatcherServlet 之内，可以在 Handler 执行前后对处理流程进行拦截操作。
  *
- * 具有很强的灵活性，HandlerMapping#getHandler 不同的 HandlerMapping 对多组不同的 Handler 使用不同的 HandlerInterceptor。
+ * 基于AntMatcher + 过滤器链实现，具有很强的灵活性，HandlerMapping#getHandler 不同的 HandlerMapping 对多组不同的 Handler 使用不同的 HandlerInterceptor。
  */
 public interface HandlerInterceptor {
 

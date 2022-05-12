@@ -354,6 +354,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加过滤器到过滤器链。
+	 *
 	 * Override this method to add Spring MVC interceptors for
 	 * pre- and post-processing of controller invocation.
 	 * @see InterceptorRegistry
