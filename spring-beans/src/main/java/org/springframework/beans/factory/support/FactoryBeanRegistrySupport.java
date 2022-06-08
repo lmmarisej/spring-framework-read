@@ -109,16 +109,14 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 		// 是否单例 是否已经包含
 		if (factory.isSingleton() && containsSingleton(beanName)) {
 			synchronized (getSingletonMutex()) {
-				// 从工厂bean的缓存中获取
-				Object object = this.factoryBeanObjectCache.get(beanName);
+				Object object = this.factoryBeanObjectCache.get(beanName);		// 相当于从二级缓存获取
 				if (object == null) {
 
 					// 从 factoryBean 接口中获取
-					object = doGetObjectFromFactoryBean(factory, beanName);
+					object = doGetObjectFromFactoryBean(factory, beanName);	// 通过 FactoryBean 获取到的 bean 同样需要经过 bean 初始化流程
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)
-					// 从缓存map中获取
-					Object alreadyThere = this.factoryBeanObjectCache.get(beanName);
+					Object alreadyThere = this.factoryBeanObjectCache.get(beanName);	// 上一步方法过程中创建了
 					if (alreadyThere != null) {
 						// 如果缓存中获取有值
 						// object 覆盖
@@ -191,7 +189,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 			if (System.getSecurityManager() != null) {
 				AccessControlContext acc = getAccessControlContext();
 				try {
-					// 从 FactoryBean 中获取bean
+					// 从 FactoryBean 中获取 bean
 					object = AccessController.doPrivileged((PrivilegedExceptionAction<Object>) factory::getObject, acc);
 				}
 				catch (PrivilegedActionException pae) {
@@ -199,8 +197,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 				}
 			}
 			else {
-				// 获取obj
-				object = factory.getObject();
+				object = factory.getObject();	// 调用 FactoryBean 的工厂方法构建真正的 bean
 			}
 		}
 		catch (FactoryBeanNotInitializedException ex) {

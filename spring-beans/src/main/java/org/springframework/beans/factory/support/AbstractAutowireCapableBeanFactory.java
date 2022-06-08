@@ -16,6 +16,15 @@
 
 package org.springframework.beans.factory.support;
 
+import org.apache.commons.logging.Log;
+import org.springframework.beans.*;
+import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.core.*;
+import org.springframework.lang.Nullable;
+import org.springframework.util.*;
+import org.springframework.util.ReflectionUtils.MethodCallback;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -25,64 +34,10 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
-
-import org.apache.commons.logging.Log;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyAccessorUtils;
-import org.springframework.beans.PropertyValue;
-import org.springframework.beans.PropertyValues;
-import org.springframework.beans.TypeConverter;
-import org.springframework.beans.factory.Aware;
-import org.springframework.beans.factory.BeanClassLoaderAware;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanCurrentlyInCreationException;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.InjectionPoint;
-import org.springframework.beans.factory.UnsatisfiedDependencyException;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.config.AutowiredPropertyMarker;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.beans.factory.config.ConstructorArgumentValues;
-import org.springframework.beans.factory.config.DependencyDescriptor;
-import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
-import org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor;
-import org.springframework.beans.factory.config.TypedStringValue;
-import org.springframework.core.DefaultParameterNameDiscoverer;
-import org.springframework.core.MethodParameter;
-import org.springframework.core.NamedThreadLocal;
-import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.core.PriorityOrdered;
-import org.springframework.core.ResolvableType;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.ReflectionUtils.MethodCallback;
-import org.springframework.util.StringUtils;
 
 /**
  * Abstract bean factory superclass that implements default bean creation, with the full
@@ -698,10 +653,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				isSingletonCurrentlyInCreation(beanName));
 
 		// 单例对象提前暴露
-		if (earlySingletonExposure) {
+		if (earlySingletonExposure) {		// 提前暴露——只完成了实例化，未完成初始化操作的 bean
 			if (logger.isTraceEnabled()) {
-				logger.trace("Eagerly caching bean '" + beanName +
-						"' to allow for resolving potential circular references");
+				logger.trace("Eagerly caching bean '" + beanName + "' to allow for resolving potential circular references");
 			}
 			// 添加单例工厂
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
@@ -714,8 +668,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// 依赖注入
 			populateBean(beanName, mbd, instanceWrapper);
-			// 初始化bean，Aware、BeanPostProcessorsBefore、@PostConstruct、InitializingBean、InitMethod、beanPostProcessorAfter
-			exposedObject = initializeBean(beanName, exposedObject, mbd);
+			// bean 的初始化 执行 Aware、BeanPostProcessorsBefore、@PostConstruct、InitializingBean、InitMethod、beanPostProcessorAfter
+			exposedObject = initializeBean(beanName, exposedObject, mbd);		// 得到一个完整的 bean 对象
 		}
 		catch (Throwable ex) {
 			if (ex instanceof BeanCreationException && beanName.equals(((BeanCreationException) ex).getBeanName())) {
@@ -728,8 +682,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 
-		// 第五部分
-		// 依赖相关处理
+		// 第五部分       ————依赖相关处理
 		if (earlySingletonExposure) {
 			Object earlySingletonReference = getSingleton(beanName, false);
 			if (earlySingletonReference != null) {
@@ -737,10 +690,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					exposedObject = earlySingletonReference;
 				}
 				else if (!this.allowRawInjectionDespiteWrapping && hasDependentBean(beanName)) {
-					// 当前bean的依赖列表
-					String[] dependentBeans = getDependentBeans(beanName);
-					// 当前bean的依赖列表
-					Set<String> actualDependentBeans = new LinkedHashSet<>(dependentBeans.length);
+					String[] dependentBeans = getDependentBeans(beanName);							// 当前 bean 的依赖列表
+					Set<String> actualDependentBeans = new LinkedHashSet<>(dependentBeans.length);	// 当前 bean 的依赖列表
 					for (String dependentBean : dependentBeans) {
 						if (!removeSingletonIfCreatedForTypeCheckOnly(dependentBean)) {
 							actualDependentBeans.add(dependentBean);
@@ -764,8 +715,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 第六部分
 		// Register bean as disposable.
 		try {
-			// 注册bean(一次性的bean)
-			registerDisposableBeanIfNecessary(beanName, bean, mbd);
+			registerDisposableBeanIfNecessary(beanName, bean, mbd);		// 依赖相关处理
 		}
 		catch (BeanDefinitionValidationException ex) {
 			throw new BeanCreationException(
@@ -781,7 +731,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @param mbd the merged bean definition to determine the type for
 	 * @param typesToMatch the types to match in case of internal type matching purposes
 	 * (also signals that the returned {@code Class} will never be exposed to application code)
-	 * @return
 	 */
 	@Override
 	@Nullable
@@ -1078,10 +1027,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 第四部分
 		// If we're allowed, we can create the factory bean and call getObjectType() early
 		if (allowInit) {
-			FactoryBean<?> factoryBean = (mbd.isSingleton() ?
-					// 单例 工厂bean验证
-					getSingletonFactoryBeanForTypeCheck(beanName, mbd) :
-					// 非 单例 工厂bean验证
+			FactoryBean<?> factoryBean = (mbd.isSingleton() ?					// 单例 工厂 bean 验证
+					getSingletonFactoryBeanForTypeCheck(beanName, mbd) :		// 非单例 工厂 bean 验证
 					getNonSingletonFactoryBeanForTypeCheck(beanName, mbd));
 			if (factoryBean != null) {
 				// Try to obtain the FactoryBean's object type from this early stage of the instance.
@@ -1172,10 +1119,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 *
 	 * @return the object to expose as bean reference
 	 */
-	protected Object getEarlyBeanReference(String beanName, RootBeanDefinition mbd, Object bean) {
+	protected Object getEarlyBeanReference(String beanName, RootBeanDefinition mbd, Object bean) {	// 主要解决 AOP Bean 循环引用
 		Object exposedObject = bean;
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
-			for (BeanPostProcessor bp : getBeanPostProcessors()) {
+			for (BeanPostProcessor bp : getBeanPostProcessors()) {			// 处理 BeanPostProcessor，包括据此实现的 AOP
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
 					exposedObject = ibp.getEarlyBeanReference(exposedObject, beanName);
@@ -1203,8 +1150,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	private FactoryBean<?> getSingletonFactoryBeanForTypeCheck(String beanName, RootBeanDefinition mbd) {
 		synchronized (getSingletonMutex()) {
-			// 获取 beanName 对应的 BeanWrapper
-			BeanWrapper bw = this.factoryBeanInstanceCache.get(beanName);
+			BeanWrapper bw = this.factoryBeanInstanceCache.get(beanName);		// 获取 beanName 对应的 BeanWrapper
 
 			if (bw != null) {
 				// 直接返回 beanWrapper 的强制转换
@@ -1224,16 +1170,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			Object instance;
 			try {
 				// Mark this bean as currently in creation, even if just partially.
-				// 创建前的验证
-				beforeSingletonCreation(beanName);
+				beforeSingletonCreation(beanName);		// 创建前的验证
 				// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 				// 实例解析
 				instance = resolveBeforeInstantiation(beanName, mbd);
 				if (instance == null) {
-					// 创建 beanWrapper
-					bw = createBeanInstance(beanName, mbd, null);
-					// 获取实例
-					instance = bw.getWrappedInstance();
+					bw = createBeanInstance(beanName, mbd, null);		// 创建 beanWrapper
+					instance = bw.getWrappedInstance();						// 获取实例
 				}
 			}
 			catch (UnsatisfiedDependencyException ex) {
@@ -1250,16 +1193,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			finally {
 				// Finished partial creation of this bean.
-				// 创建后的行为
-				afterSingletonCreation(beanName);
+				afterSingletonCreation(beanName);				// 创建后的行为
 			}
 
 			// 获取 factoryBean
 			// instance 强转 FactoryBean
 			FactoryBean<?> fb = getFactoryBean(beanName, instance);
 			if (bw != null) {
-				// 置入容器
-				this.factoryBeanInstanceCache.put(beanName, bw);
+				this.factoryBeanInstanceCache.put(beanName, bw);		// 置入容器
 			}
 			return fb;
 		}
@@ -2170,7 +2111,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @see #applyBeanPostProcessorsAfterInitialization
 	 */
 	protected Object initializeBean(final String beanName, final Object bean, @Nullable RootBeanDefinition mbd) {
-		// 第一部分
+		// 第一部分     ————aware 接口执行
 		if (System.getSecurityManager() != null) {
 			AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
 				invokeAwareMethods(beanName, bean);
@@ -2178,20 +2119,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}, getAccessControlContext());
 		}
 		else {
-			// aware 接口执行
 			invokeAwareMethods(beanName, bean);
 		}
 
-		// 第二部分
+		// 第二部分      ————执行 BeanPostProcessor 前置方法
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
 			// BeanPostProcessor 前置方法执行，在 LifecycleMetadata.invokeInitMethods 中完成JSR250注解的前置处理，如：PostConstruct。
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
-		// 第三部分
+		// 第三部分		————初始化方法执行
 		try {
-			// 执行实例化函数
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -2201,9 +2140,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			);
 		}
 
-		// 第四部分
+		// 第四部分       ————BeanPostProcessor 后置方法执行
 		if (mbd == null || !mbd.isSynthetic()) {
-			// BeanPostProcessor 后置方法执行
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 
@@ -2212,8 +2150,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * 执行 aware 接口
-	 * @param beanName
-	 * @param bean
 	 */
 	private void invokeAwareMethods(final String beanName, final Object bean) {
 		if (bean instanceof Aware) {

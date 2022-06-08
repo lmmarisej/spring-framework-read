@@ -28,9 +28,6 @@ package org.springframework.beans.factory;
  * Refer to {@link org.springframework.context.support.ApplicationContextAwareProcessor}
  * for an example of processing specific {@code *Aware} interface callbacks.
  *
- * 当Bean实例化完成并且相关属性及依赖设置完成之后，Spring容器会检查当前对象实例是否实现了一些列以Aware命名结尾的接口定义。
- *
- * 提供Bean对IoC容器感知的功能，使得Bean得知IoC容器此时的状态。
  *
  * @author Chris Beams
  * @author Juergen Hoeller

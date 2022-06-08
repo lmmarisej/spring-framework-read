@@ -76,21 +76,21 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 *
 	 * 单例对象容器, key: beanName , value: bean实例
 	 * */
-	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
+	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);		// 一级缓存
 
 	/**
 	 *  Cache of singleton factories: bean name to ObjectFactory.
 	 * key: beanName
 	 * value: 对象工厂
 	 * */
-	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
+	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);	// 三级缓存
 
 	/**
 	 *  Cache of early singleton objects: bean name to bean instance.
 	 *
 	 * 提前暴露的对象 key: beanName , value: object
 	 * */
-	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
+	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);	// 二级缓存
 
 	/**
 	 *
@@ -206,14 +206,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
-		synchronized (this.singletonObjects) {
-			// 单例bean容器中是否存在
+		synchronized (this.singletonObjects) {				// 构造一个只存在于三级缓存中的 bean
 			if (!this.singletonObjects.containsKey(beanName)) {
-				// 添加单例对象工厂
 				this.singletonFactories.put(beanName, singletonFactory);
-				// 删除提前暴露的 BeanName
 				this.earlySingletonObjects.remove(beanName);
-				// 注册单例beanName
 				this.registeredSingletons.add(beanName);
 			}
 		}
@@ -229,28 +225,19 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * Return the (raw) singleton object registered under the given name.
 	 * <p>Checks already instantiated singletons and also allows for an early
 	 * reference to a currently created singleton (resolving a circular reference).
-	 * 循环依赖的map处理
 	 * @param beanName the name of the bean to look for
 	 * @param allowEarlyReference whether early references should be created or not
 	 * @return the registered singleton object, or {@code null} if none found
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-		// 尝试从单例缓存中获取
-		Object singletonObject = this.singletonObjects.get(beanName);
-		// 单例对象是否null
-		// 这个 beanName 是否正在创建
-		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
-			// 锁
-			synchronized (this.singletonObjects) {
-				// 从早期加载的map中获取
-				singletonObject = this.earlySingletonObjects.get(beanName);
-				// 对象是否空 ， 是否允许提前应用
-				if (singletonObject == null && allowEarlyReference) {
-					// 从对象工厂map中获取对象工厂
-					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
-					if (singletonFactory != null) {
-						// 对象获取后设置
+		Object singletonObject = this.singletonObjects.get(beanName);		// 一级缓存
+		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {		// 是否正在创建
+			synchronized (this.singletonObjects) {		// 锁
+				singletonObject = this.earlySingletonObjects.get(beanName);		// 二级缓存
+				if (singletonObject == null && allowEarlyReference) {		// 提前曝光 bean
+					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);	// 三级缓存中获取 ObjectFactory
+					if (singletonFactory != null) {		// 通过工厂方法，构造 bean 实例，将 bean 相关的对象从三级缓存移动到二级缓存
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);

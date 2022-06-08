@@ -594,6 +594,14 @@ public abstract class AbstractApplicationContext
     @Override
     public void refresh() throws BeansException, IllegalStateException {
         synchronized (this.startupShutdownMonitor) {
+			/*
+				容器启动刷新前的准备工作。
+				1、设置容器的启动时间
+				2、设置活既状态为 true
+				3、设置关闭状态为 false
+				4、获限 Environment 对象，并加载当前系统的属性值到 Environment 对象中
+				5、准务监所器利事件的樂合对象，默认为空的樂合
+			 */
             // Prepare this context for refreshing.
             // 准备刷新此上下文。
             prepareRefresh();
@@ -602,6 +610,9 @@ public abstract class AbstractApplicationContext
 			// 在子类中启动refreshBeanFactory
             ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();		// 会执行BeanDefinition的载入
 
+			/*
+				完成 Bean 工厂的某些初始化操作。
+			 */
             // Prepare the bean factory for use in this context.
             prepareBeanFactory(beanFactory);	// 为容器的启动做好必要的准备工作，配置Classloader、PropertyEditor、BeanPostProcessor
 
@@ -636,7 +647,7 @@ public abstract class AbstractApplicationContext
 
 				// 实例化所有的(non-lazy-init)单例
 				// Instantiate all remaining (non-lazy-init) singletons.
-                finishBeanFactoryInitialization(beanFactory);
+                finishBeanFactoryInitialization(beanFactory);				// 重要
 
 				// 发布容器事件，结束refresh过程
                 // Last step: publish corresponding event.
@@ -699,10 +710,11 @@ public abstract class AbstractApplicationContext
         // Initialize any placeholder property sources in the context environment.
         initPropertySources();
 
-        // 进行数据必填性验证
+
         // Validate that all properties marked as required are resolvable:
         // see ConfigurablePropertyResolver#setRequiredProperties
-        getEnvironment().validateRequiredProperties();
+        getEnvironment()		// 获取环境变量
+				.validateRequiredProperties();		// 进行数据必填性验证
 
         // 处理早期应用监听器列表 和 应用监听器列表
         // Store pre-refresh ApplicationListeners...
@@ -717,7 +729,7 @@ public abstract class AbstractApplicationContext
 
         // Allow for the collection of early ApplicationEvents,
         // to be published once the multicaster is available...
-        this.earlyApplicationEvents = new LinkedHashSet<>();
+        this.earlyApplicationEvents = new LinkedHashSet<>();			// 实例化集合对象
     }
     /**
      * <p>Replace any stub property sources with actual instances.
@@ -747,7 +759,7 @@ public abstract class AbstractApplicationContext
      */
     protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
         // Tell the internal bean factory to use the context's class loader etc.
-        // 设置 classLaoder
+        // 设置 classloader
         beanFactory.setBeanClassLoader(getClassLoader());
         // 设置 el 表达式解析器
         beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));

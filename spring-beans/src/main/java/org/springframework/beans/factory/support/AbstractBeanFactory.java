@@ -335,7 +335,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
-			// 完成FactoryBean的处理，以获取其产生的结果；FactoryBean，创建的对象由Spring作为bean进行管理
+			// 完成 FactoryBean 的处理，以获取其产生的结果；FactoryBean，创建的对象由 Spring 作为 bean 进行管理
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
@@ -343,7 +343,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
 			// 原型模式下的依赖检查
-			if (isPrototypeCurrentlyInCreation(beanName)) {
+			if (isPrototypeCurrentlyInCreation(beanName)) {					// 解决不了非懒加载单例对象的循环依赖
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
@@ -385,7 +385,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				// Guarantee initialization of beans that the current bean depends on.
 				// 需要依赖的bean，会递归的依赖注入所有属性
-				String[] dependsOn = mbd.getDependsOn();
+				String[] dependsOn = mbd.getDependsOn();			// 优先处理依赖 bean
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
 						// 是否依赖
@@ -443,7 +443,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						// 创建后的行为
 						afterPrototypeCreation(beanName);
 					}
-					// 对于在 createBean 时创建的 FactoryBean 实例，完成其对应的 Bean 的创建
+					// 可能在上面创建的 bean 实例时 FactoryBean 实例
 					bean = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
 				}
 
@@ -2102,8 +2102,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 		// 第一部分
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
-		// 判断 beanName 是不是 bean 工厂
-		if (BeanFactoryUtils.isFactoryDereference(name)) {
+		if (BeanFactoryUtils.isFactoryDereference(name)) {		// 工厂对象的引用
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
 			}
@@ -2113,7 +2112,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			if (mbd != null) {
 				mbd.isFactoryBean = true;
 			}
-			// 返回实例
 			return beanInstance;
 		}
 
@@ -2142,8 +2140,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
 			boolean synthetic = (mbd != null && mbd.isSynthetic());
-			// 使用 FactoryBean 创建 bean 实例
-			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
+			object = getObjectFromFactoryBean(factory, beanName, !synthetic);		// 使用 FactoryBean 创建 bean 实例
 		}
 		return object;
 	}
@@ -2192,6 +2189,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @see RootBeanDefinition#getDependsOn
 	 * @see #registerDisposableBean
 	 * @see #registerDependentBean
+	 *
+	 * 注册销毁 bean 实例的钩子函数。
 	 */
 	protected void registerDisposableBeanIfNecessary(String beanName, Object bean, RootBeanDefinition mbd) {
 		AccessControlContext acc = (System.getSecurityManager() != null ? getAccessControlContext() : null);
