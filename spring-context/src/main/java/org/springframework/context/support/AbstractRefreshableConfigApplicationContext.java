@@ -38,15 +38,10 @@ import org.springframework.util.StringUtils;
  */
 public abstract class AbstractRefreshableConfigApplicationContext extends AbstractRefreshableApplicationContext
 		implements BeanNameAware, InitializingBean {
-	/**
-	 * 配置文件地址
-	 */
-	@Nullable
-	private String[] configLocations;
 
-	/**
-	 *
-	 */
+	@Nullable
+	private String[] configLocations;		// 配置文件地址
+
 	private boolean setIdCalled = false;
 
 
@@ -127,7 +122,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	 * @see org.springframework.core.env.Environment#resolveRequiredPlaceholders(String)
 	 */
 	protected String resolvePath(String path) {
-		return getEnvironment().resolveRequiredPlaceholders(path);
+		return getEnvironment().resolveRequiredPlaceholders(path);		// 根据环境变量属性替换路径占位符
 	}
 
 

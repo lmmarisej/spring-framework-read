@@ -134,21 +134,19 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * initializing a fresh bean factory for the next phase of the context's lifecycle.
 	 */
 	@Override
-	protected final void refreshBeanFactory() throws BeansException {
+	protected final void refreshBeanFactory() throws BeansException {		// 创建容器工厂，设置属性值
 		// 如果已经建立了BeanFactory，则销毁并关闭该BeanFactory，保证在refresh后使用的是新建立起来的IoC容器
 		if (hasBeanFactory()) {
 			destroyBeans();
 			closeBeanFactory();
 		}
 		try {
-			// 创建 BeanFactory
-			DefaultListableBeanFactory beanFactory = createBeanFactory();
-			// 设置序列化id
-			beanFactory.setSerializationId(getId());
+			DefaultListableBeanFactory beanFactory = createBeanFactory();	// 创建 BeanFactory
+			beanFactory.setSerializationId(getId());		// 设置序列化 id
 			// 定制工厂的处理
 			// 设置两个属性值
-			// 	1. allowBeanDefinitionOverriding
-			//  2. allowCircularReferences
+			// 1. allowBeanDefinitionOverriding
+			// 2. allowCircularReferences
 			customizeBeanFactory(beanFactory);
 			// 开始对BeanDefinitions的载入
 			loadBeanDefinitions(beanFactory);

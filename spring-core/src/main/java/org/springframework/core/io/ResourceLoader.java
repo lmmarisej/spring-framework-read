@@ -38,10 +38,8 @@ import org.springframework.util.ResourceUtils;
  * @see org.springframework.context.ApplicationContext
  * @see org.springframework.context.ResourceLoaderAware
  * @since 10.03.2004
- *
- * 资源查找和定位的统一抽象。
  */
-public interface ResourceLoader {
+public interface ResourceLoader {			// 提供资源解析的统一规范
 
 	/**
 	 * Pseudo URL prefix for loading from the class path: "classpath:".

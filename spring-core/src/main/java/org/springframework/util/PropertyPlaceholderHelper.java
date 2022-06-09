@@ -146,18 +146,15 @@ public class PropertyPlaceholderHelper {
 
 	protected String parseStringValue(
 			String value, PlaceholderResolver placeholderResolver, @Nullable Set<String> visitedPlaceholders) {
-
-		// 占位符所在位置
-		int startIndex = value.indexOf(this.placeholderPrefix);
+		
+		int startIndex = value.indexOf(this.placeholderPrefix);		// 占位符所在位置
 		if (startIndex == -1) {
 			return value;
 		}
-
-		// 返回值
-		StringBuilder result = new StringBuilder(value);
+		
+		StringBuilder result = new StringBuilder(value);		// 返回值
 		while (startIndex != -1) {
-			// 寻找结尾占位符
-			int endIndex = findPlaceholderEndIndex(result, startIndex);
+			int endIndex = findPlaceholderEndIndex(result, startIndex);		// 寻找结尾占位符
 			if (endIndex != -1) {
 				// 返回值切分留下中间内容
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
@@ -170,11 +167,9 @@ public class PropertyPlaceholderHelper {
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
-				// 递归获取占位符内容
-				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
+				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);	// 递归解析占位符
 				// Now obtain the value for the fully resolved key...
-				// 解析占位符内容获得真正的属性值
-				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
+				String propVal = placeholderResolver.resolvePlaceholder(placeholder);	// 解析占位符内容获得真正的属性值
 				if (propVal == null && this.valueSeparator != null) {
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);
 					if (separatorIndex != -1) {

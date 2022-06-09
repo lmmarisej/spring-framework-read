@@ -98,7 +98,6 @@ public class StandardServletEnvironment extends StandardEnvironment implements C
 	}
 
 	/**
-	 * 初始化 属性值
 	 * @param servletContext the {@link ServletContext} (may not be {@code null})
 	 * @param servletConfig the {@link ServletConfig} ({@code null} if not available)
 	 */

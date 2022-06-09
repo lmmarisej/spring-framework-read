@@ -45,7 +45,7 @@ import org.springframework.lang.Nullable;
  */
 public abstract class AbstractXmlApplicationContext extends AbstractRefreshableConfigApplicationContext {
 
-	private boolean validating = true;
+	private boolean validating = true;		// 设置 xmL 文件的验证标志，默认是 true
 
 
 	/**
@@ -95,7 +95,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		// Allow a subclass to provide custom initialization of the reader,
 		// then proceed with actually loading the bean definitions.
 		initBeanDefinitionReader(beanDefinitionReader);		// 初始化读取器
-		loadBeanDefinitions(beanDefinitionReader);			// 启动读取器，完成BeanDefinition在IoC容器中的载入
+		loadBeanDefinitions(beanDefinitionReader);			// 启动读取器，完成 BeanDefinition 在 IoC 容器中的载入
 	}
 
 	/**
@@ -123,11 +123,11 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #getResourcePatternResolver
 	 */
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
-		Resource[] configResources = getConfigResources();		// 获取BeanDefinition的定位
+		Resource[] configResources = getConfigResources();		// 获取 BeanDefinition 的定位
 		if (configResources != null) {
 			reader.loadBeanDefinitions(configResources);
 		}
-		String[] configLocations = getConfigLocations();		// 以String形式获取配置文件的位置
+		String[] configLocations = getConfigLocations();		// 以 String 形式获取配置文件的位置
 		if (configLocations != null) {
 			reader.loadBeanDefinitions(configLocations);
 		}

@@ -80,29 +80,24 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	/**
 	 * Indicates that the validation should be disabled.
-	 * 不验证
 	 */
-	public static final int VALIDATION_NONE = XmlValidationModeDetector.VALIDATION_NONE;
+	public static final int VALIDATION_NONE = XmlValidationModeDetector.VALIDATION_NONE;		// 不验证
 
 	/**
 	 * Indicates that the validation mode should be detected automatically.
-	 * 自动推测进行验证
 	 */
-	public static final int VALIDATION_AUTO = XmlValidationModeDetector.VALIDATION_AUTO;
+	public static final int VALIDATION_AUTO = XmlValidationModeDetector.VALIDATION_AUTO;		// 自动推测进行验证
 
 	/**
 	 * Indicates that DTD validation should be used.
-	 * DTD验证
 	 */
-	public static final int VALIDATION_DTD = XmlValidationModeDetector.VALIDATION_DTD;
+	public static final int VALIDATION_DTD = XmlValidationModeDetector.VALIDATION_DTD;		// DTD验证
 
 	/**
 	 * Indicates that XSD validation should be used.
-	 * XSD验证
 	 */
-	public static final int VALIDATION_XSD = XmlValidationModeDetector.VALIDATION_XSD;
-
-
+	public static final int VALIDATION_XSD = XmlValidationModeDetector.VALIDATION_XSD;			// XSD验证
+	
 	/**
 	 *  Constants instance for this class.
 	 *
@@ -365,13 +360,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 					"Detected cyclic loading of " + encodedResource + " - check your import definitions!");
 		}
 		try {
-			// 流
-			try (InputStream inputStream = encodedResource.getResource().getInputStream()) {
+			try (InputStream inputStream = encodedResource.getResource().getInputStream()) {		// 开始读配置文件
 				InputSource inputSource = new InputSource(inputStream);
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
-				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
+				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());		// 核心
 			}
 		}
 		catch (IOException ex) {
@@ -423,8 +417,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
-			Document doc = doLoadDocument(inputSource, resource);		// 将流转为文档树
-			int count = registerBeanDefinitions(doc, resource);			// 注册bean定义，并获取数量
+			Document doc = doLoadDocument(inputSource, resource);		// 流  ->   文档树
+			int count = registerBeanDefinitions(doc, resource);			// 核心
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
 			}
@@ -477,8 +471,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * mode, even when something other than {@link #VALIDATION_AUTO} was set.
 	 * @see #detectValidationMode
 	 */
-	protected int getValidationModeForResource(Resource resource) {
-		// 获取 xml 验证方式
+	protected int getValidationModeForResource(Resource resource) {		// 获取 xml 验证模式
 		int validationModeToUse = getValidationMode();
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
@@ -543,14 +536,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
-		// 获取 基于 Document 的Bean定义读取器
-		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
-		// 历史已有的bean定义数量
-		int countBefore = getRegistry().getBeanDefinitionCount();
-		// 注册bean定义
-		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
-		// 注册后的数量-历史数量
-		return getRegistry().getBeanDefinitionCount() - countBefore;
+		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();		// 基于 Document 的 Bean 定义读取器
+		int countBefore = getRegistry().getBeanDefinitionCount();								// 历史已有的 bean 定义数量
+		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));				// 注册 bean 定义
+		return getRegistry().getBeanDefinitionCount() - countBefore;							// 注册后的数量-历史数量
 	}
 
 	/**

@@ -448,20 +448,17 @@ public class BeanDefinitionParserDelegate {
 
 		// 别名列表
 		List<String> aliases = new ArrayList<>();
-		// 是否有 name 属性
-		if (StringUtils.hasLength(nameAttr)) {
-			// 获取名称列表, 根据 `,; `进行分割
+		if (StringUtils.hasLength(nameAttr)) {		// 是否有 name 属性
+			// 获取名称列表, 根据 `,; ` 进行分割
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			// 添加所有
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
 		// 第二部分
-		// beanName = id
 		String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
-			// 别名的第一个设置为beanName
-			beanName = aliases.remove(0);
+			beanName = aliases.remove(0);			// 别名的第一个设置为 beanName
 			if (logger.isTraceEnabled()) {
 				logger.trace("No XML 'id' specified - using '" + beanName +
 						"' as bean name and " + aliases + " as aliases");
@@ -474,8 +471,7 @@ public class BeanDefinitionParserDelegate {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
-		// 第三部分
-		// 解析 bean 定义
+		// 第三部分 解析 bean 定义
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 
 		// 第四部分
@@ -483,18 +479,15 @@ public class BeanDefinitionParserDelegate {
 			if (!StringUtils.hasText(beanName)) {
 				try {
 					if (containingBean != null) {
-						// bean name 生成
-						beanName = BeanDefinitionReaderUtils.generateBeanName(
+						beanName = BeanDefinitionReaderUtils.generateBeanName(					// bean name 生成
 								beanDefinition, this.readerContext.getRegistry(), true);
 					}
 					else {
-						// beanName 生成
-						beanName = this.readerContext.generateBeanName(beanDefinition);
+						beanName = this.readerContext.generateBeanName(beanDefinition);			// beanName 生成
 						// Register an alias for the plain bean class name, if still possible,
 						// if the generator returned the class name plus a suffix.
 						// This is expected for Spring 1.2/2.0 backwards compatibility.
-						// 获取 beanClass
-						String beanClassName = beanDefinition.getBeanClassName();
+						String beanClassName = beanDefinition.getBeanClassName();				// 获取 beanClass
 						if (beanClassName != null &&
 								beanName.startsWith(beanClassName) && beanName.length() > beanClassName.length() &&
 								!this.readerContext.getRegistry().isBeanNameInUse(beanClassName)) {
@@ -511,10 +504,8 @@ public class BeanDefinitionParserDelegate {
 					return null;
 				}
 			}
-			// 别名列表
-			String[] aliasesArray = StringUtils.toStringArray(aliases);
-			// 返回 bean 定义
-			return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
+			String[] aliasesArray = StringUtils.toStringArray(aliases);							// 别名列表
+			return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);			// 返回 bean 定义
 		}
 
 		return null;
@@ -1189,7 +1180,7 @@ public class BeanDefinitionParserDelegate {
 			// 解析 bean 标签
 			BeanDefinitionHolder nestedBd = parseBeanDefinitionElement(ele, bd);
 			if (nestedBd != null) {
-				// 装饰 bean define
+				// 装饰 bean Definition
 				nestedBd = decorateBeanDefinitionIfRequired(ele, nestedBd, bd);
 			}
 			return nestedBd;

@@ -144,18 +144,14 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 		// this behavior emulates a stack of delegates without actually necessitating one.
 
 
-		// 父 BeanDefinitionParserDelegate 一开始为null
-		BeanDefinitionParserDelegate parent = this.delegate;
-		// 创建 BeanDefinitionParserDelegate
-		this.delegate = createDelegate(getReaderContext(), root, parent);
-
+		BeanDefinitionParserDelegate parent = this.delegate;				// 父 BeanDefinitionParserDelegate 一开始为 null
+		this.delegate = createDelegate(getReaderContext(), root, parent);	// 创建 BeanDefinitionParserDelegate
+		
 		// 判断命名空间是否为默认的命名空间
 		// 默认命名空间: http://www.springframework.org/schema/beans
 		if (this.delegate.isDefaultNamespace(root)) {
-			// 获取 profile 属性
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
-			// 是否存在 profile
-			if (StringUtils.hasText(profileSpec)) {
+			if (StringUtils.hasText(profileSpec)) {			// 是否存在 profile
 				// profile 切分后的数据
 				String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
 						profileSpec, BeanDefinitionParserDelegate.MULTI_VALUE_ATTRIBUTE_DELIMITERS);
@@ -171,23 +167,17 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 			}
 		}
 
-		// 前置处理
-		preProcessXml(root);
-		// bean definition 处理
-		parseBeanDefinitions(root, this.delegate);
-		// 后置 xml 处理
-		postProcessXml(root);
-
+		preProcessXml(root);		// 前置处理
+		parseBeanDefinitions(root, this.delegate);		// 委派给 delegate 解析
+		postProcessXml(root);		// 后置 xml 处理
+		
 		this.delegate = parent;
 	}
 
 	protected BeanDefinitionParserDelegate createDelegate(
 			XmlReaderContext readerContext, Element root, @Nullable BeanDefinitionParserDelegate parentDelegate) {
-
-		// 创建对象 BeanDefinitionParserDelegate
-		BeanDefinitionParserDelegate delegate = new BeanDefinitionParserDelegate(readerContext);
-		// 设置默认值数据
-		delegate.initDefaults(root, parentDelegate);
+		BeanDefinitionParserDelegate delegate = new BeanDefinitionParserDelegate(readerContext);	// 创建解析器对象
+		delegate.initDefaults(root, parentDelegate);		// 设置默认值数据
 		return delegate;
 	}
 
@@ -197,29 +187,23 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 	 * @param root the DOM root element of the document
 	 */
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
-		// 是否是默认的命名空间
-		if (delegate.isDefaultNamespace(root)) {
-			// 子节点列表
-			NodeList nl = root.getChildNodes();
+		if (delegate.isDefaultNamespace(root)) {		// 是否是默认的命名空间
+			NodeList nl = root.getChildNodes();			// 子节点列表
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
 				if (node instanceof Element) {
 					Element ele = (Element) node;
-					// 是否是默认的命名空间
-					if (delegate.isDefaultNamespace(ele)) {
-						// 处理标签的方法
-						parseDefaultElement(ele, delegate);
+					if (delegate.isDefaultNamespace(ele)) {					// 是否是默认的命名空间
+						parseDefaultElement(ele, delegate);						// 处理标签的方法
 					}
 					else {
-						// 处理自定义标签
-						delegate.parseCustomElement(ele);
+						delegate.parseCustomElement(ele);						// 处理自定义标签
 					}
 				}
 			}
 		}
 		else {
-			// 处理自定义标签
-			delegate.parseCustomElement(root);
+			delegate.parseCustomElement(root);			// 处理自定义标签
 		}
 	}
 
@@ -227,21 +211,16 @@ public class DefaultBeanDefinitionDocumentReader  implements BeanDefinitionDocum
 	 * 解析 element 元素
 	 */
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
-		// 解析 import 标签
-		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {		// 解析 import 标签
 			importBeanDefinitionResource(ele);
 		}
-		// 解析 alias 标签
-		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {		// 解析 alias 标签
 			processAliasRegistration(ele);
 		}
-		// 解析 bean 标签
-		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {		// 解析 bean 标签
 			processBeanDefinition(ele, delegate);
 		}
-		// 解析 beans 标签
-		// 嵌套的 beans
-		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
+		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {		// 解析 beans 标签 嵌套的 beans
 			// recurse
 			doRegisterBeanDefinitions(ele);
 		}
