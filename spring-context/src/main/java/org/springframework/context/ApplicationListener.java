@@ -32,12 +32,12 @@ import java.util.EventListener;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @param <E> the specific {@code ApplicationEvent} subclass to listen to
- *           	继承{@link ApplicationEvent} 的事件
+ *           	继承 {@link ApplicationEvent} 的事件
  * @see org.springframework.context.ApplicationEvent
  * @see org.springframework.context.event.ApplicationEventMulticaster
  * @see org.springframework.context.event.EventListener
  *
- * Spring应用内事件监听器，只负责监听指定的事件并进行处理。
+ * Spring 应用内事件监听器，兼容 Java 事件监听器。
  */
 @FunctionalInterface
 public interface ApplicationListener<E extends ApplicationEvent> extends EventListener {

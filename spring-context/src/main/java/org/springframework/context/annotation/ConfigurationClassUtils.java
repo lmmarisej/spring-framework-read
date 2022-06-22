@@ -126,7 +126,7 @@ abstract class ConfigurationClassUtils {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
 		else if (config != null || isConfigurationCandidate(metadata)) {
-			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
+			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);		// 部分
 		}
 		else {
 			return false;

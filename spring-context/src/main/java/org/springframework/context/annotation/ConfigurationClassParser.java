@@ -255,16 +255,13 @@ class ConfigurationClassParser {
 		}
 
 		// Recursively process the configuration class and its superclass hierarchy.
-		// 将配置类转换成 SourceClass
-		SourceClass sourceClass = asSourceClass(configClass);
+		SourceClass sourceClass = asSourceClass(configClass);		// 将配置类转换成 SourceClass
 		do {
-			// 解析配置类
-			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
+			sourceClass = doProcessConfigurationClass(configClass, sourceClass);			// 解析配置类
 		}
 		while (sourceClass != null);
 
-		// 放入配置类缓存
-		this.configurationClasses.put(configClass, configClass);
+		this.configurationClasses.put(configClass, configClass);		// 放入配置类缓存
 	}
 
 	/**
@@ -299,10 +296,12 @@ class ConfigurationClassParser {
 			}
 		}
 
-		// 处理 ComponentScans ComponentScan 注解
+		/*
+				扫描 bean
+		 */
 		// Process any @ComponentScan annotations
 		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(
-				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
+				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);		// 处理 ComponentScans ComponentScan 注解
 		// 如果 ComponentScan 数据解析结果不为空 并且通过条件解析，条件解析的阶段是注册阶段
 		if (!componentScans.isEmpty() &&
 				!this.conditionEvaluator.shouldSkip(sourceClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN)) {
@@ -324,14 +323,12 @@ class ConfigurationClassParser {
 			}
 		}
 
-		// 处理 Import 注解
 		// Process any @Import annotations
-		processImports(configClass, sourceClass, getImports(sourceClass), true);
+		processImports(configClass, sourceClass, getImports(sourceClass), true);		// 处理 Import 注解
 
-		// 处理 ImportResource 注解
 		// Process any @ImportResource annotations
 		AnnotationAttributes importResource =
-				AnnotationConfigUtils.attributesFor(sourceClass.getMetadata(), ImportResource.class);
+				AnnotationConfigUtils.attributesFor(sourceClass.getMetadata(), ImportResource.class);		// 处理 ImportResource 注解
 		if (importResource != null) {
 			String[] resources = importResource.getStringArray("locations");
 			Class<? extends BeanDefinitionReader> readerClass = importResource.getClass("reader");
@@ -429,27 +426,21 @@ class ConfigurationClassParser {
 	 * Retrieve the metadata for all <code>@Bean</code> methods.
 	 */
 	private Set<MethodMetadata> retrieveBeanMethodMetadata(SourceClass sourceClass) {
-		// 提取元数据
-		AnnotationMetadata original = sourceClass.getMetadata();
-		// 提取带有 Bean 标签的数据
-		Set<MethodMetadata> beanMethods = original.getAnnotatedMethods(Bean.class.getName());
+		AnnotationMetadata original = sourceClass.getMetadata();		// 提取元数据
+		Set<MethodMetadata> beanMethods = original.getAnnotatedMethods(Bean.class.getName());		// 提取带有 Bean 标签的数据
 
 		if (beanMethods.size() > 1 && original instanceof StandardAnnotationMetadata) {
 			// Try reading the class file via ASM for deterministic declaration order...
 			// Unfortunately, the JVM's standard reflection returns methods in arbitrary
 			// order, even between different runs of the same application on the same JVM.
 			try {
-				// 类的注解元数据
 				AnnotationMetadata asm =
-						this.metadataReaderFactory.getMetadataReader(original.getClassName()).getAnnotationMetadata();
-				// 提取带有 Bean 注解的方法元数据
-				Set<MethodMetadata> asmMethods = asm.getAnnotatedMethods(Bean.class.getName());
-				if (asmMethods.size() >= beanMethods.size()) {
+						this.metadataReaderFactory.getMetadataReader(original.getClassName()).getAnnotationMetadata();	// 类的注解元数据
+				Set<MethodMetadata> asmMethods = asm.getAnnotatedMethods(Bean.class.getName());		// 提取带有 Bean 注解的方法元数据
 
-					// 选中的方法元数据
-					Set<MethodMetadata> selectedMethods = new LinkedHashSet<>(asmMethods.size());
-					// 循环两个方法元数据进行 methodName 比较如果相同会被加入到选中集合中
-					for (MethodMetadata asmMethod : asmMethods) {
+				if (asmMethods.size() >= beanMethods.size()) {
+					Set<MethodMetadata> selectedMethods = new LinkedHashSet<>(asmMethods.size());			// 选中的方法元数据
+					for (MethodMetadata asmMethod : asmMethods) {	// 循环两个方法元数据进行 methodName 比较如果相同会被加入到选中集合中
 						for (MethodMetadata beanMethod : beanMethods) {
 							if (beanMethod.getMethodName().equals(asmMethod.getMethodName())) {
 								selectedMethods.add(beanMethod);
@@ -602,7 +593,10 @@ class ConfigurationClassParser {
 			imports.addAll(sourceClass.getAnnotationAttributes(Import.class.getName(), "value"));
 		}
 	}
-
+	
+	/**
+	 * 导入配置类，完成配置类实例化工作。
+	 */
 	private void processImports(ConfigurationClass configClass, SourceClass currentSourceClass,
 			Collection<SourceClass> importCandidates, boolean checkForCircularImports) {
 
@@ -673,8 +667,7 @@ class ConfigurationClassParser {
 						configClass.getMetadata().getClassName() + "]", ex);
 			}
 			finally {
-				// 从 importStack 删除配置类
-				this.importStack.pop();
+				this.importStack.pop();				// 从 importStack 删除配置类
 			}
 		}
 	}

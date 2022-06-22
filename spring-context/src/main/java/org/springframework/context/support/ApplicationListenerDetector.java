@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 检测 bean 实例是否实现了 ApplicationListener 接口，在实例化完成之前进注册到多波器，在销毁之前进行注销。
+ *
  * {@code BeanPostProcessor} that detects beans which implement the {@code ApplicationListener}
  * interface. This catches beans that can't reliably be detected by {@code getBeanNamesForType}
  * and related operations which only work against top-level beans.
@@ -64,7 +66,7 @@ class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, 
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		if (ApplicationListener.class.isAssignableFrom(beanType)) {
-			this.singletonNames.put(beanName, beanDefinition.isSingleton());
+			this.singletonNames.put(beanName, beanDefinition.isSingleton());		// 解析 beanDefinition 获取 bean 单例类型
 		}
 	}
 

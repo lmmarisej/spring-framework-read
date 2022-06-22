@@ -28,7 +28,7 @@ import java.util.EventObject;
  * @see org.springframework.context.ApplicationListener
  * @see org.springframework.context.event.EventListener
  *
- * Spring应用内事件。
+ * Spring 应用内事件封装，兼容 Java 事件。
  */
 public abstract class ApplicationEvent extends EventObject {
 
@@ -46,7 +46,6 @@ public abstract class ApplicationEvent extends EventObject {
 
 	/**
 	 * Create a new {@code ApplicationEvent}.
-	 *
 	 * 创建一个事件
 	 * @param source the object on which the event initially occurred or with
 	 *               which the event is associated (never {@code null})

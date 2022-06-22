@@ -579,12 +579,12 @@ public abstract class AbstractApplicationContext
 				完成 Bean 工厂的某些初始化操作。
 			 */
 			// Prepare the bean factory for use in this context.
-			prepareBeanFactory(beanFactory);    // 为容器的启动做好必要的准备工作，配置Classloader、PropertyEditor、BeanPostProcessor
+			prepareBeanFactory(beanFactory);    // 为容器的启动做好必要的准备工作，配置 Classloader、PropertyEditor、BeanPostProcessor
 			
 			try {
 				// 设置beanFactory的后置处理，调用时机：扫描BeanDefinition、根据BeanDefinition实例化（Instantiation）时
 				// Allows post-processing of the bean factory in context subclasses.
-				postProcessBeanFactory(beanFactory);
+				postProcessBeanFactory(beanFactory);			// 容器实现扩展点
 				
 				// 调用容器中的后置处理器处理BeanFactory，这些后处理器在Bean定义中向容器注册
 				// Invoke factory processors registered as beans in the context.
@@ -739,21 +739,19 @@ public abstract class AbstractApplicationContext
 		beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, this);
 		beanFactory.registerResolvableDependency(ApplicationContext.class, this);
 		
-		// 添加 bean 后置处理器
+		// 添加 bean 实例化阶段处理器，处理注册和注销事件监听处理器
 		// Register early post-processor for detecting inner beans as ApplicationListeners.
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(this));
 		
-		// 判断是否存在 loadTimeWeaver bean
 		// Detect a LoadTimeWeaver and prepare for weaving, if found.
+		// 增加对 Aspectj 的支持，在 java 中织入分为三种方式。
+		// 分为编译器织入，类加载器织入，运行期织入，编译器织入是指在 java 编译器，采用特殊的编译器，将切面织入到 java 类中。
 		if (beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
-			// 添加后置处理器
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
 			// Set a temporary ClassLoader for type matching.
-			// 设置临时的 classLoader
 			beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
 		}
 		
-		// environment bean 注册
 		// Register default environment beans.
 		if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME)) {
 			beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
@@ -785,18 +783,12 @@ public abstract class AbstractApplicationContext
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
-		// 后置处理器委托对象
-		// 调用 BeanFactoryPostProcessor 方法
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 		
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
-		// (e.g. through an @Bean method registered by ConfigurationClassPostProcessor)
-		// 判断临时类加载器是否存在
-		// 是否包含 loadTimeWeaver bean
-		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
-			// 添加 bean后置处理器
+		// (e.g. through a @Bean method registered by ConfigurationClassPostProcessor)
+		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {		// 织入支持
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
-			// 添加临时类加载器
 			beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
 		}
 	}
