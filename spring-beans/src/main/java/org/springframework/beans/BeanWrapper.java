@@ -80,8 +80,6 @@ public interface BeanWrapper
 	Class<?> getWrappedClass();
 
 	/**
-	 * 获取属性描述器。
-	 *
 	 * Obtain the PropertyDescriptors for the wrapped object
 	 * (as determined by standard JavaBeans introspection).
 	 *

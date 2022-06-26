@@ -3,7 +3,7 @@ List of outstanding things to think about - turn into tickets once distilled to 
 High Importance
 
 - In the resolver/executor model we cache executors.  They are currently recorded in the AST and so if the user chooses to evaluate an expression
-in a different context then the stored executor may be incorrect.  It may harmless 'fail' which would cause us to retrieve a new one, but 
+in a different context then the stored executor may be incorrect.  It may harmless 'fail' which would cause us to retrieve a new one, but
 can it do anything malicious? In which case we either need to forget them when the context changes or store them elsewhere.  Should caching be
 something that can be switched on/off by the context? (shouldCacheExecutors() on the interface?)
 - Expression serialization needs supporting

@@ -32,7 +32,6 @@ import org.springframework.util.ObjectUtils;
  * A {@link BeanWrapper} implementation should handle any necessary conversion,
  * as this object doesn't know anything about the objects it will be applied to.
  *
- *   bean属性类applyPropertyValues
  * @author Rod Johnson
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -41,7 +40,7 @@ import org.springframework.util.ObjectUtils;
  * @see BeanWrapper
  */
 @SuppressWarnings("serial")
-public class PropertyValue extends BeanMetadataAttributeAccessor implements Serializable {
+public class PropertyValue extends BeanMetadataAttributeAccessor implements Serializable {		// 单个 bean 属性的信息和值的对象
 
 	/**
 	 * 属性名称

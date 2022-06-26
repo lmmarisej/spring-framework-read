@@ -116,10 +116,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 	@Override
 	public void addConverter(GenericConverter converter) {
-		// 加入 convert 接口
-		this.converters.add(converter);
-		// 缓存清除
-		invalidateCache();
+		this.converters.add(converter);		// 加入 convert 接口
+		invalidateCache();		// 缓存清除
 	}
 
 	@Override
@@ -172,7 +170,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 	 * <p>More precisely, this method will return true if objects of sourceType can be
 	 * converted to the target type by returning the source object unchanged.
 	 * @param sourceType context about the source type to convert from
-	 * (may be {@code null} if source is {@code null})
+	 * (maybe {@code null} if source is {@code null})
 	 * @param targetType context about the target type to convert to (required)
 	 * @return {@code true} if conversion can be bypassed; {@code false} otherwise
 	 * @throws IllegalArgumentException if targetType is {@code null}
@@ -265,7 +263,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 	}
 
 	/**
-	 * Hook method to lookup the converter for a given sourceType/targetType pair.
+	 * Hook method to look up the converter for a given sourceType/targetType pair.
 	 * First queries this ConversionService's converter cache.
 	 * On a cache miss, then performs an exhaustive search for a matching converter.
 	 * If no converter matches, returns the default converter.
@@ -675,9 +673,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 	/**
 	 * Internal converter that performs no operation.
-	 * 没有任何操作的 convert 对象
 	 */
-	private static class NoOpConverter implements GenericConverter {
+	private static class NoOpConverter implements GenericConverter {		// 没有任何操作的 convert 对象
 
 		private final String name;
 
@@ -704,25 +701,12 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 	/**
 	 * Adapts a {@link Converter} to a {@link GenericConverter}.
-	 * 转换装饰类
 	 */
 	@SuppressWarnings("unchecked")
-	private final class ConverterAdapter implements ConditionalGenericConverter {
-
-		/**
-		 * 转换器对象
-		 */
+	private final class ConverterAdapter implements ConditionalGenericConverter {		// Converter 适配为条件和多类型的转换器
 		private final Converter<Object, Object> converter;
-
-		/**
-		 * 元对象和目标对象.
-		 */
-		private final ConvertiblePair typeInfo;
-
-		/**
-		 * 解析类型
-		 */
-		private final ResolvableType targetType;
+		private final ConvertiblePair typeInfo;				// 源对象和目标对象
+		private final ResolvableType targetType;			// 解析类型
 
 		public ConverterAdapter(Converter<?, ?> converter, ResolvableType sourceType, ResolvableType targetType) {
 			this.converter = (Converter<Object, Object>) converter;
@@ -738,8 +722,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 		@Override
 		public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
 			// Check raw type first...
-			// 判断类型是否一致
-			if (this.typeInfo.getTargetType() != targetType.getObjectType()) {
+			if (this.typeInfo.getTargetType() != targetType.getObjectType()) {			// 一样无需转换
 				return false;
 			}
 			// Full check for complex generic type match required?
@@ -748,20 +731,17 @@ public class GenericConversionService implements ConfigurableConversionService {
 					!this.targetType.hasUnresolvableGenerics()) {
 				return false;
 			}
-			// 从 converter 判断是否可以转换
 			return !(this.converter instanceof ConditionalConverter) ||
-					((ConditionalConverter) this.converter).matches(sourceType, targetType);
+					((ConditionalConverter) this.converter).matches(sourceType, targetType);		// 从 converter 判断是否可以转换
 		}
 
 		@Override
 		@Nullable
 		public Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 			if (source == null) {
-				// 空对象转换
-				return convertNullSource(sourceType, targetType);
+				return convertNullSource(sourceType, targetType);				// 空对象转换
 			}
-			// 转换接口调用
-			return this.converter.convert(source);
+			return this.converter.convert(source);			// 委托给指定的转换器进行转换
 		}
 
 		@Override

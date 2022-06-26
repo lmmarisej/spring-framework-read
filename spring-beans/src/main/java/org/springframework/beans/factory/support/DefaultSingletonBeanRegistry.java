@@ -184,14 +184,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
 		synchronized (this.singletonObjects) {
-			// 设置 单例对象 map
-			this.singletonObjects.put(beanName, singletonObject);
-			// 删除 单例的beanFactory
-			this.singletonFactories.remove(beanName);
-			// 删除 早期加载的bean
-			this.earlySingletonObjects.remove(beanName);
-			// 放入已注册的beanName
-			this.registeredSingletons.add(beanName);
+			this.singletonObjects.put(beanName, singletonObject);			// 设置 单例对象 map
+			this.singletonFactories.remove(beanName);			// 删除 单例的beanFactory
+			this.earlySingletonObjects.remove(beanName);			// 删除 早期加载的bean
+			this.registeredSingletons.add(beanName);			// 放入已注册的beanName
+			
 		}
 	}
 
@@ -238,8 +235,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (singletonObject == null && allowEarlyReference) {		// 提前曝光 bean
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);	// 三级缓存中获取 ObjectFactory
 					if (singletonFactory != null) {		// 通过工厂方法，构造 bean 实例，将 bean 相关的对象从三级缓存移动到二级缓存
-						singletonObject = singletonFactory.getObject();
-						this.earlySingletonObjects.put(beanName, singletonObject);
+						singletonObject = singletonFactory.getObject();		// 包括了 AOP 代理 bean 逻辑的执行
+						this.earlySingletonObjects.put(beanName, singletonObject);     // 进入二级
 						this.singletonFactories.remove(beanName);
 					}
 				}
@@ -467,8 +464,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param dependentBeanName the name of the dependent bean
 	 */
 	public void registerDependentBean(String beanName, String dependentBeanName) {
-		// 别名
-		String canonicalName = canonicalName(beanName);
+		String canonicalName = canonicalName(beanName);		// 别名
 
 		synchronized (this.dependentBeanMap) {
 			// 向依赖关系中放入数据

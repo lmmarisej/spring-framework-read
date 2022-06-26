@@ -64,13 +64,9 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 
     @Override
     public Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
-        // Don't override the class with CGLIB if no overrides.
-		// 不是 cglib
-        // 重写方法列表是否存在
-        if (!bd.hasMethodOverrides()) {
-            // 构造方法
+        // Don't override the class with CGLIB if no overrides. 不是 cglib
+        if (!bd.hasMethodOverrides()) {        // 重写方法列表是否存在
 			Constructor<?> constructorToUse;
-			// 锁
             synchronized (bd.constructorArgumentLock) {
             	// 提取构造函数
                 constructorToUse = (Constructor<?>) bd.resolvedConstructorOrFactoryMethod;
@@ -88,21 +84,17 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 									(PrivilegedExceptionAction<Constructor<?>>) clazz::getDeclaredConstructor);
 						}
 						else {
-							// 获取构造函数
-							constructorToUse = clazz.getDeclaredConstructor();
+							constructorToUse = clazz.getDeclaredConstructor();			// 获取构造函数
 						}
-						// 数据设置
-						// 将 类的构造函数赋值给 BeanDefinition
-						bd.resolvedConstructorOrFactoryMethod = constructorToUse;
+						bd.resolvedConstructorOrFactoryMethod = constructorToUse;	// 获取到构造器之后将构造器赋值给bd中的属性
 					}
 					catch (Throwable ex) {
 						throw new BeanInstantiationException(clazz, "No default constructor found", ex);
 					}
 				}
             }
-            // 调用构造方法进行构造
-            return BeanUtils.instantiateClass(constructorToUse);
-        }
+            return BeanUtils.instantiateClass(constructorToUse);            // 调用构造方法进行构造
+		}
         else {
             // Must generate CGLIB subclass.
             // cglib 构造 . 本质还是 构造函数创建（CGlib是一个常用的字节码生成类库，提供一系列API来生成和转换Java字节码）

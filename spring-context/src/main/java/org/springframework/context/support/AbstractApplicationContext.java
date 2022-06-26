@@ -96,8 +96,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @see org.springframework.context.MessageSource
  * @since January 21, 2001
  */
-public abstract class AbstractApplicationContext
-		extends DefaultResourceLoader        // 默认具有ResourceLoader，这个容器的子类无需指定Resource
+public abstract class AbstractApplicationContext extends DefaultResourceLoader        // 默认具有ResourceLoader，这个容器的子类无需指定Resource
 		implements ConfigurableApplicationContext {
 	
 	/**
@@ -151,7 +150,7 @@ public abstract class AbstractApplicationContext
 	/**
 	 * Flag that indicates whether this context is currently active.
 	 */
-	private final AtomicBoolean active = new AtomicBoolean();		// 当前容器是否关闭
+	private final AtomicBoolean active = new AtomicBoolean();        // 当前容器是否关闭
 	
 	/**
 	 * Flag that indicates whether this context has been closed already.
@@ -186,7 +185,7 @@ public abstract class AbstractApplicationContext
 	 * Parent context.
 	 */
 	@Nullable
-	private ApplicationContext parent;		// 父子容器，一般用于 Spring MVC
+	private ApplicationContext parent;        // 父子容器，一般用于 Spring MVC
 	
 	/**
 	 * Environment used by this context.
@@ -208,7 +207,7 @@ public abstract class AbstractApplicationContext
 	/**
 	 * ResourcePatternResolver used by this context.
 	 */
-	private final ResourcePatternResolver resourcePatternResolver;			// 资源路径解析器
+	private final ResourcePatternResolver resourcePatternResolver;            // 资源路径解析器
 	
 	/**
 	 * LifecycleProcessor for managing the lifecycle of beans within this context.
@@ -478,8 +477,7 @@ public abstract class AbstractApplicationContext
 	 */
 	ApplicationEventMulticaster getApplicationEventMulticaster() throws IllegalStateException {
 		if (this.applicationEventMulticaster == null) {
-			throw new IllegalStateException("ApplicationEventMulticaster not initialized - " +
-					"call 'refresh' before multicasting events via the context: " + this);
+			throw new IllegalStateException("ApplicationEventMulticaster not initialized - " + "call 'refresh' before multicasting events via the context: " + this);
 		}
 		return this.applicationEventMulticaster;
 	}
@@ -492,8 +490,7 @@ public abstract class AbstractApplicationContext
 	 */
 	LifecycleProcessor getLifecycleProcessor() throws IllegalStateException {
 		if (this.lifecycleProcessor == null) {
-			throw new IllegalStateException("LifecycleProcessor not initialized - " +
-					"call 'refresh' before invoking lifecycle methods via the context: " + this);
+			throw new IllegalStateException("LifecycleProcessor not initialized - " + "call 'refresh' before invoking lifecycle methods via the context: " + this);
 		}
 		return this.lifecycleProcessor;
 	}
@@ -569,7 +566,7 @@ public abstract class AbstractApplicationContext
 				5、准务监所器利事件的樂合对象，默认为空的樂合
 			 */
 			// Prepare this context for refreshing.
-			prepareRefresh();		// 准备刷新此上下文。
+			prepareRefresh();        // 准备刷新此上下文。
 			
 			// Tell the subclass to refresh the internal bean factory.
 			// 在子类中启动refreshBeanFactory
@@ -584,39 +581,33 @@ public abstract class AbstractApplicationContext
 			try {
 				// 设置beanFactory的后置处理，调用时机：扫描BeanDefinition、根据BeanDefinition实例化（Instantiation）时
 				// Allows post-processing of the bean factory in context subclasses.
-				postProcessBeanFactory(beanFactory);			// 容器实现扩展点
+				postProcessBeanFactory(beanFactory);            // 子容器实现的扩展点
 				
 				// 调用容器中的后置处理器处理BeanFactory，这些后处理器在Bean定义中向容器注册
 				// Invoke factory processors registered as beans in the context.
-				invokeBeanFactoryPostProcessors(beanFactory);        // 解析xml、注解元信息中的bean，并注册到容器
+				invokeBeanFactoryPostProcessors(beanFactory);        // 解析 xml、注解元信息中的 bean，并注册到容器
 				
-				// 注册bean的后置处理器处理Bean，在Bean的创建过程中调用，调用时机：初始化（Initializing）Bean时
+				// 注册bean的后置处理器处理Bean，在Bean的创建过程中调用，调用时机：初始化（Initializing）Bean 时
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
 				
-				// 对上下文中的消息源进行初始化
 				// Initialize message source for this context.
-				initMessageSource();
+				initMessageSource();		// 为上下文初始化 message 源，即不同语言的消息体，国际化处理
 				
-				// 初始化上下文中的事件机制
 				// Initialize event multicaster for this context.
-				initApplicationEventMulticaster();
+				initApplicationEventMulticaster();		// 初始化事件监听多路广播器
 				
-				// 初始化其他的特殊Bean
 				// Initialize other special beans in specific context subclasses.
-				onRefresh();
+				onRefresh();				// 留给子类来初始化其他的 bean
 				
-				// 检查监听Bean，并将这些Bean向容器注册
 				// Check for listener beans and register them.
-				registerListeners();
+				registerListeners();				// 在所有注册的 bean 中查找 listener bean，注册到消息广播器中
 				
-				// 实例化所有的(non-lazy-init)单例
 				// Instantiate all remaining (non-lazy-init) singletons.
-				finishBeanFactoryInitialization(beanFactory);                // 重要
+				finishBeanFactoryInitialization(beanFactory);                // 初始化所有剩余的单例 bean ——重要
 				
-				// 发布容器事件，结束refresh过程
 				// Last step: publish corresponding event.
-				finishRefresh();
+				finishRefresh();				// 发布容器事件，结束refresh过程
 			} catch (BeansException ex) {
 				if (logger.isWarnEnabled()) {
 					logger.warn("Exception encountered during context initialization - cancelling refresh attempt: " + ex);
@@ -649,11 +640,11 @@ public abstract class AbstractApplicationContext
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
-		this.startupDate = System.currentTimeMillis();			// 第一步 容器启动时间
-		this.closed.set(false);			// 设置关闭标记位 false
-		this.active.set(true);			// 设置激活标记位 true
+		this.startupDate = System.currentTimeMillis();            // 第一步 容器启动时间
+		this.closed.set(false);            // 设置关闭标记位 false
+		this.active.set(true);            // 设置激活标记位 true
 		
-		if (logger.isDebugEnabled()) {	// 日志
+		if (logger.isDebugEnabled()) {    // 日志
 			if (logger.isTraceEnabled()) {
 				logger.trace("Refreshing " + this);
 			} else {
@@ -662,13 +653,13 @@ public abstract class AbstractApplicationContext
 		}
 		
 		// Initialize any placeholder property sources in the context environment.
-		initPropertySources();		// 初始化属性, 占位符资源等数据处理 抽象方法, 子类实现
+		initPropertySources();        // 初始化属性, 占位符资源等数据处理 抽象方法, 子类实现
 		
 		
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
-		getEnvironment()        						// 获取环境变量
-				.validateRequiredProperties();        	// 进行数据必填性验证
+		getEnvironment()                                // 获取环境变量
+				.validateRequiredProperties();            // 进行数据必填性验证
 		
 		// 处理早期应用监听器列表 和 应用监听器列表
 		// Store pre-refresh ApplicationListeners...
@@ -701,8 +692,8 @@ public abstract class AbstractApplicationContext
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
-		refreshBeanFactory();				// 刷新 beanFactory , 子类实现
-		return getBeanFactory();			// 获取 beanFactory , 子类实现
+		refreshBeanFactory();                // 刷新 beanFactory , 子类实现
+		return getBeanFactory();            // 获取 beanFactory , 子类实现
 	}
 	
 	/**
@@ -787,7 +778,7 @@ public abstract class AbstractApplicationContext
 		
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
 		// (e.g. through a @Bean method registered by ConfigurationClassPostProcessor)
-		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {		// 织入支持
+		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {        // 织入支持
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
 			beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
 		}
@@ -799,8 +790,7 @@ public abstract class AbstractApplicationContext
 	 * <p>Must be called before any instantiation of application beans.
 	 */
 	protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
-		// 后置处理器委托类进行能注册
-		PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, this);
+		PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, this);        // 后置处理器委托类进行注册
 	}
 	
 	/**
@@ -808,22 +798,16 @@ public abstract class AbstractApplicationContext
 	 * Use parent's if none defined in this context.
 	 */
 	protected void initMessageSource() {
-		// 获取 beanFactory
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
-		// 判断容器中是否存在 messageSource 这个beanName
-		// 存在的情况
-		if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {
-			// 获取 messageSource 对象
-			this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);
+		if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {		// 判断容器中是否存在 messageSource 这个beanName
+			this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);			// 获取 messageSource 对象
 			
-			// 设置 父 MessageSource
 			// Make MessageSource aware of parent MessageSource.
 			if (this.parent != null && this.messageSource instanceof HierarchicalMessageSource) {
 				HierarchicalMessageSource hms = (HierarchicalMessageSource) this.messageSource;
 				if (hms.getParentMessageSource() == null) {
-					// Only set parent context as parent MessageSource if no parent MessageSource
-					// registered already.
-					hms.setParentMessageSource(getInternalParentMessageSource());
+					// Only set parent context as parent MessageSource if no parent MessageSource registered already.
+					hms.setParentMessageSource(getInternalParentMessageSource());			// 设置 父 MessageSource
 				}
 			}
 			if (logger.isTraceEnabled()) {
@@ -832,14 +816,11 @@ public abstract class AbstractApplicationContext
 		}
 		// 不存在的情况
 		else {
-			//  MessageSource 实现类
 			// Use empty MessageSource to be able to accept getMessage calls.
-			DelegatingMessageSource dms = new DelegatingMessageSource();
-			// 设置父 MessageSource
-			dms.setParentMessageSource(getInternalParentMessageSource());
+			DelegatingMessageSource dms = new DelegatingMessageSource();			//  MessageSource 实现类
+			dms.setParentMessageSource(getInternalParentMessageSource());			// 设置父 MessageSource
 			this.messageSource = dms;
-			// 注册 MessageSource
-			beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, this.messageSource);
+			beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, this.messageSource);			// 注册 MessageSource
 			if (logger.isTraceEnabled()) {
 				logger.trace("No '" + MESSAGE_SOURCE_BEAN_NAME + "' bean, using [" + this.messageSource + "]");
 			}
@@ -855,22 +836,19 @@ public abstract class AbstractApplicationContext
 	 */
 	protected void initApplicationEventMulticaster() {
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
-		// 存在的情况
+		//判断容器中是香存在 bdName 为 applicationEventMulticaster 的 bd
 		if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
-			this.applicationEventMulticaster =
-					beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
+			this.applicationEventMulticaster = beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Using ApplicationEventMulticaster [" + this.applicationEventMulticaster + "]");
 			}
 		}
-		// 不存在的情况
+		// 如果没有，则默认采用 SimpLeApplicationEventMulticaster
 		else {
 			this.applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
-			// 注册到容器
 			beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
 			if (logger.isTraceEnabled()) {
-				logger.trace("No '" + APPLICATION_EVENT_MULTICASTER_BEAN_NAME + "' bean, using " +
-						"[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
+				logger.trace("No '" + APPLICATION_EVENT_MULTICASTER_BEAN_NAME + "' bean, using " + "[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
 			}
 		}
 	}
@@ -889,8 +867,7 @@ public abstract class AbstractApplicationContext
 		// 判断 lifecycleProcessor beanName 是否有对应的 bean 实例
 		if (beanFactory.containsLocalBean(LIFECYCLE_PROCESSOR_BEAN_NAME)) {
 			// 设置 lifecycleProcessor
-			this.lifecycleProcessor =
-					beanFactory.getBean(LIFECYCLE_PROCESSOR_BEAN_NAME, LifecycleProcessor.class);
+			this.lifecycleProcessor = beanFactory.getBean(LIFECYCLE_PROCESSOR_BEAN_NAME, LifecycleProcessor.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Using LifecycleProcessor [" + this.lifecycleProcessor + "]");
 			}
@@ -904,8 +881,7 @@ public abstract class AbstractApplicationContext
 			// 注册
 			beanFactory.registerSingleton(LIFECYCLE_PROCESSOR_BEAN_NAME, this.lifecycleProcessor);
 			if (logger.isTraceEnabled()) {
-				logger.trace("No '" + LIFECYCLE_PROCESSOR_BEAN_NAME + "' bean, using " +
-						"[" + this.lifecycleProcessor.getClass().getSimpleName() + "]");
+				logger.trace("No '" + LIFECYCLE_PROCESSOR_BEAN_NAME + "' bean, using " + "[" + this.lifecycleProcessor.getClass().getSimpleName() + "]");
 			}
 		}
 	}
@@ -927,49 +903,39 @@ public abstract class AbstractApplicationContext
 	 * Doesn't affect other listeners, which can be added without being beans.
 	 */
 	protected void registerListeners() {
-		// 获取 应用监听器列表
 		// Register statically specified listeners first.
 		for (ApplicationListener<?> listener : getApplicationListeners()) {
-			// 获取事件广播器
-			// 添加应用监听器
 			getApplicationEventMulticaster().addApplicationListener(listener);
 		}
 		
-		// 通过类型获取 应用监听器名称列表
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let post-processors apply to them!
 		String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
-		// 将 应用监听器列表的名称注册到 事件广播器中
 		for (String listenerBeanName : listenerBeanNames) {
 			getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
 		}
 		
-		// 早期应用事件发布
 		// Publish early application events now that we finally have a multicaster...
-		Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
+		Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;		// 早期应用事件发布
 		this.earlyApplicationEvents = null;
 		if (earlyEventsToProcess != null) {
 			for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
-				// 发布事件
-				getApplicationEventMulticaster().multicastEvent(earlyEvent);
+				getApplicationEventMulticaster().multicastEvent(earlyEvent);				// 发布事件
 			}
 		}
 	}
 	
 	/**
-	 * Finish the initialization of this context's bean factory,
-	 * initializing all remaining singleton beans.
+	 * Finish the initialization of this context's bean factory, initializing all remaining singleton beans.
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// 判断是否存在转换服务
-		//  1. 转换服务的beanName存在
-		//  2. 转换服务的beanName 和 类型是否匹配
+		//  1. 转换服务的 beanName 存在
+		//  2. 转换服务的 beanName 和 类型是否匹配
 		// Initialize conversion service for this context.
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
-			// 注册转换服务
-			beanFactory.setConversionService(
-					beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
+			beanFactory.setConversionService(beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));	// 注册转换服务
 		}
 		
 		// 添加嵌套值解析器, 字符串解析其
@@ -987,17 +953,14 @@ public abstract class AbstractApplicationContext
 			getBean(weaverAwareName);
 		}
 		
-		// 删除临时类加载器
 		// Stop using the temporary ClassLoader for type matching.
-		beanFactory.setTempClassLoader(null);
+		beanFactory.setTempClassLoader(null);		// 删除临时类加载器
 		
-		// 冻结部分配置
 		// Allow for caching all bean definition metadata, not expecting further changes.
-		beanFactory.freezeConfiguration();
+		beanFactory.freezeConfiguration();			// 冻结部分配置
 		
-		// 非懒加载的单例对象实例化
 		// Instantiate all remaining (non-lazy-init) singletons.
-		beanFactory.preInstantiateSingletons();
+		beanFactory.preInstantiateSingletons();		// 非懒加载的单例对象实例化
 	}
 	
 	/**
@@ -1396,8 +1359,7 @@ public abstract class AbstractApplicationContext
 	}
 	
 	@Override
-	public <T> Map<String, T> getBeansOfType(@Nullable Class<T> type, boolean includeNonSingletons, boolean allowEagerInit)
-			throws BeansException {
+	public <T> Map<String, T> getBeansOfType(@Nullable Class<T> type, boolean includeNonSingletons, boolean allowEagerInit) throws BeansException {
 		
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeansOfType(type, includeNonSingletons, allowEagerInit);
@@ -1410,8 +1372,7 @@ public abstract class AbstractApplicationContext
 	}
 	
 	@Override
-	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType)
-			throws BeansException {
+	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) throws BeansException {
 		
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeansWithAnnotation(annotationType);
@@ -1419,8 +1380,7 @@ public abstract class AbstractApplicationContext
 	
 	@Override
 	@Nullable
-	public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType)
-			throws NoSuchBeanDefinitionException {
+	public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType) throws NoSuchBeanDefinitionException {
 		
 		assertBeanFactoryActive();
 		return getBeanFactory().findAnnotationOnBean(beanName, annotationType);
@@ -1450,8 +1410,7 @@ public abstract class AbstractApplicationContext
 	 */
 	@Nullable
 	protected BeanFactory getInternalParentBeanFactory() {
-		return (getParent() instanceof ConfigurableApplicationContext ?
-				((ConfigurableApplicationContext) getParent()).getBeanFactory() : getParent());
+		return (getParent() instanceof ConfigurableApplicationContext ? ((ConfigurableApplicationContext) getParent()).getBeanFactory() : getParent());
 	}
 	
 	
@@ -1482,8 +1441,7 @@ public abstract class AbstractApplicationContext
 	 */
 	private MessageSource getMessageSource() throws IllegalStateException {
 		if (this.messageSource == null) {
-			throw new IllegalStateException("MessageSource not initialized - " +
-					"call 'refresh' before accessing messages via the context: " + this);
+			throw new IllegalStateException("MessageSource not initialized - " + "call 'refresh' before accessing messages via the context: " + this);
 		}
 		return this.messageSource;
 	}
@@ -1494,8 +1452,7 @@ public abstract class AbstractApplicationContext
 	 */
 	@Nullable
 	protected MessageSource getInternalParentMessageSource() {
-		return (getParent() instanceof AbstractApplicationContext ?
-				((AbstractApplicationContext) getParent()).messageSource : getParent());
+		return (getParent() instanceof AbstractApplicationContext ? ((AbstractApplicationContext) getParent()).messageSource : getParent());
 	}
 	
 	

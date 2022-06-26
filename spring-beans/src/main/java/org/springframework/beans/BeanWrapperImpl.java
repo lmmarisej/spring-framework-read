@@ -208,14 +208,12 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 	@Nullable
 	public Object convertForProperty(@Nullable Object value, String propertyName) throws TypeMismatchException {
 		CachedIntrospectionResults cachedIntrospectionResults = getCachedIntrospectionResults();
-		// 类型描述符
-		PropertyDescriptor pd = cachedIntrospectionResults.getPropertyDescriptor(propertyName);
+		PropertyDescriptor pd = cachedIntrospectionResults.getPropertyDescriptor(propertyName);		// 类型描述符
 		if (pd == null) {
 			throw new InvalidPropertyException(getRootClass(), getNestedPath() + propertyName,
 					"No property '" + propertyName + "' found");
 		}
-		// 类型描述符
-		TypeDescriptor td = cachedIntrospectionResults.getTypeDescriptor(pd);
+		TypeDescriptor td = cachedIntrospectionResults.getTypeDescriptor(pd);		// 类型描述符
 		if (td == null) {
 			td = cachedIntrospectionResults.addTypeDescriptor(pd, new TypeDescriptor(property(pd)));
 		}

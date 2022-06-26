@@ -323,15 +323,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @see #getAdvicesAndAdvisorsForBean
 	 */
 	@Override
-	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
-		// 判断bean是否不为空
+	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {		// 完成 AOP 代理
 		if (bean != null) {
-			// 通过 bean.class 和 beanName 组装一个cacheKey
-			Object cacheKey = getCacheKey(bean.getClass(), beanName);
-			// 移除cacheKey看是否与bean相等
-			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
-				// 代理
-				return wrapIfNecessary(bean, beanName, cacheKey);
+			Object cacheKey = getCacheKey(bean.getClass(), beanName);			// 通过 bean.class 和 beanName 组装一个cacheKey
+			if (this.earlyProxyReferences.remove(cacheKey) != bean) {			// 移除cacheKey看是否与bean相等
+				return wrapIfNecessary(bean, beanName, cacheKey);				// 代理
 			}
 		}
 		return bean;

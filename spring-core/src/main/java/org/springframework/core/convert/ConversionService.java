@@ -22,13 +22,12 @@ import org.springframework.lang.Nullable;
  * A service interface for type conversion. This is the entry point into the convert system.
  * Call {@link #convert(Object, Class)} to perform a thread-safe type conversion using this system.
  *
- * 转换服务
  * @author Keith Donald
  * @author Phillip Webb
  * @since 3.0
  */
 public interface ConversionService {
-
+	
 	/**
 	 * Return {@code true} if objects of {@code sourceType} can be converted to the {@code targetType}.
 	 * <p>If this method returns {@code true}, it means {@link #convert(Object, Class)} is capable
@@ -38,15 +37,16 @@ public interface ConversionService {
 	 * even though a convert invocation may still generate a {@link ConversionException} if the
 	 * underlying elements are not convertible. Callers are expected to handle this exceptional case
 	 * when working with collections and maps.
-	 *
+	 * <p>
 	 * 是否能够转换
-	 * @param sourceType the source type to convert from (may be {@code null} if source is {@code null})
+	 *
+	 * @param sourceType the source type to convert from (maybe {@code null} if source is {@code null})
 	 * @param targetType the target type to convert to (required)
 	 * @return {@code true} if a conversion can be performed, {@code false} if not
 	 * @throws IllegalArgumentException if {@code targetType} is {@code null}
 	 */
 	boolean canConvert(@Nullable Class<?> sourceType, Class<?> targetType);
-
+	
 	/**
 	 * Return {@code true} if objects of {@code sourceType} can be converted to the {@code targetType}.
 	 * The TypeDescriptors provide additional context about the source and target locations
@@ -58,43 +58,43 @@ public interface ConversionService {
 	 * even though a convert invocation may still generate a {@link ConversionException} if the
 	 * underlying elements are not convertible. Callers are expected to handle this exceptional case
 	 * when working with collections and maps.
-	 * 是否能够转换
+	 *
 	 * @param sourceType context about the source type to convert from
-	 * (may be {@code null} if source is {@code null})
+	 * (maybe {@code null} if source is {@code null})
 	 * @param targetType context about the target type to convert to (required)
 	 * @return {@code true} if a conversion can be performed between the source and target types,
 	 * {@code false} if not
 	 * @throws IllegalArgumentException if {@code targetType} is {@code null}
 	 */
 	boolean canConvert(@Nullable TypeDescriptor sourceType, TypeDescriptor targetType);
-
+	
 	/**
 	 * Convert the given {@code source} to the specified {@code targetType}.
-	 * 转换
-	 * @param source the source object to convert (may be {@code null})
+	 *
+	 * @param source     the source object to convert (maybe {@code null})
 	 * @param targetType the target type to convert to (required)
 	 * @return the converted object, an instance of targetType
-	 * @throws ConversionException if a conversion exception occurred
+	 * @throws ConversionException      if a conversion exception occurred
 	 * @throws IllegalArgumentException if targetType is {@code null}
 	 */
 	@Nullable
-	<T> T convert(@Nullable Object source, Class<T> targetType);
-
+	<T> T convert(@Nullable Object source, Class<T> targetType);		// 转换
+	
 	/**
 	 * Convert the given {@code source} to the specified {@code targetType}.
 	 * The TypeDescriptors provide additional context about the source and target locations
 	 * where conversion will occur, often object fields or property locations.
-	 * 转换
-	 * @param source the source object to convert (may be {@code null})
+	 *
+	 * @param source     the source object to convert (maybe {@code null})
 	 * @param sourceType context about the source type to convert from
-	 * (may be {@code null} if source is {@code null})
+	 *                   (maybe {@code null} if source is {@code null})
 	 * @param targetType context about the target type to convert to (required)
 	 * @return the converted object, an instance of {@link TypeDescriptor#getObjectType() targetType}
-	 * @throws ConversionException if a conversion exception occurred
+	 * @throws ConversionException      if a conversion exception occurred
 	 * @throws IllegalArgumentException if targetType is {@code null},
-	 * or {@code sourceType} is {@code null} but source is not {@code null}
+	 *                                  or {@code sourceType} is {@code null} but source is not {@code null}
 	 */
 	@Nullable
 	Object convert(@Nullable Object source, @Nullable TypeDescriptor sourceType, TypeDescriptor targetType);
-
+	
 }

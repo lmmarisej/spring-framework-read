@@ -342,6 +342,8 @@ class AnnotationConfigApplicationContextTests {
 	void individualBeanWithFactoryBeanSupplierAndTargetType() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 		RootBeanDefinition bd = new RootBeanDefinition();
+		// bean 的创建方式之一————Supplier
+		// 也可以通过 BeanFactoryPostProcessor 获取 bean 的 BD，再设置 setInstanceSupplier
 		bd.setInstanceSupplier(NonInstantiatedFactoryBean::new);
 		bd.setTargetType(ResolvableType.forClassWithGenerics(FactoryBean.class, String.class));
 		bd.setLazyInit(true);

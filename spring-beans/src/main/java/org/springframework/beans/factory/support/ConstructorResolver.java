@@ -138,16 +138,13 @@ class ConstructorResolver {
 		BeanWrapperImpl bw = new BeanWrapperImpl();
 		this.beanFactory.initBeanWrapper(bw);
 
-		// 需要被使用的构造函数
-		Constructor<?> constructorToUse = null;
-		// 参数持有者
-		ArgumentsHolder argsHolderToUse = null;
-		// 需要被使用的构造函数的参数列表
-		Object[] argsToUse = null;
-
+		Constructor<?> constructorToUse = null;		// 需要被使用的构造函数
+		ArgumentsHolder argsHolderToUse = null;		// 参数持有者
+		Object[] argsToUse = null;		// 需要被使用的构造函数的参数列表
+		
 		// 将 explicitArgs 转换成构造函数中需要的构造参数列表
 		if (explicitArgs != null) {
-			argsToUse = explicitArgs;
+			argsToUse = explicitArgs;		// 从缓存中找到了构造器，那么继续从缓存中寻找缓存的构造器参数
 		}
 		else {
 			Object[] argsToResolve = null;
@@ -167,13 +164,10 @@ class ConstructorResolver {
 			}
 		}
 
-		// 推论得到一个需要执行的构造函数对象
-		if (constructorToUse == null || argsToUse == null) {
+		if (constructorToUse == null || argsToUse == null) {		// 推论得到一个需要执行的构造函数对象
 			// Take specified constructors, if any.
-			// 候选的构造函数列表
-			Constructor<?>[] candidates = chosenCtors;
-			// 如果构造函数集合为空，直接获取BeanClass 中的构造函数列表作为可选列表
-			if (candidates == null) {
+			Constructor<?>[] candidates = chosenCtors;			// 候选的构造函数列表
+			if (candidates == null) {			// 如果构造函数集合为空，直接获取 BeanClass 中的构造函数列表作为可选列表
 				Class<?> beanClass = mbd.getBeanClass();
 				try {
 					candidates = (mbd.isNonPublicAccessAllowed() ?
@@ -201,45 +195,42 @@ class ConstructorResolver {
 			}
 
 			// Need to resolve the constructor.
+			// 自动装配标识，以下有一种情况成立则为 true，
+			// 1、传进来构造函数，证明 spring 根据之前代码的判断，知道应该用哪个构造函数，
+			// 2、BeanDefinition 中设置为构造兩数注入模型
 			boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);
 			ConstructorArgumentValues resolvedValues = null;
 
-			// 构造函数的最小参数长度
-			int minNrOfArgs;
+			int minNrOfArgs;			// 构造函数的最小参数长度
 			if (explicitArgs != null) {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
-				// 解析获得构造函数的最小参数长度
-				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
+				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);	// 解析获得构造函数的最小参数长度
 			}
 
-			AutowireUtils.sortConstructors(candidates);
+			AutowireUtils.sortConstructors(candidates);	// 对候选的构造函数进行排序，先是访问权限后是参数个数 public 权限参数数量由多到少
 			int minTypeDiffWeight = Integer.MAX_VALUE;
 			Set<Constructor<?>> ambiguousConstructors = null;
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
 			for (Constructor<?> candidate : candidates) {
-
-				// 构造函数的参数长度
-				int parameterCount = candidate.getParameterCount();
+				int parameterCount = candidate.getParameterCount();				// 参数个数
 
 				if (constructorToUse != null && argsToUse != null && argsToUse.length > parameterCount) {
 					// Already found greedy constructor that can be satisfied ->
 					// do not look any further, there are only less greedy constructors left.
 					break;
 				}
-				// 当前构造函数的参数长度 小于 最小构造函数的参数长度不进行处理
-				if (parameterCount < minNrOfArgs) {
+				if (parameterCount < minNrOfArgs) {				// 当前构造函数的参数长度 小于 最小构造函数的参数长度不进行处理
 					continue;
 				}
 
 				ArgumentsHolder argsHolder;
-				// 构造函数中关于类型和参数名称的处理
-				Class<?>[] paramTypes = candidate.getParameterTypes();
+				Class<?>[] paramTypes = candidate.getParameterTypes();				// 构造函数中关于类型和参数名称的处理
 				if (resolvedValues != null) {
 					try {
 						String[] paramNames = ConstructorPropertiesChecker.evaluate(candidate, parameterCount);
@@ -424,13 +415,10 @@ class ConstructorResolver {
 		// initBeanWrapper 方法调用
 		this.beanFactory.initBeanWrapper(bw);
 
-		// 创建 bean 的类
-		Object factoryBean;
-		// factoryBean 的 class
-		Class<?> factoryClass;
-		// 是否静态
-		boolean isStatic;
-
+		Object factoryBean;		// 工厂实例
+		Class<?> factoryClass;	// 工厂类型
+		boolean isStatic;		// 是实例工厂还是静态工厂
+		
 		// 获取 factory bean
 		String factoryBeanName = mbd.getFactoryBeanName();
 		if (factoryBeanName != null) {
@@ -438,12 +426,12 @@ class ConstructorResolver {
 				throw new BeanDefinitionStoreException(mbd.getResourceDescription(), beanName,
 						"factory-bean reference points back to the same bean definition");
 			}
-			// 从容器中获取bean
+			// 从容器中获取 bean
 			factoryBean = this.beanFactory.getBean(factoryBeanName);
 			if (mbd.isSingleton() && this.beanFactory.containsSingleton(beanName)) {
 				throw new ImplicitlyAppearedSingletonException();
 			}
-			// 获取class
+			// 获取 class
 			factoryClass = factoryBean.getClass();
 			// 是否静态
 			isStatic = false;
@@ -498,14 +486,12 @@ class ConstructorResolver {
 					factoryMethodToUse = mbd.getResolvedFactoryMethod();
 				}
 				if (factoryMethodToUse != null) {
-					// 转换 list
-					candidates = Collections.singletonList(factoryMethodToUse);
+					candidates = Collections.singletonList(factoryMethodToUse);					// 转换 list
 				}
 			}
 			if (candidates == null) {
 				candidates = new ArrayList<>();
-				// 获取所有方法
-				Method[] rawCandidates = getCandidateMethods(factoryClass, mbd);
+				Method[] rawCandidates = getCandidateMethods(factoryClass, mbd);				// 获取所有方法
 				for (Method candidate : rawCandidates) {
 					// 名字是否和定义的相同
 					if (Modifier.isStatic(candidate.getModifiers()) == isStatic && mbd.isFactoryMethod(candidate)) {
@@ -515,18 +501,15 @@ class ConstructorResolver {
 			}
 
 			if (candidates.size() == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
-				// 取出第一个方法执行
-				Method uniqueCandidate = candidates.get(0);
-				// 参数是否没有
-				if (uniqueCandidate.getParameterCount() == 0) {
+				Method uniqueCandidate = candidates.get(0);					// 取出第一个方法执行
+				if (uniqueCandidate.getParameterCount() == 0) {				// 参数是否没有
 					mbd.factoryMethodToIntrospect = uniqueCandidate;
 					synchronized (mbd.constructorArgumentLock) {
 						mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;
 						mbd.constructorArgumentsResolved = true;
 						mbd.resolvedConstructorArguments = EMPTY_ARGS;
 					}
-					// 设置实例化的bean
-					bw.setBeanInstance(instantiate(beanName, mbd, factoryBean, uniqueCandidate, EMPTY_ARGS));
+					bw.setBeanInstance(instantiate(beanName, mbd, factoryBean, uniqueCandidate, EMPTY_ARGS));	// 设置实例化的 bean
 					return bw;
 				}
 			}

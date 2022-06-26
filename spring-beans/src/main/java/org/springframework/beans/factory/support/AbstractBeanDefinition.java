@@ -1069,7 +1069,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
-	 * Specify whether or not the configured destroy method is the default.
+	 * Specify whether the configured destroy method is the default.
 	 * <p>The default value is {@code false}.
 	 * @see #setDestroyMethodName
 	 */
@@ -1208,10 +1208,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public void prepareMethodOverrides() throws BeanDefinitionValidationException {
 		// Check that lookup methods exist and determine their overloaded status.
-
-		// 是否需要重写
 		if (hasMethodOverrides()) {
-			// 重写
 			getMethodOverrides().getOverrides().forEach(this::prepareMethodOverride);
 		}
 	}
@@ -1224,18 +1221,15 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * @throws BeanDefinitionValidationException in case of validation failure
 	 */
 	protected void prepareMethodOverride(MethodOverride mo) throws BeanDefinitionValidationException {
-		// 返回需要重写方法的数量
-		int count = ClassUtils.getMethodCountForName(getBeanClass(), mo.getMethodName());
-		// 重写方法数量 = 0 异常
+		int count = ClassUtils.getMethodCountForName(getBeanClass(), mo.getMethodName());		// 获取对应类中对应方法名的个数
 		if (count == 0) {
 			throw new BeanDefinitionValidationException(
 					"Invalid method override: no method with name '" + mo.getMethodName() +
 							"' on class [" + getBeanClassName() + "]");
 		}
-		// 重写方法数量等于1 设置重写值=false
 		else if (count == 1) {
 			// Mark override as not overloaded, to avoid the overhead of arg type checking.
-			mo.setOverloaded(false);
+			mo.setOverloaded(false);		// 标记 methodOverride 暂末被覆盖，避免参数类型检查的开销
 		}
 	}
 

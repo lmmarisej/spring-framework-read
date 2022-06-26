@@ -16,18 +16,18 @@
 
 package org.springframework.core.convert.converter;
 
-import java.util.Set;
-
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
+import java.util.Set;
 
 /**
  * Generic converter interface for converting between two or more types.
  *
  * <p>This is the most flexible of the Converter SPI interfaces, but also the most complex.
  * It is flexible in that a GenericConverter may support converting between multiple source/target
- * type pairs (see {@link #getConvertibleTypes()}. In addition, GenericConverter implementations
+ * type pairs see {@link #getConvertibleTypes()}. In addition, GenericConverter implementations
  * have access to source/target {@link TypeDescriptor field context} during the type conversion
  * process. This allows for resolving source and target field metadata such as annotations and
  * generics information, which can be used to influence the conversion logic.
@@ -37,56 +37,47 @@ import org.springframework.util.Assert;
  *
  * <p>Implementations may additionally implement {@link ConditionalConverter}.
  *
- * 转换器
  * @author Keith Donald
  * @author Juergen Hoeller
- * @since 3.0
  * @see TypeDescriptor
  * @see Converter
  * @see ConverterFactory
  * @see ConditionalConverter
+ * @since 3.0
  */
-public interface GenericConverter {
-
+public interface GenericConverter {		// 两种或多种类型之间进行转换的通用转换器接口。
+	
 	/**
 	 * Return the source and target types that this converter can convert between.
 	 * <p>Each entry is a convertible source-to-target type pair.
 	 * <p>For {@link ConditionalConverter conditional converters} this method may return
 	 * {@code null} to indicate all source-to-target pairs should be considered.
-	 *
-	 * 返回对象 ConvertiblePair , ConvertiblePair 中包含了 原类型和目标类型
 	 */
 	@Nullable
-	Set<ConvertiblePair> getConvertibleTypes();
-
+	Set<ConvertiblePair> getConvertibleTypes();		// 返回此转换器可以转换的源类型和目标类型。
+	
 	/**
 	 * Convert the source object to the targetType described by the {@code TypeDescriptor}.
-	 * 类型转换
-	 * @param source the source object to convert (may be {@code null})
+	 *
+	 * @param source     the source object to convert (maybe {@code null})
 	 * @param sourceType the type descriptor of the field we are converting from
 	 * @param targetType the type descriptor of the field we are converting to
 	 * @return the converted object
 	 */
 	@Nullable
-	Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
-
-
+	Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType);		// 类型转换
+	
+	
 	/**
 	 * Holder for a source-to-target class pair.
 	 */
 	final class ConvertiblePair {
-		/**
-		 * 原类型
-		 */
-		private final Class<?> sourceType;
-
-		/**
-		 * 目标类型
-		 */
-		private final Class<?> targetType;
-
+		private final Class<?> sourceType;		// 源类型
+		private final Class<?> targetType;		// 目标类型
+		
 		/**
 		 * Create a new source-to-target pair.
+		 *
 		 * @param sourceType the source type
 		 * @param targetType the target type
 		 */
@@ -96,15 +87,15 @@ public interface GenericConverter {
 			this.sourceType = sourceType;
 			this.targetType = targetType;
 		}
-
+		
 		public Class<?> getSourceType() {
 			return this.sourceType;
 		}
-
+		
 		public Class<?> getTargetType() {
 			return this.targetType;
 		}
-
+		
 		@Override
 		public boolean equals(@Nullable Object other) {
 			if (this == other) {
@@ -116,16 +107,16 @@ public interface GenericConverter {
 			ConvertiblePair otherPair = (ConvertiblePair) other;
 			return (this.sourceType == otherPair.sourceType && this.targetType == otherPair.targetType);
 		}
-
+		
 		@Override
 		public int hashCode() {
 			return (this.sourceType.hashCode() * 31 + this.targetType.hashCode());
 		}
-
+		
 		@Override
 		public String toString() {
 			return (this.sourceType.getName() + " -> " + this.targetType.getName());
 		}
 	}
-
+	
 }

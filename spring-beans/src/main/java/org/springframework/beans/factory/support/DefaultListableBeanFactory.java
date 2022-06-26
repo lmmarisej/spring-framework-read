@@ -999,39 +999,25 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		// Iterate over a copy to allow for init methods which in turn register new bean definitions.
 		// While this may not be part of the regular factory bootstrap, it does otherwise work fine.
-		// beanNames 内容是 beanDefinition 的名称
-		List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
-
+		List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);		// beanNames 内容是 beanDefinition 的名称
+		
 		// Trigger initialization of all non-lazy singleton beans...
-		// 处理非懒加载的bean进行实例化
-		for (String beanName : beanNames) {
-			// 获取 bean定义
-			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
-			// 条件过滤
-			// 1. abstract 修饰
-			// 2. 是否单例
-			// 3. 是否懒加载
-			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
-				// 是否是工厂bean
-				if (isFactoryBean(beanName)) {
-					// 获取 bean
-					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
-					// 类型判断是否是 FactoryBean
-					if (bean instanceof FactoryBean) {
+		for (String beanName : beanNames) {		// 处理非懒加载的 bean 进行实例化
+			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);			// 获取 bean定义
+			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {			// 1.abstract 修饰 2.是否单例 3.是否懒加载
+				if (isFactoryBean(beanName)) {										// 是否是工厂bean
+					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);	// 获取 bean
+					if (bean instanceof FactoryBean) {								// 类型判断是否是 FactoryBean
 						final FactoryBean<?> factory = (FactoryBean<?>) bean;
-						// 是否立即加载
-						boolean isEagerInit;
-						// 计算 isEagerInit
-						// 1. 是否是 SmartFactoryBean
-						// 2. 执行SmartFactoryBean 的 isEagerInit 方法
+						boolean isEagerInit;						// 是否立即加载
+						// 计算 isEagerInit 1. 是否是 SmartFactoryBean 2. 执行SmartFactoryBean 的 isEagerInit 方法
 						if (System.getSecurityManager() != null && factory instanceof SmartFactoryBean) {
 							isEagerInit = AccessController.doPrivileged((PrivilegedAction<Boolean>)
 											((SmartFactoryBean<?>) factory)::isEagerInit,
 									getAccessControlContext());
 						}
 						else {
-							isEagerInit = (factory instanceof SmartFactoryBean &&
-									((SmartFactoryBean<?>) factory).isEagerInit());
+							isEagerInit = (factory instanceof SmartFactoryBean && ((SmartFactoryBean<?>) factory).isEagerInit());
 						}
 						if (isEagerInit) {
 							getBean(beanName);
@@ -1045,12 +1031,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		// Trigger post-initialization callback for all applicable beans...
-		// 触发回调方法
-		for (String beanName : beanNames) {
-			// 获取单例对象的实例
-			Object singletonInstance = getSingleton(beanName);
-			// 类型判断
-			if (singletonInstance instanceof SmartInitializingSingleton) {
+		for (String beanName : beanNames) {		// 触发回调方法
+			Object singletonInstance = getSingleton(beanName);						// 获取单例对象的实例
+			if (singletonInstance instanceof SmartInitializingSingleton) {			// 类型判断
 				// 执行 SmartInitializingSingleton 方法 afterSingletonsInstantiated
 				final SmartInitializingSingleton smartSingleton = (SmartInitializingSingleton) singletonInstance;
 				if (System.getSecurityManager() != null) {

@@ -43,15 +43,13 @@ public class DocumentDefaultsDefinition implements DefaultsDefinition {
 	private String merge;
 
 	/**
-	 * no or byName or byType
-	 * 自动注入方式
+	 * no, or byName or byType
 	 */
 	@Nullable
 	private String autowire;
 
 	/**
 	 * default-autowire-candidates
-	 *
 	 */
 	@Nullable
 	private String autowireCandidates;

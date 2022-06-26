@@ -34,16 +34,12 @@ import org.springframework.beans.BeansException;
  * @author Colin Sampaleanu
  * @see FactoryBean
  * @since 1.0.2
- *
- * 通常用于封装通用工厂，该工厂可以为我们返回容器管理的相关对象。
  */
 @FunctionalInterface
-public interface ObjectFactory<T> {
+public interface ObjectFactory<T> {			// 用于的函数式接口，主要用来通过匿名内部类传递创建 Object 实例逻辑
 
 	/**
 	 * Return an instance (possibly shared or independent) of the object managed by this factory.
-	 *
-	 * 在每次调用时返回 T 的新实例（原型）。
 	 *
 	 * @return the resulting instance
 	 * @throws BeansException in case of creation errors

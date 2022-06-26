@@ -74,7 +74,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	 */
 	@Nullable
 	default Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
-		return null;
+		return null;		// null 表示不处理
 	}
 
 	/**
