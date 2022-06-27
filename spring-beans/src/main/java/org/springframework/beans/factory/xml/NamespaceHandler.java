@@ -16,12 +16,11 @@
 
 package org.springframework.beans.factory.xml;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.lang.Nullable;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Base interface used by the {@link DefaultBeanDefinitionDocumentReader}
@@ -42,21 +41,20 @@ import org.springframework.lang.Nullable;
  *
  * @author Rob Harrop
  * @author Erik Wiersma
- * @since 2.0
  * @see DefaultBeanDefinitionDocumentReader
  * @see NamespaceHandlerResolver
+ * @since 2.0
  */
 public interface NamespaceHandler {
-
+	
 	/**
 	 * Invoked by the {@link DefaultBeanDefinitionDocumentReader} after
 	 * construction but before any custom elements are parsed.
 	 *
-	 * 初始化方法, 一般在 构造函数执行之后执行
 	 * @see NamespaceHandlerSupport#registerBeanDefinitionParser(String, BeanDefinitionParser)
 	 */
-	void init();
-
+	void init();        // 初始化方法, 一般在 构造函数执行之后执行
+	
 	/**
 	 * Parse the specified {@link Element} and register any resulting
 	 * {@link BeanDefinition BeanDefinitions} with the
@@ -68,16 +66,13 @@ public interface NamespaceHandler {
 	 * <p>Implementations may return {@code null} if they will
 	 * <strong>not</strong> be used in a nested scenario.
 	 *
-	 *
-	 * 解析 beanDefinition
-	 *
-	 * @param element the element that is to be parsed into one or more {@code BeanDefinitions}
+	 * @param element       the element that is to be parsed into one or more {@code BeanDefinitions}
 	 * @param parserContext the object encapsulating the current state of the parsing process
 	 * @return the primary {@code BeanDefinition} (can be {@code null} as explained above)
 	 */
 	@Nullable
 	BeanDefinition parse(Element element, ParserContext parserContext);
-
+	
 	/**
 	 * Parse the specified {@link Node} and decorate the supplied
 	 * {@link BeanDefinitionHolder}, returning the decorated definition.
@@ -90,9 +85,8 @@ public interface NamespaceHandler {
 	 * <p>The supplied {@link ParserContext} can be used to register any
 	 * additional beans needed to support the main definition.
 	 *
-	 * 将 node 解析成 BeanDefinitionHolder
-	 * @param source the source element or attribute that is to be parsed
-	 * @param definition the current bean definition
+	 * @param source        the source element or attribute that is to be parsed
+	 * @param definition    the current bean definition
 	 * @param parserContext the object encapsulating the current state of the parsing process
 	 * @return the decorated definition (to be registered in the BeanFactory),
 	 * or simply the original bean definition if no decoration is required.
@@ -100,6 +94,6 @@ public interface NamespaceHandler {
 	 * treated like the case where the original bean definition gets returned.
 	 */
 	@Nullable
-	BeanDefinitionHolder decorate(Node source, BeanDefinitionHolder definition, ParserContext parserContext);
-
+	BeanDefinitionHolder decorate(Node source, BeanDefinitionHolder definition, ParserContext parserContext);	// 将 node 解析成 BeanDefinitionHolder
+	
 }

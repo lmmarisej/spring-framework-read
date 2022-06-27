@@ -39,8 +39,7 @@ class AopTestUtilsTests {
 
 	@Test
 	void getTargetObjectForNull() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				getTargetObject(null));
+		assertThatIllegalArgumentException().isThrownBy(() -> getTargetObject(null));
 	}
 
 	@Test

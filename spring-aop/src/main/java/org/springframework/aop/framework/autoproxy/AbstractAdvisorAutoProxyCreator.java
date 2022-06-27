@@ -73,14 +73,11 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	protected Object[] getAdvicesAndAdvisorsForBean(
 			Class<?> beanClass, String beanName, @Nullable TargetSource targetSource) {
 
-		// 寻找Advisor
-		List<Advisor> advisors = findEligibleAdvisors(beanClass, beanName);
-		// 增强方法是否为空
-		if (advisors.isEmpty()) {
+		List<Advisor> advisors = findEligibleAdvisors(beanClass, beanName);		// 寻找Advisor
+		if (advisors.isEmpty()) {		// 增强方法是否为空
 			return DO_NOT_PROXY;
 		}
-		// 返回增强方法集合
-		return advisors.toArray();
+		return advisors.toArray();		// 返回增强方法集合
 	}
 
 	/**
@@ -94,8 +91,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * @see #extendAdvisors
 	 */
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
-		// 寻找增强方法
-		List<Advisor> candidateAdvisors = findCandidateAdvisors();
+		List<Advisor> candidateAdvisors = findCandidateAdvisors();		// 寻找增强方法
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
 		extendAdvisors(eligibleAdvisors);
 		if (!eligibleAdvisors.isEmpty()) {
@@ -166,7 +162,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * given the sorted Advisors obtained to date.
 	 * <p>The default implementation is empty.
 	 * <p>Typically used to add Advisors that expose contextual information
-	 * required by some of the later advisors.
+	 * required by some later advisors.
 	 * @param candidateAdvisors the Advisors that have already been identified as
 	 * applying to a given bean
 	 */

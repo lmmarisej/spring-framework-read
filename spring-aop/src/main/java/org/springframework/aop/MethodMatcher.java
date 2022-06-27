@@ -62,7 +62,7 @@ public interface MethodMatcher {
 	 * will be made.
 	 * @param method the candidate method
 	 * @param targetClass the target class
-	 * @return whether or not this method matches statically
+	 * @return whether this method matches statically
 	 *
 	 *
 	 */
@@ -76,10 +76,10 @@ public interface MethodMatcher {
 	 * @return whether or not a runtime match via the 3-arg
 	 * {@link #matches(java.lang.reflect.Method, Class, Object[])} method is required if static matching passed
 	 *
-	 * 返回false，表示不会考虑具体的Joinpoint的方法参数，被称为static matching，不用检查参数，对于同类型的方法匹配结果，可以在框架内部进行
+	 * 返回false，表示不会考虑具体的 Join point 的方法参数，被称为static matching，不用检查参数，对于同类型的方法匹配结果，可以在框架内部进行
 	 * 缓存，以提高性能。
 	 *
-	 * 返回true，也被称为dynamic MethodMatcher，每次需要检查方法参数，因此无法对匹配结果进行缓存。
+	 * 返回 true，也被称为 dynamic MethodMatcher，每次需要检查方法参数，因此无法对匹配结果进行缓存。
 	 */
 	boolean isRuntime();
 

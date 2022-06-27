@@ -81,8 +81,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 	 * @see #isEligibleBean
 	 */
 	public List<Advisor> buildAspectJAdvisors() {
-		// 获取aop类路径
-		List<String> aspectNames = this.aspectBeanNames;
+		List<String> aspectNames = this.aspectBeanNames;		// 获取切面名字列表
 
 		if (aspectNames == null) {
 			synchronized (this) {
@@ -90,32 +89,26 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 				if (aspectNames == null) {
 					List<Advisor> advisors = new ArrayList<>();
 					aspectNames = new ArrayList<>();
-					// 获取beanName
 					String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
-							this.beanFactory, Object.class, true, false);
+							this.beanFactory, Object.class, true, false);					// 获取beanName
 					for (String beanName : beanNames) {
 						if (!isEligibleBean(beanName)) {
 							continue;
 						}
 						// We must be careful not to instantiate beans eagerly as in this case they
-						// would be cached by the Spring container but would not have been weaved.
-						// 获取类型
-						Class<?> beanType = this.beanFactory.getType(beanName);
+						// would be cached by the Spring container but would not have been woven.
+						Class<?> beanType = this.beanFactory.getType(beanName);						// 获取类型
 						if (beanType == null) {
 							continue;
 						}
-						// 判断是否有Aspect注解
-						if (this.advisorFactory.isAspect(beanType)) {
-							// aspect 列表添加当前beanName
-							aspectNames.add(beanName);
-							// 获取Aspect注解信息
-							AspectMetadata amd = new AspectMetadata(beanType, beanName);
-
+						if (this.advisorFactory.isAspect(beanType)) {						// 判断是否有Aspect注解
+							aspectNames.add(beanName);							// aspect 列表添加当前beanName
+							AspectMetadata amd = new AspectMetadata(beanType, beanName);							// 获取Aspect注解信息
+							
 							if (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) {
 								MetadataAwareAspectInstanceFactory factory =
 										new BeanFactoryAspectInstanceFactory(this.beanFactory, beanName);
-								// 获取增强方法
-								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);
+								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);			// 获取增强方法
 								if (this.beanFactory.isSingleton(beanName)) {
 									this.advisorsCache.put(beanName, classAdvisors);
 								} else {

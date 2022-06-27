@@ -16,16 +16,15 @@
 
 package org.springframework.beans.factory.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.lang.Nullable;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.lang.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Support class for implementing custom {@link NamespaceHandler NamespaceHandlers}.
@@ -38,42 +37,40 @@ import org.springframework.lang.Nullable;
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
- * @since 2.0
  * @see #registerBeanDefinitionParser(String, BeanDefinitionParser)
  * @see #registerBeanDefinitionDecorator(String, BeanDefinitionDecorator)
+ * @since 2.0
  */
 public abstract class NamespaceHandlerSupport implements NamespaceHandler {
-
+	
 	/**
 	 * Stores the {@link BeanDefinitionParser} implementations keyed by the
 	 * local name of the {@link Element Elements} they handle.
-	 *
+	 * <p>
 	 * key: xml elementName
 	 * value: BeanDefinitionParser
 	 */
 	private final Map<String, BeanDefinitionParser> parsers = new HashMap<>();
-
+	
 	/**
 	 * Stores the {@link BeanDefinitionDecorator} implementations keyed by the
 	 * local name of the {@link Element Elements} they handle.
-	 *
+	 * <p>
 	 * key: xml elementName
 	 * value: BeanDefinitionDecorator
 	 */
 	private final Map<String, BeanDefinitionDecorator> decorators = new HashMap<>();
-
+	
 	/**
 	 * Stores the {@link BeanDefinitionDecorator} implementations keyed by the local
 	 * name of the {@link Attr Attrs} they handle.
-	 *
-	 * 存储有关 {@link Attr} 的 BeanDefinitionDecorator 容器
-	 *
+	 * <p>
 	 * key: attr
 	 * value: BeanDefinitionDecorator
 	 */
 	private final Map<String, BeanDefinitionDecorator> attributeDecorators = new HashMap<>();
-
-
+	
+	
 	/**
 	 * Parses the supplied {@link Element} by delegating to the {@link BeanDefinitionParser} that is
 	 * registered for that {@link Element}.
@@ -86,7 +83,7 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 		// 解析
 		return (parser != null ? parser.parse(element, parserContext) : null);
 	}
-
+	
 	/**
 	 * Locates the {@link BeanDefinitionParser} from the register implementations using
 	 * the local name of the supplied {@link Element}.
@@ -103,21 +100,18 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 		}
 		return parser;
 	}
-
+	
 	/**
 	 * Decorates the supplied {@link Node} by delegating to the {@link BeanDefinitionDecorator} that
 	 * is registered to handle that {@link Node}.
 	 */
 	@Override
 	@Nullable
-	public BeanDefinitionHolder decorate(
-			Node node, BeanDefinitionHolder definition, ParserContext parserContext) {
-		// 根据 node 获取 BeanDefinitionDecorator
-		BeanDefinitionDecorator decorator = findDecoratorForNode(node, parserContext);
-		// 解析
+	public BeanDefinitionHolder decorate(Node node, BeanDefinitionHolder definition, ParserContext parserContext) {
+		BeanDefinitionDecorator decorator = findDecoratorForNode(node, parserContext);		// 根据 node 获取 BeanDefinitionDecorator
 		return (decorator != null ? decorator.decorate(node, definition, parserContext) : null);
 	}
-
+	
 	/**
 	 * Locates the {@link BeanDefinitionParser} from the register implementations using
 	 * the local name of the supplied {@link Node}. Supports both {@link Element Elements}
@@ -129,11 +123,9 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 		String localName = parserContext.getDelegate().getLocalName(node);
 		if (node instanceof Element) {
 			decorator = this.decorators.get(localName);
-		}
-		else if (node instanceof Attr) {
+		} else if (node instanceof Attr) {
 			decorator = this.attributeDecorators.get(localName);
-		}
-		else {
+		} else {
 			parserContext.getReaderContext().fatal(
 					"Cannot decorate based on Nodes of type [" + node.getClass().getName() + "]", node);
 		}
@@ -143,8 +135,8 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 		}
 		return decorator;
 	}
-
-
+	
+	
 	/**
 	 * Subclasses can call this to register the supplied {@link BeanDefinitionParser} to
 	 * handle the specified element. The element name is the local (non-namespace qualified)
@@ -153,7 +145,7 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	protected final void registerBeanDefinitionParser(String elementName, BeanDefinitionParser parser) {
 		this.parsers.put(elementName, parser);
 	}
-
+	
 	/**
 	 * Subclasses can call this to register the supplied {@link BeanDefinitionDecorator} to
 	 * handle the specified element. The element name is the local (non-namespace qualified)
@@ -162,7 +154,7 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	protected final void registerBeanDefinitionDecorator(String elementName, BeanDefinitionDecorator dec) {
 		this.decorators.put(elementName, dec);
 	}
-
+	
 	/**
 	 * Subclasses can call this to register the supplied {@link BeanDefinitionDecorator} to
 	 * handle the specified attribute. The attribute name is the local (non-namespace qualified)
@@ -171,5 +163,5 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	protected final void registerBeanDefinitionDecoratorForAttribute(String attrName, BeanDefinitionDecorator dec) {
 		this.attributeDecorators.put(attrName, dec);
 	}
-
+	
 }

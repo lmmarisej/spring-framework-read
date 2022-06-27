@@ -517,10 +517,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 3. className 不为空
 		// 满足、上述三点的情况下会去创建 RootBeanDefinition
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
-			// 创建 beanDefinition
-			mbdToUse = new RootBeanDefinition(mbd);
-			// 设置bean class
-			mbdToUse.setBeanClass(resolvedClass);
+			mbdToUse = new RootBeanDefinition(mbd);			// 创建 beanDefinition
+			mbdToUse.setBeanClass(resolvedClass);			// 设置bean class
 		}
 		
 		
@@ -531,13 +529,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			mbdToUse.prepareMethodOverrides();
 		} catch (BeanDefinitionValidationException ex) {
 			throw new BeanDefinitionStoreException(mbdToUse.getResourceDescription(),
-					beanName, "Validation of method overrides failed", ex
-			);
+					beanName, "Validation of method overrides failed", ex);
 		}
 		
 		// 第三部分：bean 创建之前的处理		【通过 `实例工厂（factoryBean）`和`静态工厂（factoryMethod）` 进行 bean 的创建】
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			// 给 BeanPostProcessors 一个机会来返回代理来替代真正的实例，应用实例化前的前置处理器
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);        // 返回代理 bean 实例。
 			if (bean != null) {
 				return bean;
@@ -1184,10 +1182,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object instance;
 		try {
 			// Mark this bean as currently in creation, even if just partially.
-			// 原型模式下创建的 前置函数
-			beforePrototypeCreation(beanName);
+			beforePrototypeCreation(beanName);			// 原型模式下创建的 前置函数
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			// 实例解析
 			instance = resolveBeforeInstantiation(beanName, mbd);
 			if (instance == null) {
 				// 创建 bean 实例
@@ -1250,7 +1246,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
-					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
+					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);	// 创建对象之前提前准备 AOP 信息
 					if (bean != null) {
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
 					}

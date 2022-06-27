@@ -231,7 +231,7 @@ public abstract class AopUtils {
 	 *
 	 * @param pc               the static or dynamic pointcut to check
 	 * @param targetClass      the class to test
-	 * @param hasIntroductions whether or not the advisor chain for this bean includes any
+	 * @param hasIntroductions whether the advisor chain for this bean includes any
 	 *                         introductions
 	 * @return whether the pointcut can apply on any method
 	 */
@@ -315,27 +315,27 @@ public abstract class AopUtils {
 	 *
 	 * @param candidateAdvisors the Advisors to evaluate
 	 * @param clazz             the target class
-	 * @return sublist of Advisors that can apply to an object of the given class (may be the
+	 * @return sublist of Advisors that can apply to an object of the given class (maybe the
 	 * incoming List as-is)
 	 */
 	public static List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvisors,
 			Class<?> clazz) {
-		if (candidateAdvisors.isEmpty()) {
+		if (candidateAdvisors.isEmpty()) {		// 若候选的增强器集合为空直接返回
 			return candidateAdvisors;
 		}
-		List<Advisor> eligibleAdvisors = new ArrayList<>();
+		List<Advisor> eligibleAdvisors = new ArrayList<>();		// 定义一个合适的增强器集合对象
 		for (Advisor candidate : candidateAdvisors) {
 			if (candidate instanceof IntroductionAdvisor && canApply(candidate, clazz)) {
 				eligibleAdvisors.add(candidate);
 			}
 		}
-		boolean hasIntroductions = !eligibleAdvisors.isEmpty();
+		boolean hasIntroductions = !eligibleAdvisors.isEmpty();		// 是否有引介增强
 		for (Advisor candidate : candidateAdvisors) {
 			if (candidate instanceof IntroductionAdvisor) {
 				// already processed
-				continue;
+				continue;		// 在上面己经处理过，不需要处理
 			}
-			if (canApply(candidate, clazz, hasIntroductions)) {
+			if (canApply(candidate, clazz, hasIntroductions)) {		// 真正的判断增强器是否合适当前类型
 				eligibleAdvisors.add(candidate);
 			}
 		}

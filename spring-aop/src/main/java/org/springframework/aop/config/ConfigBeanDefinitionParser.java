@@ -93,7 +93,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 	private static final int POINTCUT_INDEX = 1;
 	private static final int ASPECT_INSTANCE_FACTORY_INDEX = 2;
 
-	private ParseState parseState = new ParseState();
+	private final ParseState parseState = new ParseState();
 
 
 	@Override
@@ -103,19 +103,21 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 				new CompositeComponentDefinition(element.getTagName(), parserContext.extractSource(element));
 		parserContext.pushContainingComponent(compositeDef);
 
-		configureAutoProxyCreator(parserContext, element);
+		configureAutoProxyCreator(parserContext, element);		// 注册自动代理模式创建器
 
 		List<Element> childElts = DomUtils.getChildElements(element);
 		for (Element elt: childElts) {
 			String localName = parserContext.getDelegate().getLocalName(elt);
-			if (POINTCUT.equals(localName)) {
-				parsePointcut(elt, parserContext);
-			}
-			else if (ADVISOR.equals(localName)) {
-				parseAdvisor(elt, parserContext);
-			}
-			else if (ASPECT.equals(localName)) {
-				parseAspect(elt, parserContext);
+			switch (localName) {
+				case POINTCUT:
+					parsePointcut(elt, parserContext);
+					break;
+				case ADVISOR:
+					parseAdvisor(elt, parserContext);
+					break;
+				case ASPECT:
+					parseAspect(elt, parserContext);
+					break;
 			}
 		}
 
@@ -205,19 +207,17 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 			List<BeanReference> beanReferences = new ArrayList<>();
 
 			List<Element> declareParents = DomUtils.getChildElementsByTagName(aspectElement, DECLARE_PARENTS);
-			for (int i = METHOD_INDEX; i < declareParents.size(); i++) {
-				Element declareParentsElement = declareParents.get(i);
+			for (Element declareParentsElement : declareParents) {
 				beanDefinitions.add(parseDeclareParents(declareParentsElement, parserContext));
 			}
 
-			// We have to parse "advice" and all the advice kinds in one loop, to get the
-			// ordering semantics right.
-			NodeList nodeList = aspectElement.getChildNodes();
+			// We have to parse "advice" and all the advice kinds in one loop, to get the ordering semantics right.
+			NodeList nodeList = aspectElement.getChildNodes();		// 解析其下的 advice 节点
 			boolean adviceFoundAlready = false;
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);
-				if (isAdviceNode(node, parserContext)) {
-					if (!adviceFoundAlready) {
+				if (isAdviceNode(node, parserContext)) {// 是否为advice:before/advice:after/advice:after-returning/advice:after-throwing/advice:around节点
+					if (!adviceFoundAlready) {		// 校验 aop:aspect 必须有ref属性，否则无法对切入点进行观察操作
 						adviceFoundAlready = true;
 						if (!StringUtils.hasText(aspectName)) {
 							parserContext.getReaderContext().error(
@@ -234,7 +234,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 			}
 
 			AspectComponentDefinition aspectComponentDefinition = createAspectComponentDefinition(
-					aspectElement, aspectId, beanDefinitions, beanReferences, parserContext);
+					aspectElement, aspectId, beanDefinitions, beanReferences, parserContext);	// 解析 advice 节点并注册到 bean 工厂中
 			parserContext.pushContainingComponent(aspectComponentDefinition);
 
 			List<Element> pointcuts = DomUtils.getChildElementsByTagName(aspectElement, POINTCUT);
@@ -320,23 +320,25 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 			this.parseState.push(new AdviceEntry(parserContext.getDelegate().getLocalName(adviceElement)));
 
 			// create the method factory bean
+			// 关联 aspectName，包装为 SimpleBeanFactoryAwareAspectInstanceFactory 对象
 			RootBeanDefinition methodDefinition = new RootBeanDefinition(MethodLocatingFactoryBean.class);
 			methodDefinition.getPropertyValues().add("targetBeanName", aspectName);
 			methodDefinition.getPropertyValues().add("methodName", adviceElement.getAttribute("method"));
 			methodDefinition.setSynthetic(true);
 
 			// create instance factory definition
-			RootBeanDefinition aspectFactoryDef =
-					new RootBeanDefinition(SimpleBeanFactoryAwareAspectInstanceFactory.class);
+			RootBeanDefinition aspectFactoryDef = new RootBeanDefinition(SimpleBeanFactoryAwareAspectInstanceFactory.class);
 			aspectFactoryDef.getPropertyValues().add("aspectBeanName", aspectName);
 			aspectFactoryDef.setSynthetic(true);
 
 			// register the pointcut
+			// 涉及 point-cut 属性的解析，并结合上达的两个 bean 最终包裝为 AbstractAspect JAdvice 通知对象
 			AbstractBeanDefinition adviceDef = createAdviceDefinition(
 					adviceElement, parserContext, aspectName, order, methodDefinition, aspectFactoryDef,
 					beanDefinitions, beanReferences);
 
 			// configure the advisor
+			// 最终包装为 AspectJPointcutAdvisor 对象
 			RootBeanDefinition advisorDefinition = new RootBeanDefinition(AspectJPointcutAdvisor.class);
 			advisorDefinition.setSource(parserContext.extractSource(adviceElement));
 			advisorDefinition.getConstructorArgumentValues().addGenericArgumentValue(adviceDef);
@@ -366,6 +368,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 			RootBeanDefinition methodDef, RootBeanDefinition aspectFactoryDef,
 			List<BeanDefinition> beanDefinitions, List<BeanReference> beanReferences) {
 
+		// 首先根据 adviceElement 节点分析出是什么类型的 Advice
 		RootBeanDefinition adviceDefinition = new RootBeanDefinition(getAdviceClass(adviceElement, parserContext));
 		adviceDefinition.setSource(parserContext.extractSource(adviceElement));
 
@@ -373,22 +376,19 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 		adviceDefinition.getPropertyValues().add(DECLARATION_ORDER_PROPERTY, order);
 
 		if (adviceElement.hasAttribute(RETURNING)) {
-			adviceDefinition.getPropertyValues().add(
-					RETURNING_PROPERTY, adviceElement.getAttribute(RETURNING));
+			adviceDefinition.getPropertyValues().add(RETURNING_PROPERTY, adviceElement.getAttribute(RETURNING));
 		}
 		if (adviceElement.hasAttribute(THROWING)) {
-			adviceDefinition.getPropertyValues().add(
-					THROWING_PROPERTY, adviceElement.getAttribute(THROWING));
+			adviceDefinition.getPropertyValues().add(THROWING_PROPERTY, adviceElement.getAttribute(THROWING));
 		}
 		if (adviceElement.hasAttribute(ARG_NAMES)) {
-			adviceDefinition.getPropertyValues().add(
-					ARG_NAMES_PROPERTY, adviceElement.getAttribute(ARG_NAMES));
+			adviceDefinition.getPropertyValues().add(ARG_NAMES_PROPERTY, adviceElement.getAttribute(ARG_NAMES));
 		}
 
-		ConstructorArgumentValues cav = adviceDefinition.getConstructorArgumentValues();
+		ConstructorArgumentValues cav = adviceDefinition.getConstructorArgumentValues();	 // 设置构造函数的入参变量
 		cav.addIndexedArgumentValue(METHOD_INDEX, methodDef);
 
-		Object pointcut = parsePointcutProperty(adviceElement, parserContext);
+		Object pointcut = parsePointcutProperty(adviceElement, parserContext);		// 解析 point-cut 属性
 		if (pointcut instanceof BeanDefinition) {
 			cav.addIndexedArgumentValue(POINTCUT_INDEX, pointcut);
 			beanDefinitions.add((BeanDefinition) pointcut);
@@ -409,23 +409,19 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 	 */
 	private Class<?> getAdviceClass(Element adviceElement, ParserContext parserContext) {
 		String elementName = parserContext.getDelegate().getLocalName(adviceElement);
-		if (BEFORE.equals(elementName)) {
-			return AspectJMethodBeforeAdvice.class;
-		}
-		else if (AFTER.equals(elementName)) {
-			return AspectJAfterAdvice.class;
-		}
-		else if (AFTER_RETURNING_ELEMENT.equals(elementName)) {
-			return AspectJAfterReturningAdvice.class;
-		}
-		else if (AFTER_THROWING_ELEMENT.equals(elementName)) {
-			return AspectJAfterThrowingAdvice.class;
-		}
-		else if (AROUND.equals(elementName)) {
-			return AspectJAroundAdvice.class;
-		}
-		else {
-			throw new IllegalArgumentException("Unknown advice kind [" + elementName + "].");
+		switch (elementName) {
+			case BEFORE:
+				return AspectJMethodBeforeAdvice.class;
+			case AFTER:
+				return AspectJAfterAdvice.class;
+			case AFTER_RETURNING_ELEMENT:
+				return AspectJAfterReturningAdvice.class;
+			case AFTER_THROWING_ELEMENT:
+				return AspectJAfterThrowingAdvice.class;
+			case AROUND:
+				return AspectJAroundAdvice.class;
+			default:
+				throw new IllegalArgumentException("Unknown advice kind [" + elementName + "].");
 		}
 	}
 

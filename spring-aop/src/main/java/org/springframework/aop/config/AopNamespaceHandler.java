@@ -37,25 +37,25 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * and have it applied to all relevant beans in you {@link org.springframework.beans.factory.BeanFactory}
  * automatically. The {@code advisor} tag supports both in-line and referenced
  * {@link org.springframework.aop.Pointcut Pointcuts}:
- *
+ * <p>
  * <pre class="code">
  * &lt;aop:advisor id=&quot;getAgeAdvisor&quot;
  *     pointcut=&quot;execution(* *..ITestBean.getAge(..))&quot;
  *     advice-ref=&quot;getAgeCounter&quot;/&gt;
- *
+ * <p>
  * &lt;aop:advisor id=&quot;getNameAdvisor&quot;
  *     pointcut-ref=&quot;getNameCalls&quot;
  *     advice-ref=&quot;getNameCounter&quot;/&gt;</pre>
- *
+ * <p>
  * AOP标签解析(对{@code  <aop:xxxxx>}的解析)
-
+ *
  * @author Rob Harrop
  * @author Adrian Colyer
  * @author Juergen Hoeller
  * @since 2.0
  */
 public class AopNamespaceHandler extends NamespaceHandlerSupport {
-
+	
 	/**
 	 * Register the {@link BeanDefinitionParser BeanDefinitionParsers} for the
 	 * '{@code config}', '{@code spring-configured}', '{@code aspectj-autoproxy}'
@@ -65,12 +65,11 @@ public class AopNamespaceHandler extends NamespaceHandlerSupport {
 	public void init() {
 		// In 2.0 XSD as well as in 2.1 XSD.
 		registerBeanDefinitionParser("config", new ConfigBeanDefinitionParser());
-		// Spring AOP 解析
 		registerBeanDefinitionParser("aspectj-autoproxy", new AspectJAutoProxyBeanDefinitionParser());
 		registerBeanDefinitionDecorator("scoped-proxy", new ScopedProxyBeanDefinitionDecorator());
-
+		
 		// Only in 2.0 XSD: moved to context namespace as of 2.1
 		registerBeanDefinitionParser("spring-configured", new SpringConfiguredBeanDefinitionParser());
 	}
-
+	
 }
