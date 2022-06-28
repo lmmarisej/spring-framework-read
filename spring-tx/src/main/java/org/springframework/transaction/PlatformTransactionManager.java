@@ -91,8 +91,6 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * resulting DataAccessException causing the transaction to fail. The original exception will be
 	 * propagated to the caller of this commit method in such a case.
 	 *
-	 * 将给定事物提交。
-	 *
 	 * @param status object returned by the {@code getTransaction} method
 	 * @throws UnexpectedRollbackException      in case of an unexpected rollback that the
 	 *                                          transaction coordinator initiated
@@ -105,8 +103,8 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 *                                          is, committed or rolled back)
 	 * @see TransactionStatus#setRollbackOnly
 	 */
-	void commit(TransactionStatus status) throws TransactionException;
-
+	void commit(TransactionStatus status) throws TransactionException;	 // 将给定事物提交。
+	
 	/**
 	 * Perform a rollback of the given transaction.
 	 * <p>If the transaction wasn't a new one, just set it rollback-only for proper

@@ -54,7 +54,7 @@ import org.springframework.util.ClassUtils;
  */
 @SuppressWarnings("serial")
 public class AnnotationTransactionAttributeSource extends AbstractFallbackTransactionAttributeSource
-		implements Serializable {
+		implements Serializable {		// 解析事务注解属性
 	/**
 	 *是否存在javax.transaction.Transactional类。
 	 */

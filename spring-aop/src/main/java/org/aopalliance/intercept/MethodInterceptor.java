@@ -48,7 +48,7 @@ package org.aopalliance.intercept;
  * 		系统安全验证及检查、系统各处的性能检测、简单的日志记录。
  */
 @FunctionalInterface
-public interface MethodInterceptor extends Interceptor {
+public interface MethodInterceptor extends Interceptor {		// 实现后，可以作为一个 Advice 使用
 
 	/**
 	 * Implement this method to perform extra treatments before and after the invocation. Polite

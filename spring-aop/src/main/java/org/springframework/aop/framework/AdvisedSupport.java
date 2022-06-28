@@ -220,12 +220,10 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	 */
 	public void addInterface(Class<?> intf) {
 		Assert.notNull(intf, "Interface must not be null");
-		// 是不是借口
-		if (!intf.isInterface()) {
+		if (!intf.isInterface()) {		// 是不是借口
 			throw new IllegalArgumentException("[" + intf.getName() + "] is not an interface");
 		}
-		// 是否已经添加
-		if (!this.interfaces.contains(intf)) {
+		if (!this.interfaces.contains(intf)) {		// 是否已经添加
 			this.interfaces.add(intf);
 			adviceChanged();
 		}

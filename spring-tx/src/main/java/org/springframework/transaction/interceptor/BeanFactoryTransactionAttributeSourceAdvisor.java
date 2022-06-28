@@ -25,8 +25,6 @@ import org.springframework.lang.Nullable;
  * Advisor driven by a {@link TransactionAttributeSource}, used to include
  * a transaction advice bean for methods that are transactional.
  *
- *
- * 事务切面
  * @author Juergen Hoeller
  * @since 2.5.5
  * @see #setAdviceBeanName
@@ -34,7 +32,7 @@ import org.springframework.lang.Nullable;
  * @see TransactionAttributeSourceAdvisor
  */
 @SuppressWarnings("serial")
-public class BeanFactoryTransactionAttributeSourceAdvisor extends AbstractBeanFactoryPointcutAdvisor {
+public class BeanFactoryTransactionAttributeSourceAdvisor extends AbstractBeanFactoryPointcutAdvisor {		// AOP 增强通知器
 
 	@Nullable
 	private TransactionAttributeSource transactionAttributeSource;

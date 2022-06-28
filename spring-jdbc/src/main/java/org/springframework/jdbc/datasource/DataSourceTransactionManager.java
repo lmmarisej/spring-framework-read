@@ -197,7 +197,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 * TransactionDefinition#isReadOnly()} through an explicit statement on the transactional
 	 * connection: "SET TRANSACTION READ ONLY" as understood by Oracle, MySQL and Postgres.
 	 * <p>The exact treatment, including any SQL statement executed on the connection,
-	 * can be customized through through {@link #prepareTransactionalConnection}.
+	 * can be customized through {@link #prepareTransactionalConnection}.
 	 * <p>This mode of read-only handling goes beyond the {@link Connection#setReadOnly}
 	 * hint that Spring applies by default. In contrast to that standard JDBC hint, "SET TRANSACTION
 	 * READ ONLY" enforces an isolation-level-like connection mode where data manipulation
@@ -251,11 +251,9 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 	/**
 	 * This implementation sets the isolation level but ignores the timeout.
-	 *
-	 * 事务的开始方法
 	 */
 	@Override
-	protected void doBegin(Object transaction, TransactionDefinition definition) {
+	protected void doBegin(Object transaction, TransactionDefinition definition) {		// 事务开始
 		// 拿出事务
 		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
 		// 链接对象
@@ -281,11 +279,9 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 			// 获取事务级别
 			Integer previousIsolationLevel = DataSourceUtils
 					.prepareConnectionForTransaction(con, definition);
-			// 设置事务隔离级别
-			txObject.setPreviousIsolationLevel(previousIsolationLevel);
-			// 设置只读
-			txObject.setReadOnly(definition.isReadOnly());
-
+			txObject.setPreviousIsolationLevel(previousIsolationLevel);			// 设置事务隔离级别
+			txObject.setReadOnly(definition.isReadOnly());			// 设置只读
+			
 			// Switch to manual commit if necessary. This is very expensive in some JDBC drivers,
 			// so we don't want to do it unnecessarily (for example if we've explicitly
 			// configured the connection pool to set it already).
@@ -295,31 +291,26 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 				if (logger.isDebugEnabled()) {
 					logger.debug("Switching JDBC Connection [" + con + "] to manual commit");
 				}
-				con.setAutoCommit(false);		// 需要关闭autoCommit
+				con.setAutoCommit(false);		// 需要关闭 autoCommit
 			}
 
-			// 事务链接准备
-			prepareTransactionalConnection(con, definition);
-			// 事务激活
-			txObject.getConnectionHolder().setTransactionActive(true);
-
-			// 超时时间获取
-			int timeout = determineTimeout(definition);
-			// 默认超时时间设置
-			if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {
+			prepareTransactionalConnection(con, definition);					// 事务链接准备
+			txObject.getConnectionHolder().setTransactionActive(true);			// 标记激活事务
+			
+			int timeout = determineTimeout(definition);						// 超时时间获取
+			if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {			// 默认超时时间设置
 				txObject.getConnectionHolder().setTimeoutInSeconds(timeout);
 			}
 
 			// Bind the connection holder to the thread.
-			if (txObject.isNewConnectionHolder()) {		// 第一个事物，将connection和当前线程绑定
+			if (txObject.isNewConnectionHolder()) {		// 第一个事物，将 connection 和当前线程绑定
 				// k: datasource v: connectionHolder
 				TransactionSynchronizationManager.bindResource(obtainDataSource(), txObject.getConnectionHolder());
 			}
 		}
 		catch (Throwable ex) {
 			if (txObject.isNewConnectionHolder()) {
-				// 释放链接
-				DataSourceUtils.releaseConnection(con, obtainDataSource());
+				DataSourceUtils.releaseConnection(con, obtainDataSource());						// 释放链接
 				txObject.setConnectionHolder(null, false);
 			}
 			throw new CannotCreateTransactionException(
@@ -335,12 +326,9 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 */
 	@Override
 	protected Object doSuspend(Object transaction) {
-		// 获取事务对象
-		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
-		// 链接置空
-		txObject.setConnectionHolder(null);
-		// 解除资源绑定
-		return TransactionSynchronizationManager.unbindResource(obtainDataSource());
+		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;		// 获取事务对象
+		txObject.setConnectionHolder(null);														// 链接置空
+		return TransactionSynchronizationManager.unbindResource(obtainDataSource());			// 解除资源绑定
 	}
 
 	/**
@@ -361,15 +349,13 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 */
 	@Override
 	protected void doCommit(DefaultTransactionStatus status) {
-		// 事务对象
-		DataSourceTransactionObject txObject = (DataSourceTransactionObject) status.getTransaction();
-		// 获取链接
-		Connection con = txObject.getConnectionHolder().getConnection();
+		DataSourceTransactionObject txObject = (DataSourceTransactionObject) status.getTransaction();		// 事务对象
+		Connection con = txObject.getConnectionHolder().getConnection();		// 获取链接
 		if (status.isDebug()) {
 			logger.debug("Committing JDBC transaction on Connection [" + con + "]");
 		}
 		try {
-			con.commit();		// 通过Connection对事物进行提交
+			con.commit();		// 通过 Connection 对事物进行提交
 		} catch (SQLException ex) {
 			throw new TransactionSystemException("Could not commit JDBC transaction", ex);
 		}
@@ -469,11 +455,9 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	protected void prepareTransactionalConnection(Connection con, TransactionDefinition definition)
 			throws SQLException {
 
-		// 只读时
-		if (isEnforceReadOnly() && definition.isReadOnly()) {
+		if (isEnforceReadOnly() && definition.isReadOnly()) {				// 只读事务
 			try (Statement stmt = con.createStatement()) {
-				// 执行sql 类似事务隔离级别
-				stmt.executeUpdate("SET TRANSACTION READ ONLY");
+				stmt.executeUpdate("SET TRANSACTION READ ONLY");		// 当前事务只读事务
 			}
 		}
 	}
@@ -482,8 +466,6 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	/**
 	 * DataSource transaction object, representing a ConnectionHolder. Used as transaction object by
 	 * DataSourceTransactionManager.
-	 * <p>
-	 * 事务对象
 	 */
 	private static class DataSourceTransactionObject extends JdbcTransactionObjectSupport {
 
